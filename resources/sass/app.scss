@@ -1,0 +1,20 @@
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// // data
+// @import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+// @import "~datatables.net-buttons-bs4/css/buttons.bootstrap4.css";
+
+// resources/sass/app.scss
+
+// Importer DataTables CSS pour Bootstrap 4
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+
+// Importer les styles pour les boutons
+@import "~datatables.net-buttons-bs4/css/buttons.bootstrap4.css";

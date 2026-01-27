@@ -1,0 +1,115 @@
+.new-navbar {
+    background-color: blue;
+}
+.new-navbar .navbar-brand {
+    color: white;
+    font-weight: bold;
+
+}
+.new-navbar .navbar-nav li a {
+    color: white;
+    padding: 0px 50px !important;
+    font-size: 20px;
+    font-weight: bold;
+}
+.new-navbar  .navbar-nav li a:hover {
+    color: #4d4a4ad3;
+    transition: 0.3s;
+}
+
+/* page d'accueil */
+#carouselExampleInterval .carousel-inner{
+    height: 500px;
+}
+
+#carouselExampleInterval .carousel-inner .carousel-item{
+    height: 100%;
+}
+
+#carouselExampleInterval .carousel-inner .carousel-item img{
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* footer */
+.footer {
+    background-color: #0000FF;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    flex-wrap: wrap;
+}
+.footer-left, .footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+.footer-left {
+    text-align: left;
+}
+.footer-right {
+    text-align: right;
+}
+/* .social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+} */
+/* .social-icons a {
+    color: #FFFFFF;
+    background-color: #0000FF;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.social-icons a.facebook {
+    background-color: #FFFFFF;
+    color: #1877F2;
+}
+.social-icons a.twitter {
+    background-color: #1DA1F2;
+}
+.social-icons a.linkedin {
+    background-color: #0077B5;
+}
+.social-icons a.youtube {
+    background-color: #FF0000;
+} */
+.copyright {
+    margin-top: 50px;
+    text-align: center;
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-left, .footer-right {
+        align-items: center;
+        text-align: center;
+    }
+}
+.footer-content svg{
+    /* padding: 3px; */
+    margin: 6px;
+}
+.footer-right button {
+    /* text-align: right; */
+    margin-top: -35px;
+    /* margin-right: -20px; */
+    /* padding-right: 41px;; */
+}

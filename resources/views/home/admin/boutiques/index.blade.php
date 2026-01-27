@@ -1,0 +1,122 @@
+@extends('layouts.home_dashboard', ['title' => 'Proprietes Acquis'])
+@push('css')
+    <style>
+        .rotate {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+@endpush
+@section('content')
+    <div class="col-lg-9">
+        <div class="rbt-dashboard-content bg-color-white rbt-shadow-box">
+            <div class="content">
+                <div class="section-title">
+                    <h4 class="rbt-title-style-3">Convertis </h4>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-12 col-md-12 col-12 ">
+                        <h5 class="text-center">Convertir ma monnaie électronique en Trésor Money
+                        </h5>
+                        <p class="text-center">
+                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="200" height="200"
+                                viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+                                <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000"
+                                    stroke="none">
+                                    <path
+                                        d="M2014 4950 c-17 -7 -371 -373 -566 -587 -54 -59 -60 -88 -25 -128 20
+                                                                        -23 65 -36 421 -120 219 -52 414 -95 432 -95 42 0 74 30 74 68 0 15 -10 60
+                                                                        -21 100 -12 40 -20 74 -17 77 13 13 217 27 321 21 338 -17 632 -113 902 -294
+                                                                        382 -256 654 -673 737 -1132 25 -138 30 -419 9 -545 -56 -347 -198 -651 -422
+                                                                        -905 -44 -50 -89 -110 -100 -133 -37 -82 -20 -180 43 -251 46 -53 104 -79 179
+                                                                        -79 101 -1 166 47 314 233 185 231 337 534 410 816 135 520 81 1062 -155 1539
+                                                                        -326 659 -928 1097 -1670 1212 -147 23 -492 23 -620 0 -47 -8 -88 -12 -92 -8
+                                                                        -3 3 -18 45 -32 92 -15 47 -34 93 -44 101 -24 21 -53 28 -78 18z" />
+                                    <path d="M1106 4169 c-59 -14 -97 -42 -168 -122 -303 -341 -485 -726 -554
+                                                                        -1177 -25 -158 -25 -463 -1 -620 123 -800 637 -1450 1381 -1745 303 -120 675
+                                                                        -175 986 -145 74 7 150 14 169 14 l34 1 27 -88 c33 -104 50 -127 97 -127 42 0
+                                                                        37 -4 377 358 141 150 258 283 262 297 7 28 -14 68 -43 83 -10 6 -203 54 -430
+                                                                        107 -400 95 -413 97 -438 81 -43 -28 -47 -55 -20 -148 13 -45 22 -84 19 -87
+                                                                        -15 -15 -241 -23 -361 -13 -511 44 -948 283 -1255 687 -247 325 -375 767 -339
+                                                                        1166 36 397 175 721 439 1027 91 105 112 145 112 218 0 63 -18 108 -60 157
+                                                                        -58 66 -151 96 -234 76z m122 -135 c29 -20 52 -65 52 -102 0 -33 -21 -64 -101
+                                                                        -154 -217 -242 -372 -569 -436 -918 -27 -149 -24 -468 5 -625 184 -975 1072
+                                                                        -1627 2058 -1510 82 10 152 20 155 24 4 3 -6 49 -22 101 -16 52 -28 98 -26
+                                                                        101 2 6 627 -138 636 -147 4 -4 -440 -474 -449 -474 -4 0 -18 39 -31 86 -13
+                                                                        47 -27 90 -30 96 -5 7 -39 5 -104 -6 -450 -77 -897 -10 -1305 194 -610 306
+                                                                        -1029 893 -1126 1576 -22 155 -22 421 1 569 64 429 251 828 529 1125 25 26 55
+                                                                        55 68 64 29 20 97 21 126 0z" />
+                                    <path d="M1416 3614 c-14 -14 -16 -124 -16 -1058 0 -998 1 -1044 18 -1059 17
+                                                                        -16 111 -17 1154 -17 1087 0 1136 1 1151 18 16 17 17 105 17 1063 0 800 -3
+                                                                        1048 -12 1057 -9 9 -279 12 -1154 12 -1025 0 -1144 -2 -1158 -16z m2204 -774
+                                                                        l0 -670 -1050 0 -1050 0 0 670 0 670 1050 0 1050 0 0 -670z m0 -870 l0 -80
+                                                                        -1050 0 -1050 0 0 80 0 80 1050 0 1050 0 0 -80z" />
+                                    <path d="M1947 3312 c-10 -10 -17 -30 -17 -45 0 -35 -17 -77 -43 -106 -27 -29
+                                                                        -93 -60 -128 -61 -55 0 -59 -16 -59 -258 0 -249 -1 -245 74 -256 24 -4 59 -17
+                                                                        78 -29 37 -25 78 -97 78 -138 0 -18 9 -35 27 -49 26 -20 30 -20 625 -18 580 3
+                                                                        600 4 614 22 8 11 14 32 14 46 0 40 41 112 78 137 19 12 54 25 78 29 75 11 74
+                                                                        7 74 258 0 203 -2 224 -18 239 -10 10 -29 17 -43 17 -31 1 -99 32 -121 56 -23
+                                                                        26 -48 87 -48 117 0 13 -8 31 -18 40 -17 15 -75 17 -624 17 -573 0 -606 -1
+                                                                        -621 -18z m696 -403 c46 -50 32 -125 -30 -154 -44 -21 -85 -12 -118 27 -33 39
+                                                                        -33 87 0 127 42 49 102 49 148 0z" />
+                                </g>
+                            </svg>
+                        </p>
+                    </div>
+                    <form action="#" onsubmit="startLoading()">
+                        <div class="row">
+                            <div class="col-6 col-lg-6 col-sm-6 col-md-6">
+                                <h6 class="text-center">Mutualpay</h6> <br>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="rbt-form-group">
+                                        <label for="firstname">Montant Souhaite</label>
+                                        <input id="nom" name="nom" type="text" value="{{ old('nom') }}"
+                                            class=" @error('nom') is-invalid @enderror" required>
+                                        @error('nom')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="rbt-form-group">
+                                        <label for="firstname">Numero tresorMoney</label>
+                                        <input id="numero" name="numero" type="tel" value="{{ old('numero') }}"
+                                            class=" @error('numero') is-invalid @enderror" required>
+                                        @error('numero')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-6 col-sm-6 col-md-6 text-center">
+                                <h6 class="text-center">Tresor Money</h6>
+                                <img id="loadingImage" src="{{ asset('assets/tremo.png') }}" alt="Logo Tremo">
+                            </div>
+                            <div class="col-12 justify-content-center text-center mt-3">
+                                <button type="submit" class="text-center rbt-btn btn-gradient">Envoyer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@push('js')
+    <script>
+        function startLoading() {
+            document.getElementById('loadingImage').classList.add('rotate');
+        }
+    </script>
+@endpush
