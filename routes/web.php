@@ -26,6 +26,7 @@ use App\Http\Controllers\MutualisteController;
 use App\Http\Controllers\TypeCompteController;
 use App\Http\Controllers\FacturationController;
 use App\Http\Controllers\ImageProjetController;
+use App\Http\Controllers\InscriptionController;
 use App\http\Controllers\Chat\MessageController;
 use App\Http\Controllers\TypeDocumentController;
 use App\Http\Controllers\TypePaiementController;
@@ -73,9 +74,17 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/detail-des-produits/{produitprojet}', 'detailProduitMutualiste')->name('mutualiste.detailproduit');
     Route::post('/Contact-traiter', 'traitementContact')->name('mutualistes.contacter');
     Route::get('/recu-automatique/{id}', 'generatePDF')->name('telecharger.recu');
+
+    // inscription
+    Route::get('/inscriptionPage', 'inscrit')->name('inscriptionPage');
+    Route::get('/resultatIdentification/{code}', 'resultatInscript')->name('resultatInscription');
+    Route::post('/traitementInscription', 'traitementInscript')->name('inscriptTraite');
+    Route::get('/creationAccesInscrits/{code}','validationMutualiteApresInscription')->name('creatAccesNewInscrits');
+    Route::post('/storeAccesInscription/{id}','creatAccesInscrip')->name('compte.creer');
 });
 Route::controller(ConnexionMutualisteController::class)->group(function () {
-Route::post('/connexion-mutualiste', 'connexionMutualiste')->name('connexion.mutualiste');});
+    Route::post('/connexion-mutualiste', 'connexionMutualiste')->name('connexion.mutualiste');
+});
 Route::post('/connexion-administrateur', [ConnexionAdministrateurController::class, 'connexionAdministrateur'])->name('connexion.administrateur');
 Route::post('/logout-user', [LoginController::class, 'logoutUser'])->name('logout.user');
 Route::controller(MutualisteController::class)->group(function () {
@@ -84,8 +93,8 @@ Route::controller(MutualisteController::class)->group(function () {
 })->middleware('verifierRoleUtilisateur:mutualiste');
 
 
-Route::controller(InteretServiceController::class)->group(function(){
-    Route::get('/recuperation-infoInteret/{serviceId}/{montant}','recuperation')->name('recup.interet');
+Route::controller(InteretServiceController::class)->group(function () {
+    Route::get('/recuperation-infoInteret/{serviceId}/{montant}', 'recuperation')->name('recup.interet');
 });
 
 Route::middleware('auth')->group(function () {
@@ -106,10 +115,8 @@ Route::middleware('auth')->group(function () {
                 // Route::get('', 'liste_projet_mutualiste')->name('');
                 Route::get('/chat-mutualiste', 'messageMutualiste')->name('message.mutualiste')->middleware('verifier.droitAdhesion');
                 Route::get('/chat-message/{administrateur}', 'voirMessage')->name('voir.message')->middleware('verifier.droitAdhesion');
-                Route::get('/resultat-Paiement/{codePaiement}','resultatPaiement')->name('resultat.paiement');
-                Route::get('/boutiqueMonetaire','boutiques')->name('boutique.index');
-
-
+                Route::get('/resultat-Paiement/{codePaiement}', 'resultatPaiement')->name('resultat.paiement');
+                Route::get('/boutiqueMonetaire', 'boutiques')->name('boutique.index');
             });
             // route des conversations  concernant la chat ( controller message)
             Route::controller(ConversationController::class)->group(function () {
@@ -124,22 +131,21 @@ Route::middleware('auth')->group(function () {
             Route::controller(DemandeAccompagnementController::class)->group(function () {
                 Route::get('/liste-accompagnement', 'listeDemandeAccompagnement')->name('liste.demandeaccompagnement')->middleware('verifier.droitAdhesion');
                 Route::get('/accompagnement-en-attente/{demandeAccompagnement}', 'accompagnementAttente')->name('accompagnement.attente')->middleware('verifier.droitAdhesion');
-                Route::get('/modifier-demandeAccompagnement/{id}','editDemandeMutualiste')->name('demandeaccompagnement.modifier');
-                Route::put('/demandeaccompagnement-modifier/{id}','miseAJourDemande')->name('modification.demandeaccompagnement');
-                Route::get('/detail-demandeaccompagnement/{id}','detaildemandeAccompagnement')->name('detail.demandeaccompagnement');
+                Route::get('/modifier-demandeAccompagnement/{id}', 'editDemandeMutualiste')->name('demandeaccompagnement.modifier');
+                Route::put('/demandeaccompagnement-modifier/{id}', 'miseAJourDemande')->name('modification.demandeaccompagnement');
+                Route::get('/detail-demandeaccompagnement/{id}', 'detaildemandeAccompagnement')->name('detail.demandeaccompagnement');
 
-                Route::get('/pageErrorService','pageErrorpret')->name('error.pret');
-                Route::post('paiementHubRemboursement-dette','remboursHub')->name('detteRembou.hub');
-                Route::post('/enregisterDocumentPaiement-pret','rembourDetteEnregiste')->name('enregis.pret');
+                Route::get('/pageErrorService', 'pageErrorpret')->name('error.pret');
+                Route::post('paiementHubRemboursement-dette', 'remboursHub')->name('detteRembou.hub');
+                Route::post('/enregisterDocumentPaiement-pret', 'rembourDetteEnregiste')->name('enregis.pret');
                 // les images
-                Route::get('/imagesDesPaiements-Pret/{id}','galeriImagePret')->name('imagesPaie.pret');
-
+                Route::get('/imagesDesPaiements-Pret/{id}', 'galeriImagePret')->name('imagesPaie.pret');
             });
 
             Route::controller(CotisationMutualisteController::class)->group(function () {
                 Route::get('/liste-cotisation', 'listeCotisationMutualiste')->name('Cotisation.mutualiste')->middleware('verifier.droitAdhesion');
                 Route::get('/resumeDesCotisations/{id}', 'detailCotisaMutualiste')->name('resume.cotisationMutual')->middleware('verifier.droitAdhesion');
-                Route::get('/traitementHubCotisation/{id}','paiementCotisations')->name('paiementCotisation.mutualiste')->middleware('verifier.droitAdhesion');
+                Route::get('/traitementHubCotisation/{id}', 'paiementCotisations')->name('paiementCotisation.mutualiste')->middleware('verifier.droitAdhesion');
             });
             Route::controller(MutualisteController::class)->group(function () {
                 // modification d'un mutualiste
@@ -149,7 +155,7 @@ Route::middleware('auth')->group(function () {
             });
 
             Route::controller(PaiementController::class)->group(function () {
-                Route::get('/paiement-adhesion', 'paiementAdhesion')->name('paiement.adhesion');// paiement droit d'adhesion
+                Route::get('/paiement-adhesion', 'paiementAdhesion')->name('paiement.adhesion'); // paiement droit d'adhesion
 
                 Route::get('/paiement-produit/{id}', 'paiementProduitFacturation')->name('paiement.produit'); // paiement de produit
 
@@ -164,14 +170,14 @@ Route::middleware('auth')->group(function () {
             Route::controller(ProjetMutualisteController::class)->group(function () {
                 Route::get('/affaire-detail/{projetMutualiste}', 'detailMutualisteProduitAcquis')->name('produitacquis.detail')->middleware('verifier.droitAdhesion');
                 Route::get('/paiements-listeaffaire/{projetMutualiste}', 'paiementProduitAcquis')->name('produitacquis.paiement')->middleware('verifier.droitAdhesion');
-                Route::get('/listeProjetAcquis','listesProdAcquis')->name('listeProd.acquisMu')->middleware('verifier.droitAdhesion'); // liste des projet acquis mutualiste
+                Route::get('/listeProjetAcquis', 'listesProdAcquis')->name('listeProd.acquisMu')->middleware('verifier.droitAdhesion'); // liste des projet acquis mutualiste
 
-                Route::get('/detailProduitAcquis/{id}','detailProjet')->name('prodAcquis.mutuID')->middleware('verifier.droitAdhesion');
-                Route::get('/espace-client/ficherPaiement','fichePaiement')->name('fichePaiement.mutualiste');
+                Route::get('/detailProduitAcquis/{id}', 'detailProjet')->name('prodAcquis.mutuID')->middleware('verifier.droitAdhesion');
+                Route::get('/espace-client/ficherPaiement', 'fichePaiement')->name('fichePaiement.mutualiste');
 
-                Route::post('/passeHubPaiProd','hubPaiemPro')->name('passeHub.paiement');
-                Route::get('/documents-paiement/{id}','viewGalleriPaiemnt')->name('docs.paiement');
-                Route::get('/paiement-detail/{id}','showPaiement')->name('paieLign.show');
+                Route::post('/passeHubPaiProd', 'hubPaiemPro')->name('passeHub.paiement');
+                Route::get('/documents-paiement/{id}', 'viewGalleriPaiemnt')->name('docs.paiement');
+                Route::get('/paiement-detail/{id}', 'showPaiement')->name('paieLign.show');
             });
 
             Route::controller(DemandeProduitController::class)->group(function () {
@@ -181,12 +187,9 @@ Route::middleware('auth')->group(function () {
             });
 
 
-            Route::controller(DocumentPaiementController::class)->group(function(){
-                Route::post('/infosPaiementProd','remplissageInfoPaie')->name('remp.infoPaiem');// infos de paiment d'un article a soumet cher admin
+            Route::controller(DocumentPaiementController::class)->group(function () {
+                Route::post('/infosPaiementProd', 'remplissageInfoPaie')->name('remp.infoPaiem'); // infos de paiment d'un article a soumet cher admin
             });
-
-
-
         });
     });
 
@@ -201,11 +204,11 @@ Route::middleware('auth')->group(function () {
             Route::get('/paiements-accompagnements', 'PaiementsProjets')->name('paiements.accompagnements');
             Route::get('/paiements-droits-adhesion', 'PaiementsDroitAdhesion')->name('paiements.droits.adhesion');
 
-            Route::get('/paiement-caisseFPM','caissePaiement')->name('paiements.caisse');
-            Route::get('/galeriesPaiement-Especes/{id}','documentPaiement')->name('galerie.docPaiement');
-            Route::get('/detailPaiement-cash/{id}','detailPaiementCaisse')->name('detail.paiementcash');
-            Route::post('/accepterPaiementCash/{id}','accepterPaiement')->name('accepter.paiementcash');
-            Route::post('/refuserPaiementCash/{id}','refuserPaiement')->name('refuser.paiementcash');
+            Route::get('/paiement-caisseFPM', 'caissePaiement')->name('paiements.caisse');
+            Route::get('/galeriesPaiement-Especes/{id}', 'documentPaiement')->name('galerie.docPaiement');
+            Route::get('/detailPaiement-cash/{id}', 'detailPaiementCaisse')->name('detail.paiementcash');
+            Route::post('/accepterPaiementCash/{id}', 'accepterPaiement')->name('accepter.paiementcash');
+            Route::post('/refuserPaiementCash/{id}', 'refuserPaiement')->name('refuser.paiementcash');
         });
     });
     Route::controller(MessageController::class)->group(function () {
@@ -257,6 +260,7 @@ Route::middleware('auth')->group(function () {
 
         'messages' => MessageController::class,
         'interetservices' => InteretServiceController::class,
+        'inscriptions' => InscriptionController::class,
     ]);
 
     Route::middleware('verifierRoleUtilisateur:super-administrateur,administrateur')->group(function () {
@@ -309,17 +313,19 @@ Route::middleware('auth')->group(function () {
             Route::get('redevance-periodes/{redevanceId}', 'getRedevancePeriodes')->name('redevance.periodes');
         });
         Route::get('/detailPaiementCotis/{idCoti}/{idMutual}', [CotisationMutualisteController::class, 'ligneDetailPaiement'])
-    ->name('lignePaiement.cotis');
+            ->name('lignePaiement.cotis');
 
-        Route::controller(InteretServiceController::class)->group(function(){
-            Route::get('/listes-InteretsService/{id}','indexListe')->name('interetService.liste');
-            Route::get('/creation-InteretService/{id}','createInteret')->name('ajouter.interetService');
+        Route::controller(InteretServiceController::class)->group(function () {
+            Route::get('/listes-InteretsService/{id}', 'indexListe')->name('interetService.liste');
+            Route::get('/creation-InteretService/{id}', 'createInteret')->name('ajouter.interetService');
         });
-        Route::controller(DemandeAccompagnementController::class)->group(function(){
-            Route::get('/detail-Accompagnement/{id}','detail')->name('demandeAccompagnement.detail');
-            Route::post('/accepterDemande-pret/{id}','accepterDemande')->name('accepter.demandePret');
-            Route::post('/refuserDemande-Pret/{id}','refusDemandePret')->name('refus.pretDemander');
+        Route::controller(DemandeAccompagnementController::class)->group(function () {
+            Route::get('/detail-Accompagnement/{id}', 'detail')->name('demandeAccompagnement.detail');
+            Route::post('/accepterDemande-pret/{id}', 'accepterDemande')->name('accepter.demandePret');
+            Route::post('/refuserDemande-Pret/{id}', 'refusDemandePret')->name('refus.pretDemander');
+        });
 
-        });
+        Route::put('/inscriptions/{id}/approuver', [InscriptionController::class, 'approuver'])->name('inscriptions.approuver');
+        Route::put('/inscriptions/{id}/rejeter', [InscriptionController::class, 'rejeter'])->name('inscriptions.rejeter');
     });
 });

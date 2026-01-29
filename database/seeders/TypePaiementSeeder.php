@@ -28,5 +28,9 @@ class TypePaiementSeeder extends Seeder
         TypePaiement::create([
             'libelle' => "Projet"
         ]);
+        
+        TypePaiement::create([
+            'libelle' => "Carte Membre"
+        ]);
     }
 }

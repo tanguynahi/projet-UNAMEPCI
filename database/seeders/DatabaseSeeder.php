@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\TaxeSeeder;
 use Database\Seeders\CorpsSeeder;
 use Database\Seeders\GradeSeeder;
 use Database\Seeders\VilleSeeder;
@@ -15,11 +16,14 @@ use Database\Seeders\ServiceSeeder;
 use Database\Seeders\DirectionSeeder;
 use Database\Seeders\ParametreSeeder;
 use Database\Seeders\TypePieceSeeder;
+use Database\Seeders\CotisationSeeder;
 use Database\Seeders\roles\RoleSeeder;
+use Database\Seeders\SpecialiteSeeder;
 use Database\Seeders\TypeCompteSeeder;
 use Database\Seeders\TypeDocumentSeeder;
 use Database\Seeders\TypePaiementSeeder;
 use Database\Seeders\AdministrateurSeeder;
+use Database\Seeders\FormeJuridiqueSeeder;
 use Database\Seeders\permissions\PermissionSeeder;
 use Database\Seeders\assign_permissions_to_role\AssignPermissionsToAdmin;
 use Database\Seeders\assign_permissions_to_role\AssignPermissionsToMutualiste;
@@ -82,8 +86,8 @@ class DatabaseSeeder extends Seeder
         //create type compte
         $this->call(TypeCompteSeeder::class);
 
-         // create compte
-         $this->call(CompteSeeder::class);
+        // create compte
+        $this->call(CompteSeeder::class);
 
         //create type payment
         $this->call(TypePaiementSeeder::class);
@@ -97,6 +101,9 @@ class DatabaseSeeder extends Seeder
         // create paiement
         $this->call(PaiementSeeder::class);
 
-
+        $this->call(SpecialiteSeeder::class);
+        $this->call(FormeJuridiqueSeeder::class);
+        $this->call(TaxeSeeder::class);
+        $this->call(CotisationSeeder::class);
     }
 }

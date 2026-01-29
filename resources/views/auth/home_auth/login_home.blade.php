@@ -26,18 +26,26 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-
-
                             </div>
+
+                            <!-- Champ mot de passe avec bouton oeil -->
                             <div>
                                 <label>Mot de passe *</label>
-                                <input name="password" type="password" id="password"
-                                    class="@error('password') is-invalid @enderror " value="{{ old('password') }}"
-                                    minlength="6" required>
+                                <div class="password-input-wrapper" style="position: relative;">
+                                    <input name="password" type="password" id="password"
+                                        class="@error('password') is-invalid @enderror"
+                                        value="{{ old('password') }}" minlength="6" required
+                                        style="padding-right: 40px;">
+                                    <button type="button" id="togglePassword"
+                                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                                        <i class="feather-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
                                 @error('password')
                                     <strong>{{ $message }}</strong>
                                 @enderror
                             </div>
+
                             <div class="row mb--30">
                                 <div class="col-lg-6">
                                     <div class="rbt-checkbox">
@@ -70,6 +78,62 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <style>
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper input {
+            width: 100%;
+            padding-right: 40px !important;
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        #togglePassword:hover {
+            color: #333;
+        }
+
+        #togglePassword i {
+            font-size: 18px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    // Toggle le type d'input
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Changer l'icône
+                    if (type === 'text') {
+                        eyeIcon.classList.remove('feather-eye');
+                        eyeIcon.classList.add('feather-eye-off');
+                    } else {
+                        eyeIcon.classList.remove('feather-eye-off');
+                        eyeIcon.classList.add('feather-eye');
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

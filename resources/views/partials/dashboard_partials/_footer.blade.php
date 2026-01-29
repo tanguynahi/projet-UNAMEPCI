@@ -6,7 +6,7 @@
             </script> <a href="#" target="_blank" title="LKM DIGITAL">BMI WFS</a>, Tous droits
             réservés.</p>
         <a href="#" class="col-md-4 d-flex align-items-center justify-content-center my-3 my-lg-0 me-lg-auto">
-        <img class="img-responsive" src="" alt="Logo FPM" width="100"
+        <img class="img-responsive" src="" alt="UNAMEPCI " width="100"
                 height="50">
         </a>
         <ul class="nav col-md-4 justify-content-center justify-content-lg-end">

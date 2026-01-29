@@ -12,14 +12,14 @@
     <div class="container-fluid">
         <!-- sidebar: title-->
         <div class="title-text d-flex align-items-center mb-4 mt-1">
-            <h5 class="sidebar-title mb-0 flex-grow-1"><span class="sm-txt">FPM</span> <span>MUTUALPAY</span></h5>
+            <h5 class="sidebar-title mb-0 flex-grow-1"><span class="sm-txt">UNAMEPCI</span> <span></span></h5>
 
         </div>
         <!-- sidebar: menu list -->
         <div class="main-menu flex-grow-1">
             <ul class="menu-list">
-                <li class="divider py-2 lh-sm"><span class="small">TABLEAU DE BORD </span><br> <small
-                        class="text-muted"> </small></li>
+                <li class="divider py-2 lh-sm"><span class="small">TABLEAU DE BORD </span><br> <small class="text-muted">
+                    </small></li>
                 <li>
                     <a class="m-link  @if (Route::currentRouteName() == 'dashboard') active @endif" href="{{ route('dashboard') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
@@ -32,6 +32,18 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="m-link" href="{{ route('inscriptions.index') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
+                            <g clip-path="url(#clip0_136_317)">
+                                <path class="fill-secondary"
+                                    d="M6.5 1C6.10218 1 5.72064 1.15804 5.43934 1.43934C5.15804 1.72064 5 2.10218 5 2.5V3H1.5C1.10218 3 0.720644 3.15804 0.43934 3.43934C0.158035 3.72064 0 4.10218 0 4.5L0 5.884L7.614 7.914C7.86693 7.98135 8.13307 7.98135 8.386 7.914L16 5.884V4.5C16 4.10218 15.842 3.72064 15.5607 3.43934C15.2794 3.15804 14.8978 3 14.5 3H11V2.5C11 2.10218 10.842 1.72064 10.5607 1.43934C10.2794 1.15804 9.89782 1 9.5 1H6.5ZM6.5 2H9.5C9.63261 2 9.75979 2.05268 9.85355 2.14645C9.94732 2.24021 10 2.36739 10 2.5V3H6V2.5C6 2.36739 6.05268 2.24021 6.14645 2.14645C6.24021 2.05268 6.36739 2 6.5 2Z" />
+                                <path
+                                    d="M0 13.5C0 13.8978 0.158035 14.2793 0.43934 14.5606C0.720644 14.8419 1.10218 15 1.5 15H14.5C14.8978 15 15.2794 14.8419 15.5607 14.5606C15.842 14.2793 16 13.8978 16 13.5V6.84998L8.129 8.94698C8.04448 8.96955 7.95552 8.96955 7.871 8.94698L0 6.84998V13.5Z" />
+                        </svg>
+                        <span class="ms-2">Inscriptions</span>
+                    </a>
+                </li>
                 <li>
                     <a class="m-link" href="{{ route('demandeproduits.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
@@ -46,8 +58,16 @@
                 </li>
 
                 <li>
-                    <a class="m-link @if (in_array(Route::currentRouteName(), ['message.administrateur', 'messages.index','message.nouveauMutualiste','messages.edit','message.nouveauAutre','message.editeparticulier','discultion.emailParticulier'])) active @endif " href="{{ route('messages.index') }}"
-                    >
+                    <a class="m-link @if (in_array(Route::currentRouteName(), [
+                            'message.administrateur',
+                            'messages.index',
+                            'message.nouveauMutualiste',
+                            'messages.edit',
+                            'message.nouveauAutre',
+                            'message.editeparticulier',
+                            'discultion.emailParticulier',
+                        ])) active @endif "
+                        href="{{ route('messages.index') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
                             <g clip-path="url(#clip0_136_317)">
                                 <path class="fill-secondary"
@@ -122,8 +142,7 @@
 
                 <li>
                     <a class="m-link" href="{{ route('projets.index') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor"
-                            viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
                             <path
                                 d="M15.4986 3L15.4586 3.87C15.7225 4.25355 15.8435 4.71745 15.8006 5.181L15.1636 12.181C15.1185 12.6779 14.8892 13.14 14.5208 13.4766C14.1525 13.8131 13.6716 13.9998 13.1726 14H6.99863V13H13.1726C13.4221 12.9998 13.6625 12.9063 13.8466 12.7379C14.0307 12.5696 14.1452 12.3385 14.1676 12.09L14.8046 5.09C14.8171 4.95165 14.8007 4.81221 14.7563 4.68058C14.7119 4.54894 14.6406 4.42799 14.5469 4.32544C14.4532 4.22289 14.3392 4.14099 14.212 4.08496C14.0849 4.02893 13.9475 3.99999 13.8086 4H2.18863C2.04972 3.99999 1.91232 4.02893 1.78521 4.08496C1.6581 4.14099 1.54406 4.22289 1.45035 4.32544C1.35664 4.42799 1.28533 4.54894 1.24096 4.68058C1.19659 4.81221 1.18013 4.95165 1.19263 5.09L1.45863 8H0.453629L0.19763 5.181C0.172486 4.9043 0.205268 4.6254 0.293886 4.36208C0.382505 4.09876 0.525016 3.85678 0.712335 3.65159C0.899653 3.4464 1.12767 3.28248 1.38185 3.17029C1.63603 3.05811 1.91079 3.00011 2.18863 3H6.17063C6.70102 2.99989 7.20964 2.7891 7.58463 2.414L8.41263 1.586C8.78762 1.2109 9.29624 1.00011 9.82663 1H13.4986C14.0291 1 14.5378 1.21071 14.9128 1.58579C15.2879 1.96086 15.4986 2.46957 15.4986 3V3ZM9.82663 2C9.56144 2.00006 9.30712 2.10545 9.11963 2.293L8.41263 3H13.8086C14.0486 3 14.2786 3.042 14.4916 3.12L14.4986 2.98C14.4934 2.71826 14.3857 2.46902 14.1988 2.28579C14.0118 2.10255 13.7604 1.99995 13.4986 2H9.82663V2Z">
                             </path>
@@ -156,8 +175,7 @@
                 </li> --}}
                 <li>
                     <a class="m-link" href="{{ route('demandeaccompagnements.index') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor"
-                            viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M0 3H16V4H0V3Z" />
                             <path d="M9 1H14V6H9V1Z" />
                             <path d="M0 13H16V14H0V13Z" />

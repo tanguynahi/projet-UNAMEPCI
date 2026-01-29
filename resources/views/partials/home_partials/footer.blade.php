@@ -8,7 +8,7 @@
                             <a href="{{ route('accueil') }}">
                                 {{-- <img src="{{ asset('assets/home/images/logo/mutualplay.jpg') }}" alt="logo mutualplay"> --}}
                                 <h3 style="color: white;">
-                                    {{ $parametre->nom_site_web }}
+                                    {{ $parametre->nom_site_web ?? 'UNAMEPCI' }}
                                 </h3>
                             </a>
                         </div>
@@ -66,7 +66,7 @@
                 <div class="col-lg-4 col-md-4 col-sm-4 col-12">
                     <div class="footer-widget">
                         <p class="description">Besoin d'information fiables et pratiques qui vous concernent?<br>
-                            Abonnez-vous à la lettre d'information de votre mutuelle</p>
+                            Abonnez-vous à la lettre d'information de UNAMEPCI</p>
                         <div class="form-group mb--0">
                             <button class="rbt-btn rbt-switch-btn btn-gradient radius-round btn-sm" type="submit">
                                 <span data-text="S'abonner a la Newsletter">S'abonner a la Newsletter</span>

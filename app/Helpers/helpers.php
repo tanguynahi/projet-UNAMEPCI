@@ -1,10 +1,12 @@
 <?php
 // use DateTime;
 use App\Models\User;
+use App\Models\Inscription;
 use Illuminate\Support\Str;
 use App\Models\DroitAdhesion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -948,4 +950,145 @@ function salutation(): string
 {
     $heure = date('H');
     return ($heure >= 18 || $heure < 6) ? 'Bonsoir' : 'Bonjour';
+}
+
+
+
+function genereCodeInscription($length = 10)
+{
+    $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    $maxAttempts = 10; // Nombre maximal de tentatives pour générer un code unique
+    $attempt = 0;
+
+    do {
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        // Vérifier si le code généré existe déjà en base de données
+        $existingCode = Inscription::where('code', $randomString)->exists();
+
+        $attempt++;
+
+        if ($attempt > $maxAttempts) {
+            throw new \Exception("Impossible de générer un code unique après $maxAttempts tentatives.");
+        }
+    } while ($existingCode);
+
+    return $randomString;
+}
+
+function createFichiers($folder, $buff, $ext, $fileName = null)
+{
+
+    $urlPath = "";
+    $ext = str_replace('.', '', $ext);
+
+    if (!empty($buff) && !empty($ext)) {
+
+        // Configuration
+        $nextcloudUrl = env('NEXTCLOUD_BASE_URI');
+        $username = env('NEXTCLOUD_USERNAME');
+        $password = env('NEXTCLOUD_PASSWORD');
+
+        $nextcloudUrl = $nextcloudUrl . $folder;
+
+        if (empty($fileName)) {
+            $now = Carbon::now();
+            // heure avec les millièmes de secondes
+            $formattedTimeMilli = $now->format('Hisv');
+            $fileName = date('Ymd') . $formattedTimeMilli . '.' . $ext;
+        }
+        $file = $buff; //base64_decode($buff);
+
+        // Chemin complet de l'URL WebDAV avec le nom de fichier
+        $remoteFilePath = $nextcloudUrl . $fileName;
+
+        // Lire le fichier local à uploader
+        $fileContents = file_get_contents($file->getPathname());
+
+        // Initialiser cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $remoteFilePath);
+        curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // ⚠️ Désactivé pour développement
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // ⚠️ Désactivé pour développement
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // ✅ Suivre les redirections 301/302
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 5); // Maximum 5 redirections
+        curl_setopt($ch, CURLOPT_POSTREDIR, 3); // ✅ CRITIQUE : Garder le body (POST/PUT) lors des redirections 301/302/303
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContents);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: ' . $file->getMimeType(), // Type MIME du fichier
+            'Content-Length: ' . strlen($fileContents), // ✅ Taille du fichier
+            'OC-Checksum: SHA256:' . hash('sha256', $fileContents) // Vérification d'intégrité
+        ]);
+
+        // Exécuter la requête
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        $effectiveUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL); // URL finale après redirections
+        curl_close($ch);
+
+        // Vérifier si l'upload a réussi (codes 2xx = succès)
+        if ($httpCode >= 200 && $httpCode < 300) {
+            $urlPath = $fileName;
+            Log::info("Fichier uploadé avec succès vers Nextcloud", [
+                'filename' => $fileName,
+                'http_code' => $httpCode,
+                'folder' => $folder,
+                'url_initiale' => $remoteFilePath,
+                'url_finale' => $effectiveUrl
+            ]);
+        } else {
+            // Logger l'erreur avec tous les détails
+            Log::error("Échec de l'upload vers Nextcloud", [
+                'filename' => $fileName,
+                'http_code' => $httpCode,
+                'curl_error' => $curlError,
+                'response' => $response,
+                'url_initiale' => $remoteFilePath,
+                'url_finale' => $effectiveUrl,
+                'folder' => $folder
+            ]);
+            throw new \Exception("Échec de l'upload du fichier vers le cloud. Code HTTP: $httpCode. Erreur: $curlError");
+        }
+    }
+    return $urlPath;
+}
+
+
+// function envoyerMessageMutualiste($mutualiste, $lienDeValidation)
+// {
+
+//     $message = "Bonjour, Votre compte MAE-CI a ete creer avec succes. Login: $mutualiste->email,";
+
+//     $mutualiste->update(['message' => $message]);
+//     return $message;
+// }
+
+function envoyerMessageMutualiste($mutualiste, $lienDeValidation)
+{
+    $message = "Bonjour $mutualiste->nom, votre inscription MAE-CI a été validée. " .
+        "Cliquez ici pour créer vos accès : $lienDeValidation ";
+
+    $mutualiste->update([
+        'message' => $message
+    ]);
+
+    return $message;
+}
+
+function appelApiSMS()
+{
+    $exe = 'REEL';
+    $exe = 'LOCAL';
+    if ($exe == 'REEL') {
+        return "https://rest-ws.artisanconnecte.net/api/EnvoiMessage";
+    } else {
+        return "http://rest-ws.artisanconnecte.net/api/EnvoiMessage";
+    }
 }

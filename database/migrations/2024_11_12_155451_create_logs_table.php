@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('ip');
             $table->string('module');
             $table->string('navigator');
-            $table->string('action');
+            $table->text('action');
             $table->string('pays');
             $table->string('codepays');
             $table->string('url');

@@ -16,7 +16,7 @@ class ParametreSeeder extends Seeder
         Parametre::create([
             'administrateur_id' => 1,
             'mode_theme' => 'light',
-            'nom_site_web' => 'MUTUALPAY',
+            'nom_site_web' => 'UNAMEPCI',
         ]);
     }
 }
