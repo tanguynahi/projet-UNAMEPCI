@@ -539,6 +539,11 @@
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    @php
+                                        $extenCart = strtolower(
+                                            pathinfo($mutualiste->document_carte_inscript_ONMCI, PATHINFO_EXTENSION),
+                                        );
+                                    @endphp
                                     <div class="rbt-form-group">
                                         <label for="document_carte_inscript_ONMCI">Carte d'inscription ONMCI</label>
                                         <input id="document_carte_inscript_ONMCI" type="file"
@@ -546,10 +551,17 @@
                                             class=" @error('document_carte_inscript_ONMCI') is-invalid @enderror">
                                         @if ($mutualiste->document_carte_inscript_ONMCI)
                                             <div class="mt-2">
-                                                <a href="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}"
-                                                    target="_blank" class="text-primary">
-                                                    Voir le document actuel
-                                                </a>
+                                                @if ($extenCart == 'pdf')
+                                                    <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($mutualiste->document_carte_inscript_ONMCI)]) }}"
+                                                        target="_blank" class="document-link">
+                                                        <i class="fa fa-eye me-1"></i> Voir le document actuel
+                                                    </a>
+                                                @elseif (in_array($extenCart, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                                    <a href="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}"
+                                                        target="_blank" class="text-primary">
+                                                        Voir le document actuel
+                                                    </a>
+                                                @endif
                                             </div>
                                         @endif
                                         @error('document_carte_inscript_ONMCI')
@@ -924,6 +936,11 @@
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    @php
+                                        $extenCouver = strtolower(
+                                            pathinfo($mutualiste->document_autorisation_ouverture, PATHINFO_EXTENSION),
+                                        );
+                                    @endphp
                                     <div class="rbt-form-group">
                                         <label for="document_autorisation_ouverture">Document autorisation
                                             d'ouverture</label>
@@ -932,10 +949,17 @@
                                             class=" @error('document_autorisation_ouverture') is-invalid @enderror">
                                         @if ($mutualiste->document_autorisation_ouverture)
                                             <div class="mt-2">
-                                                <a href="{{ asset($mutualiste->document_autorisation_ouverture) }}"
-                                                    target="_blank" class="text-primary">
-                                                    Voir le document actuel
-                                                </a>
+                                                @if ($extenCouver == 'pdf')
+                                                    <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($mutualiste->document_autorisation_ouverture)]) }}"
+                                                        target="_blank" class="document-link">
+                                                        <i class="fa fa-eye me-1"></i> Voir le document actuel
+                                                    </a>
+                                                @elseif (in_array($extenCouver, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                                    <a href="{{ asset($mutualiste->document_autorisation_ouverture) }}"
+                                                        target="_blank" class="text-primary">
+                                                        Voir le document actuel
+                                                    </a>
+                                                @endif
                                             </div>
                                         @endif
                                         @error('document_autorisation_ouverture')

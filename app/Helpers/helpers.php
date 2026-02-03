@@ -1087,6 +1087,7 @@ function createFichiers($folder, $buff, $ext, $fileName = null)
 }
 
 
+
 // function envoyerMessageMutualiste($mutualiste, $lienDeValidation)
 // {
 
@@ -1135,4 +1136,10 @@ function apiHttp($lien)
     } else {
         return str_replace('https', 'http', $lien);
     }
+}
+
+
+function nonDossierCloud()
+{
+    return "DOCSLABELIS";
 }

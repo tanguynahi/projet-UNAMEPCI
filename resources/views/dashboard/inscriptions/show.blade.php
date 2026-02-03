@@ -516,14 +516,15 @@
                             @if ($inscription->avatar)
                                 <div class="col-md-3 col-sm-6 info-item">
                                     <span class="info-label">Photo profil:</span><br>
-                                    {{-- <a href="{{ asset($inscription->avatar) }}" target="_blank" class="document-link">
-                                        <i class="fa fa-eye me-1"></i>Voir
-                                    </a> --}}
 
                                     @if ($extensi == 'pdf')
-                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->avatar)]) }}"
+                                        {{-- <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->avatar)]) }}"
                                             target="_blank" class="document-link">
                                             <i class="fas fa-eye me-1"></i> Voir
+                                        </a> --}}
+                                        <a href="{{ asset($inscription->avatar) }}" target="_blank"
+                                            class="document-link">
+                                            <i class="fa fa-eye me-1"></i>Voir
                                         </a>
                                     @elseif (in_array($extensi, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
                                         <img src="{{ asset($inscription->avatar) }}" alt="avatar "
@@ -546,9 +547,13 @@
                                         <i class="fa fa-eye me-1"></i>Voir
                                     </a> --}}
                                     @if ($exten == 'pdf')
-                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->photo_couverture)]) }}"
+                                        {{-- <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->photo_couverture)]) }}"
                                             target="_blank" class="document-link">
                                             <i class="fas fa-eye me-1"></i> Voir
+                                        </a> --}}
+                                        <a href="{{ asset($inscription->photo_couverture) }}" target="_blank"
+                                            class="document-link">
+                                            <i class="fa fa-eye me-1"></i>Voir
                                         </a>
                                     @elseif (in_array($exten, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
                                         <img src="{{ asset($inscription->photo_couverture) }}" alt="photo_couverture "
@@ -557,12 +562,26 @@
                                 </div>
                             @endif
                             @if ($inscription->pieces_joints_recto)
+                                @php
+                                    $extenRect = strtolower(
+                                        pathinfo($inscription->pieces_joints_recto, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
                                 <div class="col-md-3 col-sm-6 info-item">
                                     <span class="info-label">Pièce recto:</span><br>
-                                    <a href="{{ asset($inscription->pieces_joints_recto) }}" target="_blank"
+                                    {{-- <a href="{{ asset($inscription->pieces_joints_recto) }}" target="_blank"
                                         class="document-link">
                                         <i class="fa fa-eye me-1"></i>Voir
-                                    </a>
+                                    </a> --}}
+                                    @if ($extenRect == 'pdf')
+                                        <a href="{{ asset($inscription->pieces_joints_recto) }}" target="_blank"
+                                            class="document-link">
+                                            <i class="fa fa-eye me-1"></i>Voir
+                                        </a>
+                                    @elseif (in_array($extenRect, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($inscription->pieces_joints_recto) }}"
+                                            alt="pieces_joints_recto " style=" width:50px; height:50px;">
+                                    @endif
 
                                     {{-- <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->lien_image)]) }}"
                                         target="_blank" class="document-link">
@@ -571,39 +590,98 @@
                                 </div>
                             @endif
                             @if ($inscription->pieces_joints_verso)
+                                @php
+                                    $extenVerso = strtolower(
+                                        pathinfo($inscription->pieces_joints_verso, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
                                 <div class="col-md-3 col-sm-6 info-item">
                                     <span class="info-label">Pièce verso:</span><br>
-                                    <a href="{{ asset($inscription->pieces_joints_verso) }}" target="_blank"
+                                    {{-- <a href="{{ asset($inscription->pieces_joints_verso) }}" target="_blank"
                                         class="document-link">
                                         <i class="fa fa-eye me-1"></i>Voir
-                                    </a>
+                                    </a> --}}
+                                    @if ($extenVerso == 'pdf')
+                                        <a href="{{ asset($inscription->pieces_joints_verso) }}" target="_blank"
+                                            class="document-link">
+                                            <i class="fa fa-eye me-1"></i>Voir
+                                        </a>
+                                    @elseif (in_array($extenVerso, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($inscription->pieces_joints_verso) }}"
+                                            alt="pieces_joints_verso " style=" width:50px; height:50px;">
+                                    @endif
                                 </div>
                             @endif
                             @if ($inscription->document_carte_inscript_ONMCI)
+                                @php
+                                    $extenCart = strtolower(
+                                        pathinfo($inscription->document_carte_inscript_ONMCI, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
                                 <div class="col-md-3 col-sm-6 info-item">
                                     <span class="info-label">Carte ONMCI:</span><br>
-                                    <a href="{{ asset($inscription->document_carte_inscript_ONMCI) }}" target="_blank"
+                                    {{-- <a href="{{ asset($inscription->document_carte_inscript_ONMCI) }}" target="_blank"
                                         class="document-link">
                                         <i class="fa fa-eye me-1"></i>Voir
-                                    </a>
+                                    </a> --}}
+
+                                    @if ($extenCart == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->document_carte_inscript_ONMCI)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenCart, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($inscription->document_carte_inscript_ONMCI) }}"
+                                            alt="document_carte_inscript_ONMCI " style=" width:50px; height:50px;">
+                                    @endif
                                 </div>
                             @endif
                             @if ($inscription->document_autorisation_ouverture)
+                                @php
+                                    $extenCouver = strtolower(
+                                        pathinfo($inscription->document_autorisation_ouverture, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
                                 <div class="col-md-3 col-sm-6 info-item">
                                     <span class="info-label">Autorisation:</span><br>
-                                    <a href="{{ asset($inscription->document_autorisation_ouverture) }}" target="_blank"
+                                    {{-- <a href="{{ asset($inscription->document_autorisation_ouverture) }}" target="_blank"
                                         class="document-link">
                                         <i class="fa fa-eye me-1"></i>Voir
-                                    </a>
+                                    </a> --}}
+
+                                    @if ($extenCouver == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->document_autorisation_ouverture)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenCouver, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($inscription->document_autorisation_ouverture) }}"
+                                            alt="document_autorisation_ouverture " style=" width:50px; height:50px;">
+                                    @endif
                                 </div>
                             @endif
                             @if ($inscription->photo_identite_1)
+                                @php
+                                    $extenPiece = strtolower(
+                                        pathinfo($inscription->photo_identite_1, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
                                 <div class="col-md-6 col-sm-6 info-item">
                                     <span class="info-label">deux (02 )Photos identités (Meme tirage):</span><br>
-                                    <a href="{{ asset($inscription->photo_identite_1) }}" target="_blank"
+                                    {{-- <a href="{{ asset($inscription->photo_identite_1) }}" target="_blank"
                                         class="document-link">
                                         <i class="fa fa-eye me-1"></i>Voir
-                                    </a>
+                                    </a> --}}
+
+                                    @if ($extenPiece == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($inscription->photo_identite_1)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenPiece, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($inscription->photo_identite_1) }}" alt="photo_identite_1 "
+                                            style=" width:50px; height:50px;">
+                                    @endif
                                 </div>
                             @endif
                         </div>

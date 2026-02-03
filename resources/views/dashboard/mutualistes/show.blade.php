@@ -452,15 +452,7 @@
                                 </div>
                             @endif
 
-                            @if ($mutualiste->photo_identite_1)
-                                <div class="col-md-3">
-                                    <label class="form-label text-muted small d-block mb-2">Photo d'identité</label>
-                                    <a href="{{ asset($mutualiste->photo_identite_1) }}" target="_blank">
-                                        <img src="{{ asset($mutualiste->photo_identite_1) }}" alt="Photo identité"
-                                            class="img-thumbnail document-preview">
-                                    </a>
-                                </div>
-                            @endif
+
 
                             @if ($mutualiste->photo_couverture)
                                 <div class="col-md-3">
@@ -471,40 +463,96 @@
                                     </a>
                                 </div>
                             @endif
-
-                            @if ($mutualiste->document_carte_inscript_ONMCI)
-                                <div class="col-md-3">
-                                    <label class="form-label text-muted small d-block mb-2">Carte d'inscription
-                                        ONMCI</label>
-                                    <a href="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}" target="_blank">
-                                        <img src="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}"
-                                            alt="Carte ONMCI" class="img-thumbnail document-preview">
-                                    </a>
-                                </div>
-                            @endif
-
-                            @if ($mutualiste->document_autorisation_ouverture)
-                                <div class="col-md-3">
-                                    <label class="form-label text-muted small d-block mb-2">Autorisation
-                                        d'ouverture</label>
-                                    <a href="{{ asset($mutualiste->document_autorisation_ouverture) }}" target="_blank">
-                                        <img src="{{ asset($mutualiste->document_autorisation_ouverture) }}"
-                                            alt="Autorisation ouverture" class="img-thumbnail document-preview">
-                                    </a>
-                                </div>
-                            @endif
-
                             @if ($mutualiste->signature)
                                 <div class="col-md-3">
                                     <label class="form-label text-muted small d-block mb-2">Signature</label>
                                     <div class="signature-container">
                                         <a href="{{ asset($mutualiste->signature) }}" target="_blank">
                                             <img src="{{ asset($mutualiste->signature) }}" alt="Signature"
-                                                class="img-fluid document-preview">
+                                                class="img-fluid document-preview" style="height: 100px; width:100px;">
                                         </a>
                                     </div>
                                 </div>
                             @endif
+                            @if ($mutualiste->photo_identite_1)
+                                @php
+                                    $extenPiece = strtolower(
+                                        pathinfo($mutualiste->photo_identite_1, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small d-block mb-2">deux (02 )Photos identités
+                                        (Meme tirage):</label>
+                                    {{-- <a href="{{ asset($mutualiste->photo_identite_1) }}" target="_blank">
+                                        <img src="{{ asset($mutualiste->photo_identite_1) }}" alt="Photo identité"
+                                            class="img-thumbnail document-preview">
+                                    </a> --}}
+
+                                    @if ($extenPiece == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($mutualiste->photo_identite_1)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenPiece, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($mutualiste->photo_identite_1) }}" alt="photo_identite_1 "
+                                            style=" width:50px; height:50px;">
+                                    @endif
+                                </div>
+                            @endif
+
+                            @if ($mutualiste->document_carte_inscript_ONMCI)
+                                @php
+                                    $extenCart = strtolower(
+                                        pathinfo($mutualiste->document_carte_inscript_ONMCI, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small d-block mb-2">Carte d'inscription
+                                        ONMCI</label>
+                                    {{-- <a href="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}" target="_blank">
+                                        <img src="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}"
+                                            alt="Carte ONMCI" class="img-thumbnail document-preview">
+                                    </a> --}}
+                                    @if ($extenCart == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($mutualiste->document_carte_inscript_ONMCI)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenCart, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($mutualiste->document_carte_inscript_ONMCI) }}"
+                                            alt="document_carte_inscript_ONMCI " style=" width:50px; height:50px;">
+                                    @endif
+                                </div>
+                            @endif
+
+                            @if ($mutualiste->document_autorisation_ouverture)
+                                @php
+                                    $extenCouver = strtolower(
+                                        pathinfo($mutualiste->document_autorisation_ouverture, PATHINFO_EXTENSION),
+                                    );
+                                @endphp
+                                <div class="col-md-3">
+                                    <label class="form-label text-muted small d-block mb-2">Autorisation
+                                        d'ouverture</label>
+                                    {{-- <a href="{{ asset($mutualiste->document_autorisation_ouverture) }}" target="_blank">
+                                        <img src="{{ asset($mutualiste->document_autorisation_ouverture) }}"
+                                            alt="Autorisation ouverture" class="img-thumbnail document-preview">
+                                    </a> --}}
+
+                                    @if ($extenCouver == 'pdf')
+                                        <a href="{{ route('visualise.pdf', ['fichier' => lienPdf($mutualiste->document_autorisation_ouverture)]) }}"
+                                            target="_blank" class="document-link">
+                                            <i class="fa fa-eye me-1"></i> Voir
+                                        </a>
+                                    @elseif (in_array($extenCouver, ['jpg', 'jpeg', 'png', 'jfif', 'heic', 'heif', 'webp']))
+                                        <img src="{{ asset($mutualiste->document_autorisation_ouverture) }}"
+                                            alt="document_autorisation_ouverture " style=" width:50px; height:50px;">
+                                    @endif
+
+                                </div>
+                            @endif
+
+
                         </div>
                     </div>
                 </div>

@@ -91,7 +91,7 @@
                                                 {{-- <a href="{{ route('mutualistes.edit', $mutualiste->id) }}" id="EditAdmin"
                                                     class="btn btn-link btn-sm text-primary editIcon"
                                                     data-bs-target="#edit_admin" title="Modifier"><i
-                                                        class="fa fa-pencil"></i></a> --}}      
+                                                        class="fa fa-pencil"></i></a> --}}
 
                                                 @if (Auth::user()->hasRole('super-administrateur'))
                                                     <a href="#deleteModal{{ $mutualiste->id }}" id="DeleteMutualiste"

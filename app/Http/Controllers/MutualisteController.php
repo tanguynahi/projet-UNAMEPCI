@@ -399,21 +399,50 @@ class MutualisteController extends Controller
                 $request->photo_couverture->storeAs('images-mutualistes/couverture/', $cover);
                 $photo_couverture = 'src-files/images-mutualistes/couverture/' . $cover;
             }
-            if ($request->hasFile('photo_identite_1')) {
-                $cover = Carbon::now()->timestamp . '.' . $request->photo_identite_1->extension();
-                $request->photo_identite_1->storeAs('images-mutualistes/photo_identite_1/', $cover);
-                $photo_identite_1 = 'src-files/images-mutualistes/photo_identite_1/' . $cover;
+
+
+
+            // if ($request->hasFile('photo_identite_1')) {
+            //     $cover = Carbon::now()->timestamp . '.' . $request->photo_identite_1->extension();
+            //     $request->photo_identite_1->storeAs('images-mutualistes/photo_identite_1/', $cover);
+            //     $photo_identite_1 = 'src-files/images-mutualistes/photo_identite_1/' . $cover;
+            // }
+            // if ($request->hasFile('document_autorisation_ouverture')) {
+            //     $cover = Carbon::now()->timestamp . '.' . $request->document_autorisation_ouverture->extension();
+            //     $request->document_autorisation_ouverture->storeAs('images-mutualistes/document_autorisation_ouverture/', $cover);
+            //     $document_autorisation_ouverture = 'src-files/images-mutualistes/document_autorisation_ouverture/' . $cover;
+            // }
+            // if ($request->hasFile('document_carte_inscript_ONMCI')) {
+            //     $cover = Carbon::now()->timestamp . '.' . $request->document_carte_inscript_ONMCI->extension();
+            //     $request->document_carte_inscript_ONMCI->storeAs('images-mutualistes/document_carte_inscript_ONMCI/', $cover);
+            //     $document_carte_inscript_ONMCI = 'src-files/images-mutualistes/document_carte_inscript_ONMCI/' . $cover;
+            // }
+
+
+
+
+            if ($request->hasFile("document_autorisation_ouverture")) {
+                $file = $request->file("document_autorisation_ouverture");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $document_autorisation_ouverture = createFichiers("$folder/", $file, $file->extension());
+                }
             }
-            if ($request->hasFile('document_autorisation_ouverture')) {
-                $cover = Carbon::now()->timestamp . '.' . $request->document_autorisation_ouverture->extension();
-                $request->document_autorisation_ouverture->storeAs('images-mutualistes/document_autorisation_ouverture/', $cover);
-                $document_autorisation_ouverture = 'src-files/images-mutualistes/document_autorisation_ouverture/' . $cover;
+            if ($request->hasFile("document_carte_inscript_ONMCI")) {
+                $file = $request->file("document_carte_inscript_ONMCI");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $document_carte_inscript_ONMCI = createFichiers("$folder/", $file, $file->extension());
+                }
             }
-            if ($request->hasFile('document_carte_inscript_ONMCI')) {
-                $cover = Carbon::now()->timestamp . '.' . $request->document_carte_inscript_ONMCI->extension();
-                $request->document_carte_inscript_ONMCI->storeAs('images-mutualistes/document_carte_inscript_ONMCI/', $cover);
-                $document_carte_inscript_ONMCI = 'src-files/images-mutualistes/document_carte_inscript_ONMCI/' . $cover;
+            if ($request->hasFile("photo_identite_1")) {
+                $file = $request->file("photo_identite_1");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $photo_identite_1 = createFichiers("$folder/", $file, $file->extension());
+                }
             }
+
             if ($request->hasFile('pieces_joints_verso')) {
                 $cover = Carbon::now()->timestamp . '.' . $request->pieces_joints_verso->extension();
                 $request->pieces_joints_verso->storeAs('images-mutualistes/pieces_joints_verso/', $cover);
@@ -722,10 +751,36 @@ class MutualisteController extends Controller
                 'photo_couverture' => 'images-mutualistes/couverture',
                 'pieces_joints_recto' => 'images-mutualistes/pieces',
                 'pieces_joints_verso' => 'images-mutualistes/pieces',
-                'document_carte_inscript_ONMCI' => 'images-mutualistes/documents',
-                'document_autorisation_ouverture' => 'images-mutualistes/documents',
-                'photo_identite_1' => 'images-mutualistes/identite'
             ];
+            // 'document_carte_inscript_ONMCI' => 'images-mutualistes/documents',
+            // 'document_autorisation_ouverture' => 'images-mutualistes/documents',
+            // 'photo_identite_1' => 'images-mutualistes/identite'
+
+
+
+
+            // pour les ficher du cloud
+            if ($request->hasFile("document_autorisation_ouverture")) {
+                $file = $request->file("document_autorisation_ouverture");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $mutualiste->document_autorisation_ouverture = createFichiers("$folder/", $file, $file->extension());
+                }
+            }
+            if ($request->hasFile("document_carte_inscript_ONMCI")) {
+                $file = $request->file("document_carte_inscript_ONMCI");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $mutualiste->document_carte_inscript_ONMCI = createFichiers("$folder/", $file, $file->extension());
+                }
+            }
+            if ($request->hasFile("photo_identite_1")) {
+                $file = $request->file("photo_identite_1");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $mutualiste->photo_identite_1 = createFichiers("$folder/", $file, $file->extension());
+                }
+            }
 
             // Gestion de chaque fichier
             foreach ($fileFields as $field => $folder) {
@@ -778,7 +833,7 @@ class MutualisteController extends Controller
             $mutualiste->statut_emploi = htmlspecialchars($request->statut_emploi);
             $mutualiste->domaine_activite = htmlspecialchars($request->domaine_activite);
             $mutualiste->date_recrutement = $request->date_recrutement;
-       
+
             $mutualiste->sigle = htmlspecialchars($request->sigle);
             $mutualiste->date_creation = $request->date_creation;
             $mutualiste->numero_autorisation = htmlspecialchars($request->numero_autorisation);

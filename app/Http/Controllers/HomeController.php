@@ -165,16 +165,6 @@ class HomeController extends Controller
             $pieces_joints_verso = null;
             $valeur = '';
 
-            // if ($request->hasFile("avatar")) {
-            //     // $avatar = null;
-            //     $file = $request->file("avatar");
-
-            //     if ($file->isValid()) {
-            //         $folder = "DOCSLABELIS";
-            //         $avatar = createFichiers("$folder/", $file, $file->extension());
-            //     }
-            // }
-
             if ($request->hasFile('signature')) {
                 $file_name = md5(uniqid()) . '.' . $request->file('signature')->extension();
                 $request->file('signature')->storeAs('signature-inscription/', $file_name);
@@ -190,21 +180,44 @@ class HomeController extends Controller
                 $request->file('photo_couverture')->storeAs('photo_couverture-inscription/', $file_name);
                 $photo_couverture = 'src-files/photo_couverture-inscription/' . $file_name;
             }
-            if ($request->hasFile('document_autorisation_ouverture')) {
-                $file_name = md5(uniqid()) . '.' . $request->file('document_autorisation_ouverture')->extension();
-                $request->file('document_autorisation_ouverture')->storeAs('document_autorisation_ouverture-inscription/', $file_name);
-                $document_autorisation_ouverture = 'src-files/document_autorisation_ouverture-inscription/' . $file_name;
+
+            // les documents
+            if ($request->hasFile("document_autorisation_ouverture")) {
+                $file = $request->file("document_autorisation_ouverture");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $document_autorisation_ouverture = createFichiers("$folder/", $file, $file->extension());
+                }
             }
-            if ($request->hasFile('document_carte_inscript_ONMCI')) {
-                $file_name = md5(uniqid()) . '.' . $request->file('document_carte_inscript_ONMCI')->extension();
-                $request->file('document_carte_inscript_ONMCI')->storeAs('document_carte_inscript_ONMCI-inscription/', $file_name);
-                $document_carte_inscript_ONMCI = 'src-files/document_carte_inscript_ONMCI-inscription/' . $file_name;
+            if ($request->hasFile("document_carte_inscript_ONMCI")) {
+                $file = $request->file("document_carte_inscript_ONMCI");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $document_carte_inscript_ONMCI = createFichiers("$folder/", $file, $file->extension());
+                }
             }
-            if ($request->hasFile('photo_identite_1')) {
-                $file_name = md5(uniqid()) . '.' . $request->file('photo_identite_1')->extension();
-                $request->file('photo_identite_1')->storeAs('photo_identite_1-inscription/', $file_name);
-                $photo_identite_1 = 'src-files/photo_identite_1-inscription/' . $file_name;
+            if ($request->hasFile("photo_identite_1")) {
+                $file = $request->file("photo_identite_1");
+                if ($file->isValid()) {
+                    $folder = nonDossierCloud();
+                    $photo_identite_1 = createFichiers("$folder/", $file, $file->extension());
+                }
             }
+            // if ($request->hasFile('document_autorisation_ouverture')) {
+            //     $file_name = md5(uniqid()) . '.' . $request->file('document_autorisation_ouverture')->extension();
+            //     $request->file('document_autorisation_ouverture')->storeAs('document_autorisation_ouverture-inscription/', $file_name);
+            //     $document_autorisation_ouverture = 'src-files/document_autorisation_ouverture-inscription/' . $file_name;
+            // }
+            // if ($request->hasFile('document_carte_inscript_ONMCI')) {
+            //     $file_name = md5(uniqid()) . '.' . $request->file('document_carte_inscript_ONMCI')->extension();
+            //     $request->file('document_carte_inscript_ONMCI')->storeAs('document_carte_inscript_ONMCI-inscription/', $file_name);
+            //     $document_carte_inscript_ONMCI = 'src-files/document_carte_inscript_ONMCI-inscription/' . $file_name;
+            // }
+            // if ($request->hasFile('photo_identite_1')) {
+            //     $file_name = md5(uniqid()) . '.' . $request->file('photo_identite_1')->extension();
+            //     $request->file('photo_identite_1')->storeAs('photo_identite_1-inscription/', $file_name);
+            //     $photo_identite_1 = 'src-files/photo_identite_1-inscription/' . $file_name;
+            // }
             if ($request->hasFile('pieces_joints_recto')) {
                 $file_name = md5(uniqid()) . '.' . $request->file('pieces_joints_recto')->extension();
                 $request->file('pieces_joints_recto')->storeAs('pieces_joints_recto-inscription/', $file_name);
