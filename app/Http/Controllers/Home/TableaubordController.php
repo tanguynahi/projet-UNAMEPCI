@@ -14,11 +14,14 @@ use App\Models\Projet;
 use App\Models\Paiement;
 use App\Models\TypePiece;
 use App\Models\Mutualiste;
+use App\Models\Specialite;
+use App\Models\CarteMembre;
 use App\Models\Facturation;
 use Illuminate\Http\Request;
 use App\Models\DroitAdhesion;
 use App\Models\ProduitProjet;
 use App\Models\Administrateur;
+use App\Models\FormeJuridique;
 use App\Models\PaiementInitiale;
 use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
@@ -57,15 +60,17 @@ class TableaubordController extends Controller
     {
         $mutualiste = auth()->user()->mutualiste;
         $contCoti = NbreCotisation();
-        $corps = Corps::all();
-        $grades = Grade::all();
-        $typePieces = TypePiece::all();
+        // $corps = Corps::all();
+        // $grades = Grade::all();
+        $specialites = Specialite::where('status', 1)->get();
+        $formeJuridiques = FormeJuridique::where('status', 1)->get();
+        $typePieces = TypePiece::where('status', 1)->get();
         $villes = Ville::orderBy('libelle', 'ASC')->get();
-        $droit_adhesions = DroitAdhesion::where('mutualiste_id',$mutualiste->id)->first();
+        $droit_adhesions = DroitAdhesion::where('mutualiste_id', $mutualiste->id)->first();
         $module = "Module Espace Mutualiste ";
         $action = "a consulte son profil";
         Logs::saveLog($module, $action);
-        return view('home.admin.profils.parametre', compact('corps', 'grades', 'typePieces', 'villes', 'droit_adhesions','contCoti','mutualiste'));
+        return view('home.admin.profils.parametre', compact('formeJuridiques', 'specialites', 'typePieces', 'villes', 'droit_adhesions', 'contCoti', 'mutualiste'));
     }
 
 
@@ -78,7 +83,7 @@ class TableaubordController extends Controller
         $module = "Module Espace Mutualiste ";
         $action = "a consulte la liste des projets";
         Logs::saveLog($module, $action);
-        return view('home.admin.projets_admin.projet', compact('droit_adhesions', 'projets','contCoti'));
+        return view('home.admin.projets_admin.projet', compact('droit_adhesions', 'projets', 'contCoti'));
     }
     public function historique_index()
     {
@@ -86,12 +91,12 @@ class TableaubordController extends Controller
         // $droit_adhesions = DroitAdhesion::where('mutualiste_id', Auth::guard()->user()->mutualiste->id)->get();
         $paiements = PaiementInitiale::where('mutualiste_id', $mutualiste->id)->get();
         $facturations = Facturation::where('mutualiste_id', $mutualiste->id)->get();
-        $cotisationMutualistes = CotisationMutualiste::where('mutualiste_id',$mutualiste->id)->get();
-        $accompagnements = DemandeAccompagnement::where('mutualiste_id',$mutualiste->id)->get();
+        $cotisationMutualistes = CotisationMutualiste::where('mutualiste_id', $mutualiste->id)->get();
+        $accompagnements = DemandeAccompagnement::where('mutualiste_id', $mutualiste->id)->get();
         $module = "Module Espace Mutualiste ";
         $action = "a consulte  l'historiques";
         Logs::saveLog($module, $action);
-        return view('home.admin.historiques.index', compact('paiements', 'facturations','cotisationMutualistes','accompagnements'));
+        return view('home.admin.historiques.index', compact('paiements', 'facturations', 'cotisationMutualistes', 'accompagnements'));
     }
 
     // pour generer recu de payement de maniere automatique
@@ -112,7 +117,7 @@ class TableaubordController extends Controller
             $module = "Module Espace Mutualiste ";
             $action = "a consulte  la page resultat paiement et voici le code du paiement : $code";
             Logs::saveLog($module, $action);
-            return view('home.admin.paiements.resultat_paiement', compact('paiementinit', 'mess', 'code','contCoti'));
+            return view('home.admin.paiements.resultat_paiement', compact('paiementinit', 'mess', 'code', 'contCoti'));
         } else {
             $code = 404;
             $mess = "<h3 class='sub-title'>Page Introuvable</h3><br>
@@ -120,7 +125,7 @@ class TableaubordController extends Controller
             $module = "Module Espace Mutualiste ";
             $action = "Une erreur s'est produit sur la page resultat paiement car le paiement n'existe pas ";
             Logs::saveLog($module, $action);
-            return view ('home.admin.errorpage.index', compact('code','mess'));
+            return view('home.admin.errorpage.index', compact('code', 'mess'));
         }
     }
     // ma boutiques conversion de monetaire
@@ -132,4 +137,25 @@ class TableaubordController extends Controller
         return view('home.admin.boutiques.index');
     }
 
+    public function carteMembreImpayer()
+    {
+        $mutualiste = auth()->user()->mutualiste;
+        $carteMembre = CarteMembre::where('mutualiste_id', $mutualiste->id)->first();
+        if (empty($carteMembre)) {
+            $module = "Module Espace Mutualiste Carte Membre ";
+            $action = "ce mutualiste ayant id $mutualiste->id n'a pas de carte membre creer ";
+            Logs::saveLog($module, $action);
+            toast('Une erreur s\'est produit, Veuillez réessayer. carte membre introuvable', 'error');
+            return redirect()->route('espace.accueil');
+        }
+        if ($carteMembre->status == 2) {
+            return view('home.admin.carteMembres.index', compact('carteMembre'));
+        } else {
+            if ($carteMembre->genere == 1) {
+                return view('home.admin.carteMembres.genere', compact('mutualiste', 'carteMembre'));
+            } else {
+                return view('home.admin.carteMembres.attente', compact('mutualiste'));
+            }
+        }
+    }
 }

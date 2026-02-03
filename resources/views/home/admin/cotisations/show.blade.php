@@ -34,7 +34,7 @@
                                     <tr>
 
                                         <td>
-                                            <p class="b3">{{ formatMontant($cotisationMutualiste->montant) }}</p>
+                                            <p class="b3">{{ formatMontant($cotisationMutualiste->montant_initial ?? $cotisationMutualiste->montant ) }}</p>
                                         </td>
                                         <td>
                                             <p class="b3 mb--5">{{ datePaiementCotisa($cotisationMutualiste->updated_at) }}

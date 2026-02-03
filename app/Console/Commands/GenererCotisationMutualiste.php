@@ -31,6 +31,7 @@ class GenererCotisationMutualiste extends Command
                 'type_paiement_id' => $mutualiste->type_paiement_id,
                 'mutualiste_id' => $mutualiste->mutualiste_id,
                 'montant' => $mutualiste->montant,
+                'montant_initial' => $mutualiste->montant,
                 'frequence_paiement' => $mutualiste->frequence_paiement,
                 'status' => 2, // Statut en attente pour le lendemain
                 'date_debut' => $mutualiste->date_debut,
@@ -58,8 +59,7 @@ class GenererCotisationMutualiste extends Command
             ->whereDate('created_at', Carbon::yesterday()) // Compare uniquement la date
             ->where('date_fin', '>=', Carbon::now()->format('Y-m-d'))
             ->get();
-        foreach($facturations as $facturation)
-        {
+        foreach ($facturations as $facturation) {
             Facturation::create([
                 'mutualiste_id' => $facturation->mutualiste_id,
                 'projet_mutualiste_id' => $facturation->projet_mutualiste_id,
@@ -79,9 +79,8 @@ class GenererCotisationMutualiste extends Command
         }
         // fin de facturations
         $terminerFat = Facturation::where('date_fin', '<', Carbon::now()->format('Y-m-d'))
-        ->get();
-        foreach($terminerFat as $terminer)
-        {
+            ->get();
+        foreach ($terminerFat as $terminer) {
             $terminer->update([
                 'status' => 4,
             ]);

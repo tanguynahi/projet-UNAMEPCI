@@ -86,6 +86,7 @@ class CotisationMutualisteController extends Controller
                 'cotisation_id' => $request->cotisation_id,
                 'type_paiement_id' => 2,
                 'montant' => $cotisation->montant_a_payer,
+                'montant_initial' => $cotisation->montant_a_payer,
                 'frequence_paiement' => $cotisation->frequence_paiement,
                 'date_debut' => $cotisation->date_debut,
                 'date_fin' => $cotisation->date_fin,
@@ -216,7 +217,86 @@ class CotisationMutualisteController extends Controller
             ];
             // dd('test');
             $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
-                ->post('http://rest-airtime.paysecurehub.com/api/payhub-ws/build-away', $data);
+                ->post(urlPaiement(), $data);
+
+            // $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
+            //     ->post('http://rest-airtime.paysecurehub.com/api/payhub-ws/build-away', $data);
+
+            $ResJSON = $reponse->json();
+            $code = $ResJSON['code'];
+            if ($reponse->status() === 200) {
+                if ($code === 200) {
+                    if (!empty($ResJSON['url'])) {
+                        return redirect()->away($ResJSON['url']);
+                    } else {
+                        toast('Echec d\'authentification à la page demandée !', 'error');
+                        $module = "Module Cotisation Mutualiste";
+                        $action = "Une erreur s'est produit lors du passage du paiement d'une cotisation sur hub de paiement";
+                        Logs::saveLog($module, $action);
+                        return back();
+                    }
+                } else {
+                    $message = messageBrut($ResJSON['message']);
+                    toast($message, 'error');
+                    return back();
+                }
+            } else {
+                $message = 'Une erreur inattendue s\'est produite, verifier que vous avez accès à internet, ' .
+                    'puis reéssayer. erreur ' . $reponse->status();
+                toast($message, 'error');
+                $module = "Module Cotisation Mutualiste";
+                $action = "Une erreur inatendue s'est produite lors du passage sur l'hub de paiement pour le paiement d'une cotisation";
+                Logs::saveLog($module, $action);
+            }
+        } catch (\Throwable $e) {
+            // dd($e->getMessage().'test');
+            DB::rollback();
+            Log::error('Erreur interne du serveur: ' . $e->getMessage());
+            $module = "Module Cotisation Mutualiste";
+            $action = "Une erreur serveur s'est produite lors du passage sur l'hub de paiement pour le paiement d'une cotisation";
+            Logs::saveLog($module, $action);
+            return redirect()->back()->with('error', 'Une erreur s\'est produite, veuillez réessayer.');
+        }
+    }
+    public function paiementCotisationsAnnuelle(Request $request, $id)
+    {
+
+        $cotisationMutualiste = CotisationMutualiste::where('id', $id)->first();
+        (int)  $Montant = $request->montant;
+        // dd($request->all(), $id, $cotisationMutualiste, $Montant);
+        try {
+            DB::beginTransaction();
+            // initialisation du code de paiement avec une valeur unique
+            $codePaiement = generateCode2('Cot');
+            // creation d'un nouveau element dans la table PaiementInitiale (debut)
+            $paiementinit = new PaiementInitiale();
+            $paiementinit->code_paiement = $codePaiement;
+            $paiementinit->mutualiste_id = auth()->user()->mutualiste->id;
+            $paiementinit->type_paiement_id = 2;
+            $paiementinit->correspondance_id = $cotisationMutualiste->id; // id facturations
+            $paiementinit->montant_initial = $Montant ?? $cotisationMutualiste->montant;
+
+            $paiementinit->save();
+            // fin
+            DB::commit(); // verification
+
+            $data = [
+                'code_paiement' => $codePaiement,
+                'nom_usager' => auth()->user()->mutualiste->nom,
+                'prenom_usager' => auth()->user()->mutualiste->prenom,
+                'telephone' => auth()->user()->mutualiste->contact,
+                'email' => auth()->user()->mutualiste->email,
+                'libelle_article' => $cotisationMutualiste->cotisation->libelle,
+                'quantite' => 1,
+                'montant' => $Montant ??  $cotisationMutualiste->montant,
+                'lib_order' => $cotisationMutualiste->cotisation->libelle,
+                'pay_fees' => 1,
+                'Url_Retour' => urlRetour() . $codePaiement,
+                'Url_Callback' => urlCallback(),
+            ];
+            // dd('test');
+            $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
+                ->post(urlPaiement(), $data);
 
             // $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
             //     ->post('http://rest-airtime.paysecurehub.com/api/payhub-ws/build-away', $data);

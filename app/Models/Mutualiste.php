@@ -10,12 +10,15 @@ use App\Models\Compte;
 use App\Models\Projet;
 use App\Models\Paiement;
 use App\Models\TypePiece;
+use App\Models\Specialite;
+use App\Models\CarteMembre;
 use App\Models\Conversation;
 use App\Models\DemandeProjet;
 use App\Models\DroitAdhesion;
 use App\Models\Accompagnement;
 use App\Models\CodeValidation;
 use App\Models\DemandeProduit;
+use App\Models\FormeJuridique;
 use App\Models\PaiementInitiale;
 use App\Models\CotisationMutualiste;
 use App\Models\DemandeAccompagnement;
@@ -56,6 +59,14 @@ class Mutualiste extends Model
     {
         return $this->belongsTo(TypePiece::class);
     }
+    public function specialite(): BelongsTo
+    {
+        return $this->belongsTo(Specialite::class);
+    }
+    public function formeJuridique(): BelongsTo
+    {
+        return $this->belongsTo(FormeJuridique::class);
+    }
 
     public function paiements(): HasMany
     {
@@ -86,6 +97,10 @@ class Mutualiste extends Model
     {
         return $this->hasOne(DroitAdhesion::class);
     }
+    public function carteMembre(): HasOne
+    {
+        return $this->hasOne(CarteMembre::class);
+    }
 
     public function codeValidation(): HasOne
     {
@@ -111,8 +126,4 @@ class Mutualiste extends Model
     {
         return $this->hasMany(Conversation::class);
     }
-
-
-
-
 }

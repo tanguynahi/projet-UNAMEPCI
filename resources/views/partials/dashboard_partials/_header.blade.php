@@ -210,7 +210,7 @@
                                 </div>
                                 <a class="btn bg-secondary text-light text-uppercase rounded-0" href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                <form id="logout-form" action="{{ route('deconnexion') }}" method="POST"
                                     class="d-none">
                                     @csrf
                                 </form>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Paiement;
 use App\Models\Mutualiste;
+use App\Models\CarteMembre;
 use App\Models\Facturation;
 use Illuminate\Http\Request;
 use App\Models\DroitAdhesion;
@@ -143,10 +144,10 @@ class paiementApiController extends Controller
                                 ]);
 
                             if ($droit_adhesion->status == 1) {
-                                $sujet = "Paiement de droit d'adhésion sur votre compte MUTUALPAY";
+                                $sujet = "Paiement de droit d'adhésion sur votre compte UNAMEPCI";
                                 $message = "
                                     Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
-                                    C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue dans la communauté du Fond de Prévoyance Militaire !<br>
+                                    C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue dans la communauté de Union Nationale des Medecins Prives de Côte d'Ivoire !<br>
                                     Nous sommes super excités de vous avoir avec nous. Votre adhésion vous ouvre les portes à un monde de nouvelles opportunités, d'événements passionnants et de nombreuses ressources.<br>
                                     Prenez le temps d'explorer ce qui vous attend et faites-en le maximum !<br>
                                     Votre soutien signifie beaucoup pour nous, et nous sommes impatients de voir tout ce que vous accomplirez avec nous.<br>
@@ -157,7 +158,7 @@ class paiementApiController extends Controller
                                 $url = appelApiEmail();
                                 $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                 $data = [
-                                    'provider' => 'MUTUALPAY <info@mail-taseti.com>',
+                                    'provider' => 'UNAMEPCI <info@mail-taseti.com>',
                                     "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
                                     "destination" => $mutualiste->email,
                                     "sujet" => $sujet,
@@ -177,21 +178,63 @@ class paiementApiController extends Controller
                                 }
                             }
                             break;
+                        // case 2:
+                        //     // cas de cotisation
+                        //     $cotisationMutualiste = CotisationMutualiste::where('id', $paiementinit->correspondance_id)->first();
+                        //     if (!empty($cotisationMutualiste)) {
+                        //         if ($cotisationMutualiste->frequence_paiement == 'Annuelle') {
+                        //             $cotisationMutualiste->montant_paye = $cotisationMutualiste->montant_paye + $Montant;
+                        //             $cotisationMutualiste->montant = $cotisationMutualiste->montant - $Montant;
+                        //             $cotisationMutualiste->save();
+
+                        //             if ($cotisationMutualiste->montant >= 0) {
+                        //                 $cotisationMutualiste->status = 1;
+                        //                 $cotisationMutualiste->save();
+                        //             }
+                        //         } else {
+                        //             $cotisationMutualiste->update([
+                        //                 'status' => 1,
+                        //             ]);
+                        //         }
+                        //     }
+                        //     break;
                         case 2:
-                            // cas de cotisation
-                            $cotisationMutualiste = CotisationMutualiste::where('id', $paiementinit->correspondance_id)->first();
-                            if (!empty($cotisationMutualiste)) {
-                                // if(!empty($cotisationMutualiste->administrateur_id))
+                            // Cas de cotisation
+                            $cotisationMutualiste = CotisationMutualiste::find($paiementinit->correspondance_id);
+
+                            if (!$cotisationMutualiste) {
+                                break;
+                            }
+
+                            if ($cotisationMutualiste->frequence_paiement === 'Annuelle') {
+
+                                // Mettre à jour les montants
+                                $cotisationMutualiste->montant_paye += $Montant;
+                                $cotisationMutualiste->montant -= $Montant;
+
+                                // Empêcher un solde négatif
+                                if ($cotisationMutualiste->montant < 0) {
+                                    $cotisationMutualiste->montant = 0;
+                                }
+
+                                // Si tout est payé → statut validé
+                                if ($cotisationMutualiste->montant == 0) {
+                                    $cotisationMutualiste->status = 1;
+                                }
+
+                                $cotisationMutualiste->save();
+                            } else {
+                                // Autres fréquences (mensuelle, trimestrielle…)
                                 $cotisationMutualiste->update([
-                                    'status' => 1,
+                                    'status' => 1
                                 ]);
                             }
                             break;
+
                         case 3:
                             //cas de prêt
-                            $demandeAccompagnement = DemandeAccompagnement::where('id',$paiementinit->correspondance_id)->first();
-                            if(!empty($demandeAccompagnement))
-                            {
+                            $demandeAccompagnement = DemandeAccompagnement::where('id', $paiementinit->correspondance_id)->first();
+                            if (!empty($demandeAccompagnement)) {
                                 $demandeAccompagnement->update([
                                     'payer' => $demandeAccompagnement->payer + $paiementinit->montant_initial,
                                 ]);
@@ -210,13 +253,59 @@ class paiementApiController extends Controller
                                 ]);
                             }
                             break;
+                        case 5:
+                            // paiement pour carte Membre
+                            $mutualisteId = $paiementinit->mutualiste_id;
+                            $carteMembre = CarteMembre::where('mutualiste_id', $mutualisteId)
+                                ->update([
+                                    'status' => 1,
+                                ]);
+
+                            if ($carteMembre->status == 1) {
+                                $sujet = "Confirmation de paiement – Carte Membre UNAMEPCI";
+
+                                $message = "
+                                    Bonjour " . $mutualiste->prenom . " " . $mutualiste->nom . ",<br><br>
+
+                                    Félicitations 🎉 !
+                                    Nous vous informons que le paiement de votre **carte de membre UNAMEPCI** a été effectué avec succès.<br><br>
+                                    Votre adhésion est désormais **active** et vous bénéficiez pleinement des services et avantages offerts par le **Union Nationale des Medecins Prives de Côte d'Ivoire**.<br><br>
+                                    Nous vous remercions pour votre confiance et sommes ravis de vous compter parmi nos membres.<br><br>
+                                    Si vous avez besoin d’assistance ou d’informations complémentaires, notre équipe reste à votre disposition.<br><br>
+                                    Cordialement,<br>
+                                    <strong>L’équipe UNAMEPCI</strong>
+                                    ";
+
+                                $url = appelApiEmail();
+                                $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                $data = [
+                                    'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+                                    "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                    "destination" => $mutualiste->email,
+                                    "sujet" => $sujet,
+                                    "message" => $template
+                                ];
+                                $retourAPI = Http::post($url, $data);
+                                $res = $retourAPI->json();
+
+                                if ($retourAPI->status() == 200) {
+                                    (int)$code = $res['status'];
+                                    if ($code != 200) {
+                                        $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                        Log::error($message);
+                                    }
+                                } else {
+                                    Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+                                }
+                            }
+
+                            break;
 
                         default:
                             // Ajoutez ici d'autres types de paiement si nécessaire
                             break;
                     }
-                }
-                 else {
+                } else {
                     // // paiement echouer
                     // $mutualiste = Mutualiste::where('id', $paiementinit->mutualiste_id)->first();
                     // switch ($paiementinit->type_paiement_id) {
@@ -291,7 +380,7 @@ class paiementApiController extends Controller
                     //         // Ajoutez ici d'autres types de paiement si nécessaire
                     //         break;
                     // }
-                        // paiement echouer
+                    // paiement echouer
                     $paiementinit->status = 3; //
                     $paiementinit->reference = $request->referencePaiement;
                 }

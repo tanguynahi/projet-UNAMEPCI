@@ -32,16 +32,16 @@
                             </thead>
                             <tbody>
                                 @foreach ($PaiementCotisations as $index => $cotisationMutualiste)
-                                    
+
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
 
-                                        <td>{{ formatMontant($cotisationMutualiste->montant) }}</td>
+                                        <td>{{ formatMontant($cotisationMutualiste->montant_initial ?? $cotisationMutualiste->montant) }}</td>
                                         <td>{{ $cotisationMutualiste->frequence_paiement }}</td>
                                         <td>{{ datePaiementCotisa($cotisationMutualiste->updated_at) }}</td>
 
                                         <td><span class="badge bg-success">Solde</span></td>
-                                        
+
                                     </tr>
                                 @endforeach
                             </tbody>

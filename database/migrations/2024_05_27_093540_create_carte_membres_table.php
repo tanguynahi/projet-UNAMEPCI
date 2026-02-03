@@ -18,6 +18,9 @@ return new class extends Migration
             $table->foreignId('type_paiement_id')->constrained('type_paiements', 'id');
             $table->string('libelle');
             $table->bigInteger('montant');
+            $table->date('date_delivre')->nullable();
+            $table->date('date_expiration')->nullable();
+            $table->enum('genere', [1, 2, 3])->default(2); // en attent de generation
             $table->enum('status', [1, 2])->default(2); // en attent de paiement
             $table->softDeletes();
             $table->timestamps();

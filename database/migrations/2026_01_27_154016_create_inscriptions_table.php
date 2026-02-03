@@ -55,7 +55,7 @@ return new class extends Migration
             $table->string("statut_emploi")->nullable();
             $table->string("domaine_activite")->nullable();
             $table->date("date_recrutement")->nullable();
-            $table->string("montant_cotis_annuel")->nullable();
+            // $table->string("montant_cotis_annuel")->nullable();
             $table->string("sigle")->nullable();
             $table->date("date_creation")->nullable();
             $table->string("numero_autorisation")->nullable();
@@ -93,6 +93,7 @@ return new class extends Migration
             $table->string("document_carte_inscript_ONMCI")->nullable();
             $table->string("document_autorisation_ouverture")->nullable();
             $table->string("photo_identite_1")->nullable();
+            $table->string("signature")->nullable();
 
             $table->string("commentaire")->nullable();
             $table->text('lien_email')->nullable();

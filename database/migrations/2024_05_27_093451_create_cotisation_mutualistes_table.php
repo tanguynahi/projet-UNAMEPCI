@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignId('cotisation_id')->constrained('cotisations','id');
             $table->foreignId('type_paiement_id')->constrained('type_paiements','id');
             $table->bigInteger('montant');
+            $table->bigInteger('montant_initial')->nullable();
+            $table->bigInteger('montant_paye')->nullable()->default(0);
             $table->string('frequence_paiement');
             $table->date('date_debut');
             $table->date('date_fin');

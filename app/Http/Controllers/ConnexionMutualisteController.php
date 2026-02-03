@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use Throwable;
 use App\Models\Logs;
 use App\Models\User;
+use App\Models\Mutualiste;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\MutualisteLoginRequest;
 
 class ConnexionMutualisteController extends Controller
 {
-    public function connexionMutualiste(MutualisteLoginRequest $request){
+    public function connexionMutualiste(MutualisteLoginRequest $request)
+    {
         try {
             // Valider les données de la requête
             // $validator = $request->validated();
@@ -27,11 +30,16 @@ class ConnexionMutualisteController extends Controller
                 // Vérifier si l'utilisateur connecté a l'un des rôles spécifiques avant de le rediriger
                 if (Auth::user()->hasRole('mutualiste')) {
                     // Rediriger l'utilisateur vers /dashboard
-                    $message = "Bienvenue ! ".formatGender(auth()->user()->mutualiste->genre)."".auth()->user()->mutualiste->nom." ".auth()->user()->mutualiste->prenom.".";
+                    $message = "Bienvenue ! " . formatGender(auth()->user()->mutualiste->genre) . "" . auth()->user()->mutualiste->nom . " " . auth()->user()->mutualiste->prenom . ".";
                     toast($message, 'success');
                     $module = "Module Connexion mutualiste ";
-                    $action = "L'mutualiste  " . auth()->user()->mutualiste->nom . " " . auth()->user()->mutualiste->prenom . "a l'id" . auth()->user()->mutualiste->id." a ete connecter";
+                    $action = "L'mutualiste  " . auth()->user()->mutualiste->nom . " " . auth()->user()->mutualiste->prenom . "a l'id" . auth()->user()->mutualiste->id . " a ete connecter";
                     Logs::saveLog($module, $action);
+                    $id =  auth()->user()->mutualiste->id;
+                    $mutualiste = Mutualiste::where('user_id', $user->id)->first();
+                    // dd(auth()->user()->mutualiste->nom, $mutualiste);
+                    $mutualiste->disponibilite = 'en ligne';
+                    $mutualiste->save();
                     return redirect()->route('espace.accueil');
                 } else {
                     // Déconnecter l'utilisateur
@@ -59,5 +67,4 @@ class ConnexionMutualisteController extends Controller
             return back()->withInput()->withErrors(['error' => 'Une erreur s\'est produite. Veuillez réessayer plus tard.']);
         }
     }
-
 }

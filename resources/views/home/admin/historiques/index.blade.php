@@ -70,6 +70,10 @@
                                                     {{ Str::limit($pret, 9) }}
                                                 </span>
                                             @endif
+                                        @else
+                                            <span class="h6 mb-5">
+                                                {{ $paiement->typePaiement->libelle ?? '' }}
+                                            </span>
                                         @endif
                                     </td>
                                     <td>

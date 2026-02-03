@@ -14,6 +14,7 @@
         $parametre = Parametre::whereId(1)->first();
     @endphp
     <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{{ $title }}</title>
     <meta name="robots" content="noindex, follow" />

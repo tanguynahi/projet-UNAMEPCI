@@ -142,43 +142,20 @@
                     </span>
                 </div>
             </div>
-            <div class="row pb-2">
-                <div class="col-7">
-                    <strong>
-                        Corps d'armée: <br>
-                    </strong>
-                </div>
-                <div class="col-5">
-                    <span class="text-center">
-                        <b> {{ $paiement->mutualiste->corp->libelle }}</b>
-                    </span>
-                </div>
-            </div>
-            <div class="row pb-2">
-                <div class="col-7">
-                    <strong>
-                        Grade:
-                    </strong>
-                </div>
-                <div class="col-5">
-                    <span class="text-center">
-                        <b> {{ $paiement->mutualiste->grade->libelle }}</b>
-                    </span>
-                </div>
-            </div>
-            <div class="row pb-2">
-                <div class="col-7">
-                    <strong>
-                        Unite: <br>
 
+            <div class="row pb-2">
+                <div class="col-7">
+                    <strong>
+                        Specialites:
                     </strong>
                 </div>
                 <div class="col-5">
                     <span class="text-center">
-                        <b> {{ $paiement->mutualiste->unite }}</b>
+                        <b> {{ $paiement->mutualiste->specialite->libelle }}</b>
                     </span>
                 </div>
             </div>
+
             <div class="row pb-2">
                 <div class="col-7">
                     <strong>
@@ -188,7 +165,7 @@
                 </div>
                 <div class="col-5">
                     <span class="text-center">
-                        <b> {{ $paiement->mutualiste->contact }} {{ $paiement->mutualiste->contact_2 }}</b>
+                        <b> {{ $paiement->mutualiste->contact }}/ {{ $paiement->mutualiste->contact_2 }}</b>
                     </span>
                 </div>
             </div>

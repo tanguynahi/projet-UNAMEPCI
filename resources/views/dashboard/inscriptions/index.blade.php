@@ -74,17 +74,17 @@
                                                 class="btn btn-link btn-sm text-success infoIcon" data-bs-toggle="tooltip"
                                                 data-bs-toggle="modal" data-bs-target="#info_admin" data-bs-placement="top"
                                                 title="Infos"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ route('mutualistes.edit', $inscription->id) }}" id="EditAdmin"
+                                            {{-- <a href="{{ route('mutualistes.edit', $inscription->id) }}" id="EditAdmin"
                                                 class="btn btn-link btn-sm text-primary editIcon"
                                                 data-bs-target="#edit_admin" title="Modifier"><i
-                                                    class="fa fa-pencil"></i></a>
+                                                    class="fa fa-pencil"></i></a> --}}
 
-                                            @if (Auth::user()->hasRole('super-administrateur'))
+                                            {{-- @if (Auth::user()->hasRole('super-administrateur'))
                                                 <a href="#deleteModal{{ $inscription->id }}" id="DeleteMutualiste"
                                                     class="btn btn-link btn-sm text-danger deleteIcon"
                                                     data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="Supprimer"><i class="fa fa-trash"></i></a>
-                                            @endif
+                                            @endif --}}
                                         </td>
                                     </tr>
 

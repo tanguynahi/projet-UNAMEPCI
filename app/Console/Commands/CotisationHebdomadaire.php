@@ -52,6 +52,7 @@ class CotisationHebdomadaire extends Command
                 'type_paiement_id' => $mutualiste->type_paiement_id,
                 'mutualiste_id' => $mutualiste->mutualiste_id, // adapter selon tes colonnes
                 'montant' => $mutualiste->montant,
+                'montant_initial' => $mutualiste->montant,
                 'frequence_paiement' => $mutualiste->frequence_paiement,
                 'status' => 2, // Statut en attente pour le lendemain
                 'date_debut' => $mutualiste->date_debut,

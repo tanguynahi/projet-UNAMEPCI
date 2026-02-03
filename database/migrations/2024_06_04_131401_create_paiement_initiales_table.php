@@ -23,8 +23,8 @@ return new class extends Migration
             $table->bigInteger('montant_total')->nullable();
             $table->string('moyen_paiement')->nullable();//  savoir si c'est en ligne ou pas
             $table->string('contact_paiement')->nullable();
-            $table->date('date_paiement_initial')->nullable();
-            $table->date('heure_paiement_initial')->nullable();
+            $table->string('date_paiement_initial')->nullable();
+            $table->string('heure_paiement_initial')->nullable();
             $table->bigInteger('produit_id')->nullable();// les produits
             // $table->string('document')->nullable(); /// document a implode si sa concerne une mise a jour de paiment effectuer en cash
             $table->enum('status',[1,2,3])->default(2); // le status 4 est du a la mise a jour d'information (paiement effectuer en cash)

@@ -4,6 +4,7 @@ use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TaxeController;
 use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\SlideController;
@@ -23,7 +24,9 @@ use App\Http\Controllers\TypePieceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\MutualisteController;
+use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\TypeCompteController;
+use App\Http\Controllers\CarteMembreController;
 use App\Http\Controllers\FacturationController;
 use App\Http\Controllers\ImageProjetController;
 use App\Http\Controllers\InscriptionController;
@@ -35,6 +38,7 @@ use App\Http\Controllers\ProduitProjetController;
 use App\Http\Controllers\AccompagnementController;
 use App\Http\Controllers\AdministrateurController;
 use App\Http\Controllers\DemandeProduitController;
+use App\Http\Controllers\FormeJuridiqueController;
 use App\Http\Controllers\InteretServiceController;
 use App\Http\Controllers\DocumentProduitController;
 use App\Http\Controllers\DocumentPaiementController;
@@ -79,8 +83,11 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/inscriptionPage', 'inscrit')->name('inscriptionPage');
     Route::get('/resultatIdentification/{code}', 'resultatInscript')->name('resultatInscription');
     Route::post('/traitementInscription', 'traitementInscript')->name('inscriptTraite');
-    Route::get('/creationAccesInscrits/{code}','validationMutualiteApresInscription')->name('creatAccesNewInscrits');
-    Route::post('/storeAccesInscription/{id}','creatAccesInscrip')->name('compte.creer');
+    Route::get('/creationAccesInscrits/{code}', 'validationMutualiteApresInscription')->name('creatAccesNewInscrits');
+    Route::post('/storeAccesInscription/{id}', 'creatAccesInscrip')->name('compte.creer');
+
+    Route::get('/visualiserPDF', 'showsPdf')->name('visualise.pdf');
+    Route::post('/deconnexionU','logout')->name('deconnexion');
 });
 Route::controller(ConnexionMutualisteController::class)->group(function () {
     Route::post('/connexion-mutualiste', 'connexionMutualiste')->name('connexion.mutualiste');
@@ -117,6 +124,9 @@ Route::middleware('auth')->group(function () {
                 Route::get('/chat-message/{administrateur}', 'voirMessage')->name('voir.message')->middleware('verifier.droitAdhesion');
                 Route::get('/resultat-Paiement/{codePaiement}', 'resultatPaiement')->name('resultat.paiement');
                 Route::get('/boutiqueMonetaire', 'boutiques')->name('boutique.index');
+
+
+                Route::get('/carteMembreMutualiste', 'carteMembreImpayer')->name('carteImpaye');
             });
             // route des conversations  concernant la chat ( controller message)
             Route::controller(ConversationController::class)->group(function () {
@@ -146,6 +156,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/liste-cotisation', 'listeCotisationMutualiste')->name('Cotisation.mutualiste')->middleware('verifier.droitAdhesion');
                 Route::get('/resumeDesCotisations/{id}', 'detailCotisaMutualiste')->name('resume.cotisationMutual')->middleware('verifier.droitAdhesion');
                 Route::get('/traitementHubCotisation/{id}', 'paiementCotisations')->name('paiementCotisation.mutualiste')->middleware('verifier.droitAdhesion');
+                Route::post('/traitementHubCotisationAnnuelle/{id}', 'paiementCotisationsAnnuelle')->name('paiementCotisationAnnuelle.mutualiste')->middleware('verifier.droitAdhesion');
             });
             Route::controller(MutualisteController::class)->group(function () {
                 // modification d'un mutualiste
@@ -158,6 +169,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/paiement-adhesion', 'paiementAdhesion')->name('paiement.adhesion'); // paiement droit d'adhesion
 
                 Route::get('/paiement-produit/{id}', 'paiementProduitFacturation')->name('paiement.produit'); // paiement de produit
+                Route::get('/paiement-carteMembres', 'paiementCarteMembre')->name('paiement.CarteMembres');
 
                 // Route::get('')
             });
@@ -261,6 +273,10 @@ Route::middleware('auth')->group(function () {
         'messages' => MessageController::class,
         'interetservices' => InteretServiceController::class,
         'inscriptions' => InscriptionController::class,
+        'cartemembres' => CarteMembreController::class,
+        'taxes' => TaxeController::class,
+        'formejuridiques' => FormeJuridiqueController::class,
+        'specialites' =>SpecialiteController::class,
     ]);
 
     Route::middleware('verifierRoleUtilisateur:super-administrateur,administrateur')->group(function () {

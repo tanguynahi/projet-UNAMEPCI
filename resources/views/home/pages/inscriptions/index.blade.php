@@ -281,6 +281,16 @@
             }
         }
     </style>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            cursor: crosshair;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -376,7 +386,7 @@
                                             </label>
                                         </div>
                                     </div>
-
+                                    {{--
                                     <div class="col-md-4 mb-3">
                                         <div class="form-check-card">
                                             <input class="form-check-input" type="radio" name="typeAdhesion"
@@ -393,9 +403,9 @@
                                                 </div>
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="col-md-4 mb-3">
+                                    {{-- <div class="col-md-4 mb-3">
                                         <div class="form-check-card">
                                             <input class="form-check-input" type="radio" name="typeAdhesion"
                                                 id="typeAdhesion_modification" value="modification"
@@ -410,7 +420,7 @@
                                                 </div>
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @error('typeAdhesion')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -795,7 +805,7 @@
                             </div>
 
                             <!-- Expérience -->
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="date_debut_metier" class="form-label">Date de début dans le métier</label>
                                 <input type="date" id="date_debut_metier" name="date_debut_metier"
                                     value="{{ old('date_debut_metier') }}"
@@ -806,7 +816,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="nombre_annee_experience" class="form-label required-field ">Nombre d'années
                                     d'expérience</label>
                                 <input type="number" id="nombre_annee_experience" name="nombre_annee_experience"
@@ -818,7 +828,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="statut_emploi" class="form-label required-field">Statut d'emploi</label>
                                 <div class="rbt-modern-select bg-transparent height-45">
                                     <select
@@ -880,7 +890,7 @@
                             </div>
 
                             <!-- Cotisation -->
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label for="montant_cotis_annuel" class="form-label">Montant cotisation annuelle</label>
                                 <div class="input-group">
                                     <input type="number" id="montant_cotis_annuel" name="montant_cotis_annuel"
@@ -892,7 +902,7 @@
                                 @error('montant_cotis_annuel')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-6">
                                 <label for="date_recrutement" class="form-label">Date de recrutement</label>
@@ -1325,16 +1335,18 @@
 
                             <!-- Carte inscription ONMCI -->
                             <div class="col-md-6">
-                                <label for="document_carte_inscript_ONMCI" class="form-label">Carte d'inscription
+                                <label for="document_carte_inscript_ONMCI" class="form-label required-field">Carte
+                                    d'inscription
                                     ONMCI</label>
                                 <div class="document-upload" id="carteOnmciUpload">
                                     <input type="file" name="document_carte_inscript_ONMCI"
                                         id="document_carte_inscript_ONMCI"
-                                        class="@error('document_carte_inscript_ONMCI') is-invalid @enderror">
+                                        class="@error('document_carte_inscript_ONMCI') is-invalid @enderror"
+                                        accept="application/pdf,.pdf" required>
                                     <div class="upload-content">
                                         <i class="feather-upload fs-4 mb-2"></i>
                                         <p class="mb-1 upload-text">Cliquez pour télécharger</p>
-                                        <small class="text-muted">Format: PDF, JPEG, PNG (max 2MB)</small>
+                                        <small class="text-muted">Format: PDF (max 2MB)</small>
                                     </div>
                                 </div>
                                 @error('document_carte_inscript_ONMCI')
@@ -1350,11 +1362,12 @@
                                 <div class="document-upload" id="autorisationUpload">
                                     <input type="file" name="document_autorisation_ouverture"
                                         id="document_autorisation_ouverture"
-                                        class="@error('document_autorisation_ouverture') is-invalid @enderror" required>
+                                        class="@error('document_autorisation_ouverture') is-invalid @enderror"
+                                        accept="application/pdf,.pdf" required>
                                     <div class="upload-content">
                                         <i class="feather-upload fs-4 mb-2"></i>
                                         <p class="mb-1 upload-text">Cliquez pour télécharger</p>
-                                        <small class="text-muted">Format: PDF, JPEG, PNG (max 2MB)</small>
+                                        <small class="text-muted">Format: PDF (max 2MB)</small>
                                     </div>
                                 </div>
                                 @error('document_autorisation_ouverture')
@@ -1368,11 +1381,12 @@
                                     meme tirage</label>
                                 <div class="document-upload" id="photoIdentite1Upload">
                                     <input type="file" name="photo_identite_1" id="photo_identite_1"
-                                        class="@error('photo_identite_1') is-invalid @enderror" required>
+                                        class="@error('photo_identite_1') is-invalid @enderror"
+                                        accept="application/pdf,.pdf" required>
                                     <div class="upload-content">
                                         <i class="feather-upload fs-4 mb-2"></i>
                                         <p class="mb-1 upload-text">Cliquez pour télécharger</p>
-                                        <small class="text-muted">Format: JPEG, PNG (max 2MB)</small>
+                                        <small class="text-muted">Format: PDF (max 2MB)</small>
                                     </div>
                                 </div>
                                 @error('photo_identite_1')
@@ -1396,6 +1410,42 @@
                                 @enderror
                             </div> --}}
                         </div>
+                        <br>
+                        <h3 class="form-section-title">
+                            <i class="feather-file me-2 mt-2"></i>Signature
+                        </h3>
+
+                        <div class="row g-3">
+                            {{-- <div class="col-md-12">
+                            </div> --}}
+
+                            <div class="col-12 col-lg-12 col-md-12 col-sm-12 text-center">
+                                <h6 for="signature" class="fw-bold">Votre signature <span class="text-danger">*</span>
+                                </h6>
+                                <canvas id="signature-pad" width="300" height="300"
+                                    class="@error('signature') is-invalid @enderror"></canvas>
+                                <br>
+                                {{-- <span><i>Veuillez entrer une signature électronique <span
+                                                    style="color: rgb(240, 39, 39)">(champs
+                                                    Obligatoire).</span></i> <br>Notez bien, une fois la signature entrée et
+                                            le formulaire validé, cela ne peut plus être modifié.</span> --}}
+                                @error('signature')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <br>
+                                <div class="row">
+                                    <div class="col-12 col-lg-12 col-md-12 col-sm-12">
+                                        <button id="save-btn" class="btn btn-primary">Enregistrer la
+                                            signature</button>
+                                        <button id="clear-btn" class="btn btn-danger">Effacer</button>
+                                        <input type="file" name="signature" id="signature" style="display: none"
+                                            value="{{ old('signature') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Boutons de navigation et soumission -->
@@ -1414,7 +1464,7 @@
 
                         <div class="col-12 mt-4 text-center">
                             <div class="rbt-form-group">
-                                <button type="submit" class="rbt-btn btn-primary ">
+                                <button type="submit" class="rbt-btn btn-primary " id="submitBtn">
                                     <i class="feather-check-circle me-2"></i>Soumettre le formulaire
                                 </button>
                             </div>
@@ -1430,7 +1480,141 @@
 
 
 @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            form.addEventListener('submit', function() {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="feather-loader me-2"></i> Envoi en cours...';
+            });
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('signature-pad');
+            const context = canvas.getContext('2d');
+            let drawing = false;
+
+            // Gestionnaires pour les événements de souris
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Gestionnaires pour les événements tactiles
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDrawing);
+
+            function startDrawing(event) {
+                event.preventDefault();
+                drawing = true;
+                const {
+                    offsetX,
+                    offsetY
+                } = getEventPosition(event);
+                context.beginPath();
+                context.moveTo(offsetX, offsetY);
+            }
+
+            function draw(event) {
+                event.preventDefault();
+                if (!drawing) return;
+                const {
+                    offsetX,
+                    offsetY
+                } = getEventPosition(event);
+                context.lineTo(offsetX, offsetY);
+                context.stroke();
+            }
+
+            function stopDrawing(event) {
+                event.preventDefault();
+                drawing = false;
+            }
+
+            function getEventPosition(event) {
+                if (event.touches && event.touches[0]) {
+                    const rect = canvas.getBoundingClientRect();
+                    return {
+                        offsetX: event.touches[0].clientX - rect.left,
+                        offsetY: event.touches[0].clientY - rect.top
+                    };
+                } else {
+                    return {
+                        offsetX: event.offsetX,
+                        offsetY: event.offsetY
+                    };
+                }
+            }
+
+            function isCanvasBlank(canvas) {
+                const blank = document.createElement('canvas');
+                blank.width = canvas.width;
+                blank.height = canvas.height;
+                return canvas.toDataURL() === blank.toDataURL();
+            }
+
+            document.getElementById('save-btn').addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+
+                if (isCanvasBlank(canvas)) {
+                    Swal.fire({
+                        title: 'Erreur!',
+                        text: 'Veuillez entrer une signature.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                const dataURL = canvas.toDataURL('image/png');
+                const blob = dataURLToBlob(dataURL);
+                const file = new File([blob], 'signature.png', {
+                    type: 'image/png'
+                });
+                const fileInput = document.getElementById('signature');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                // Trigger a change event for the file input
+                const fileInputChangeEvent = new Event('change', {
+                    bubbles: true
+                });
+                fileInput.dispatchEvent(fileInputChangeEvent);
+
+                // Optionally provide user feedback
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Signature enregistrée.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+
+            document.getElementById('clear-btn').addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            function dataURLToBlob(dataURL) {
+                const byteString = atob(dataURL.split(',')[1]);
+                const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new Blob([ab], {
+                    type: mimeString
+                });
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             /* =========================

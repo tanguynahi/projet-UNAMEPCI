@@ -25,15 +25,13 @@
                                 <tr>
                                     <th>N°</th>
                                     <th>Mutualiste</th>
-                                    <th>Corps</th>
-                                    <th>Grade</th>
-                                    <th>Unité</th>
+                                    <th>Specialite</th>
+                                    <th>Fonction</th>
                                     <th>Matricule</th>
                                     <th>Email</th>
                                     <th>Contact</th>
                                     <th>Ville</th>
                                     <th>Adresse</th>
-                                    <th>Genre</th>
                                     <th>Pièce</th>
                                     <th>N° Pièce</th>
                                     <th>Disponibilité</th>
@@ -59,7 +57,7 @@
                                         }
 
                                         $isOnline =
-                                            $mutualiste->disponibilite == 'En ligne'
+                                            $mutualiste->disponibilite == 'en ligne'
                                                 ? '<span class="badge bg-success"> En ligne </span>'
                                                 : '<span class="badge bg-danger"> Hors Ligne </span>';
                                     @endphp
@@ -68,40 +66,44 @@
                                         <td>
                                             <img src="{{ $imgUrl }}" class="avatar sm rounded me-2"
                                                 alt="profile-image">
-                                            <span>{{ $mutualiste->nom }} {{ $mutualiste->prenom }}</span>
+                                            <span>{{ $mutualiste->civilite ?? '' }}{{ $mutualiste->nom ?? '' }}
+                                                {{ $mutualiste->prenom ?? '' }}</span>
                                         </td>
-                                        <td>{{ $mutualiste->corp->libelle ?? '' }}</td>
-                                        <td>{{ $mutualiste->grade->libelle ?? '' }}</td>
-                                        <td>{{ $mutualiste->unite ?? '' }}</td>
+                                        <td>{{ $mutualiste->specialite->libelle ?? '' }}</td>
+                                        <td>{{ $mutualiste->fonction ?? '' }}</td>
+                                        {{-- <td>{{ $mutualiste->unite ?? '' }}</td> --}}
                                         <td>{{ $mutualiste->matricule }}</td>
                                         <td>{{ $mutualiste->email }}</td>
                                         <td>{{ formatPhoneNumber($mutualiste->contact, '-') ?? '' }}</td>
                                         <td>{{ $mutualiste->ville->libelle ?? '' }}</td>
                                         <td>{{ $mutualiste->adresse ?? '' }}</td>
-                                        <td>{{ $mutualiste->genre ?? '' }}</td>
                                         <td>{{ $mutualiste->typePiece->libelle ?? '' }}</td>
                                         <td>{{ $mutualiste->numero_piece ?? '' }}</td>
                                         <td>{!! $isOnline !!}</td>
                                         <td>{!! $statusBadge !!}</td>
                                         <td>
-                                            <a href="{{ route('mutualistes.show', $mutualiste->id) }}" id="ShowAdmin"
-                                                class="btn btn-link btn-sm text-success infoIcon" data-bs-toggle="tooltip"
-                                                data-bs-toggle="modal" data-bs-target="#info_admin" data-bs-placement="top"
-                                                title="Infos"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ route('mutualistes.edit', $mutualiste->id) }}" id="EditAdmin"
-                                                class="btn btn-link btn-sm text-primary editIcon"
-                                                data-bs-target="#edit_admin" title="Modifier"><i
-                                                    class="fa fa-pencil"></i></a>
+                                            @if ($mutualiste->status != 2)
+                                                <a href="{{ route('mutualistes.show', $mutualiste->id) }}" id="ShowAdmin"
+                                                    class="btn btn-link btn-sm text-success infoIcon"
+                                                    data-bs-toggle="tooltip" data-bs-toggle="modal"
+                                                    data-bs-target="#info_admin" data-bs-placement="top" title="Infos"><i
+                                                        class="fa fa-eye"></i></a>
+                                                {{-- <a href="{{ route('mutualistes.edit', $mutualiste->id) }}" id="EditAdmin"
+                                                    class="btn btn-link btn-sm text-primary editIcon"
+                                                    data-bs-target="#edit_admin" title="Modifier"><i
+                                                        class="fa fa-pencil"></i></a> --}}      
 
-                                            @if (Auth::user()->hasRole('super-administrateur'))
-                                                <a href="#deleteModal{{ $mutualiste->id }}" id="DeleteMutualiste"
-                                                    class="btn btn-link btn-sm text-danger deleteIcon"
-                                                    data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Supprimer"><i class="fa fa-trash"></i></a>
+                                                @if (Auth::user()->hasRole('super-administrateur'))
+                                                    <a href="#deleteModal{{ $mutualiste->id }}" id="DeleteMutualiste"
+                                                        class="btn btn-link btn-sm text-danger deleteIcon"
+                                                        data-bs-toggle="modal" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top" title="Supprimer"><i
+                                                            class="fa fa-trash"></i></a>
+                                                @endif
                                             @endif
                                         </td>
                                     </tr>
-                                    
+
                                     <!-- Modal delete-->
                                     <div class="modal fade flip" id="deleteModal{{ $mutualiste->id }}" tabindex="-1"
                                         aria-hidden="true">

@@ -304,7 +304,23 @@ if (!function_exists('formatDate')) {
         return $date->format('d' . $separator . 'm' . $separator . 'Y');
     }
 }
+if (!function_exists('formatDate02')) {
+    function formatDate02($dateString, $separator = '/')
+    {
+        if (empty($dateString) || $dateString === '000-00-00' || $dateString === '000-00-00 00:00:00') {
+            return 'Date non disponible';
+        }
 
+        try {
+            // Carbon détecte automatiquement le format (date ou datetime)
+            $date = Carbon::parse($dateString);
+
+            return $date->format('d' . $separator . 'm' . $separator . 'Y');
+        } catch (\Exception $e) {
+            return 'Date invalide';
+        }
+    }
+}
 
 if (!function_exists('formatDateTime')) {
     function formatDateTime($dateString, $separator = '-')
@@ -826,6 +842,16 @@ function urlCallback()
         return "https://127.0.0.1:8000/paiements/newCallBack";
     }
 }
+function urlPaiement()
+{
+    $exe = 'REEL';
+    $exe = 'LOCAL';
+    if ($exe == 'REEL') {
+        return "https://rest-airtime.paysecurehub.com/api/payhub-ws/build-away";
+    } else {
+        return "http://rest-airtime.paysecurehub.com/api/payhub-ws/build-away";
+    }
+}
 
 
 function appelApiEmail()
@@ -1072,7 +1098,7 @@ function createFichiers($folder, $buff, $ext, $fileName = null)
 
 function envoyerMessageMutualiste($mutualiste, $lienDeValidation)
 {
-    $message = "Bonjour $mutualiste->nom, votre inscription MAE-CI a été validée. " .
+    $message = "Bonjour $mutualiste->nom, votre inscription UNAMEPCI a été validée. " .
         "Cliquez ici pour créer vos accès : $lienDeValidation ";
 
     $mutualiste->update([
@@ -1090,5 +1116,23 @@ function appelApiSMS()
         return "https://rest-ws.artisanconnecte.net/api/EnvoiMessage";
     } else {
         return "http://rest-ws.artisanconnecte.net/api/EnvoiMessage";
+    }
+}
+
+function lienPdf($valeur)
+{
+    if (empty($valeur)) {
+        return null;
+    }
+    return 'https://5058.nx6.cloudlws.com/s/x8iGcqHG5NKwXkQ/download?path=&files=' . $valeur;
+}
+function apiHttp($lien)
+{
+    $exe = 'LOCAL';
+    $exe = 'REEL';
+    if ($exe == 'REEL') {
+        return $lien;
+    } else {
+        return str_replace('https', 'http', $lien);
     }
 }

@@ -38,6 +38,21 @@ class StoreMutualisteRequest extends FormRequest
             'matricule' => 'required|string|min:10|max:15|unique:mutualistes,matricule',
             'contact' => 'nullable|string|min:10|max:10|unique:mutualistes,contact',
 
+
+            'specialite_id'        => 'required',
+            'exists:specialites,id',
+            'ville_id'             => 'nullable',
+            'exists:villes,id',
+            'fonctions'            => 'required',
+            'string',
+            'min:3',
+            'droit_adhesion'       => 'required',
+            'in:0,1',
+            'carte_membre'         => 'required',
+            'in:0,1',
+            'cotisation_annuelle'  => 'required',
+            'in:0,1',
+
             // "role" => "required|string",
         ];
     }
@@ -63,6 +78,25 @@ class StoreMutualisteRequest extends FormRequest
             'contact.min' => 'Le contact doit avoir au moins 10 caractères.',
             'contact.max' => 'Le contact ne doit pas dépasser 10 caractères.',
             'contact.unique' => 'Le contact est déjà utilisé.',
+
+
+            'specialite_id.required' => 'Veuillez sélectionner une spécialité.',
+            'specialite_id.exists'   => 'La spécialité sélectionnée est invalide.',
+
+
+            'ville_id.exists'   => 'La ville sélectionnée est invalide.',
+
+            'fonctions.required' => 'Veuillez renseigner votre fonction.',
+            'fonctions.min'      => 'La fonction doit contenir au moins 3 caractères.',
+
+            'droit_adhesion.required' => 'Veuillez indiquer si le droit d’adhésion a été payé.',
+            'droit_adhesion.in'       => 'Valeur invalide pour le droit d’adhésion.',
+
+            'carte_membre.required' => 'Veuillez indiquer si la carte membre a été payée.',
+            'carte_membre.in'       => 'Valeur invalide pour la carte membre.',
+
+            'cotisation_annuelle.required' => 'Veuillez indiquer si la cotisation annuelle a été payée.',
+            'cotisation_annuelle.in'       => 'Valeur invalide pour la cotisation annuelle.',
         ];
     }
 }

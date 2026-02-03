@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('moyen_paiement');
             $table->string('contact_paiement');
             $table->bigInteger('produit_id')->nullable();// le produit
-            $table->date('date_paiement_final')->nullable();
-            $table->date('heure_paiement_final')->nullable();
+            $table->string('date_paiement_final')->nullable();
+            $table->string('heure_paiement_final')->nullable();
             $table->enum('status',[1,2,3])->default(1);
             $table->softDeletes();
             $table->timestamps();

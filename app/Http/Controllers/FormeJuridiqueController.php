@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Logs;
 use App\Models\FormeJuridique;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreformeJuridiqueRequest;
 use App\Http\Requests\UpdateformeJuridiqueRequest;
 
@@ -14,6 +16,11 @@ class FormeJuridiqueController extends Controller
     public function index()
     {
         //
+        $formejuridiques = FormeJuridique::orderBy('libelle', 'ASC')->get();
+        $module = "Module Forme Juridiques ";
+        $action = "a consulte la liste de Forme Juridique";
+        Logs::saveLog($module, $action);
+        return view('dashboard.formesJuridiques.index', compact('formejuridiques'));
     }
 
     /**
@@ -22,6 +29,7 @@ class FormeJuridiqueController extends Controller
     public function create()
     {
         //
+        return view('dashboard.formesJuridiques.create');
     }
 
     /**
@@ -30,6 +38,28 @@ class FormeJuridiqueController extends Controller
     public function store(StoreformeJuridiqueRequest $request)
     {
         //
+
+        try {
+            DB::beginTransaction();
+            $formeJuridique = new FormeJuridique();
+            $formeJuridique->libelle = $request->libelle;
+            $formeJuridique->description = $request->description;
+            $formeJuridique->status = 1;
+            $formeJuridique->save();
+            DB::commit();
+            toast('Forme Juridique  ajouté avec succès !', 'success');
+            return redirect()->route('formejuridiques.index');
+        } catch (\Throwable $e) {
+            //throw $th;
+            DB::rollBack();
+            toast('Une erreur s\'est produit, Veuillez réessayer.', 'error');
+            // Capturer toute autre exception (erreur 500)
+            $module = "Module Forme Juridique  ";
+            $action = "une erreur s'est produite lors de l'ajout d'une Forme Juridique  " . $e->getMessage();
+            Logs::saveLog($module, $action);
+
+            return redirect()->back();
+        }
     }
 
     /**
@@ -43,17 +73,39 @@ class FormeJuridiqueController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(FormeJuridique $formeJuridique)
+    public function edit($id)
     {
         //
+        $formeJuridique = FormeJuridique::findOrFail($id);
+        return view('dashboard.formesJuridiques.edit', compact('formeJuridique'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateformeJuridiqueRequest $request, FormeJuridique $formeJuridique)
+    public function update(UpdateformeJuridiqueRequest $request,  $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $formeJuridique = FormeJuridique::findOrFail($id);
+            $formeJuridique->libelle = $request->libelle;
+            $formeJuridique->description = $request->description;
+            $formeJuridique->status = 1;
+            $formeJuridique->save();
+            DB::commit();
+            toast('Forme Juridique  mise a jour avec succès !', 'success');
+            return redirect()->route('formejuridiques.index');
+        } catch (\Throwable $e) {
+            //throw $th;
+            DB::rollBack();
+            toast('Une erreur s\'est produit, Veuillez réessayer.', 'error');
+            // Capturer toute autre exception (erreur 500)
+            $module = "Module Forme Juridique  ";
+            $action = "une erreur s'est produite lors de la modification d'une Forme Juridique  " . $e->getMessage();
+            Logs::saveLog($module, $action);
+
+            return redirect()->back();
+        }
     }
 
     /**

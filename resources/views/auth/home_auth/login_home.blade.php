@@ -17,6 +17,7 @@
                         <h3 class="title text-center">Connexion</h3>
                         <form action="{{ route('connexion.mutualiste') }}" method="POST">
                             @csrf
+                            @method('post')
                             <div>
                                 <label>Email *</label>
                                 <input name="email" type="email" id="email" value="{{ old('email') }}"

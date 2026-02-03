@@ -57,7 +57,7 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'statut_emploi' => ['required', 'string'],
             'domaine_activite' => ['nullable', 'string', 'max:255'],
             'nom_employeur_principale' => ['nullable', 'string', 'max:255'],
-            'montant_cotis_annuel' => ['nullable', 'numeric', 'min:0'],
+            // 'montant_cotis_annuel' => ['nullable', 'numeric', 'min:0'],
             'date_recrutement' => ['nullable', 'date'],
 
             // Informations entreprise
@@ -95,13 +95,13 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
 
             // Fichiers
             'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'signature' => ['required', 'file', 'mimes:jpeg,png,jpg,gif'],
             'pieces_joints_recto' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
             'pieces_joints_verso' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
             'photo_couverture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'document_carte_inscript_ONMCI' => ['nullable', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
             'document_autorisation_ouverture' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
-            'photo_identite_1' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            // 'photo_identite_2' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'photo_identite_1' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
         ];
     }
 
@@ -137,6 +137,7 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
 
             // Messages pour les fichiers
             'avatar.required' => 'La photo de profil est obligatoire.',
+            'signature.required' => 'La signature est obligatoire.',
             'avatar.max' => 'La photo de profil ne doit pas dépasser 2 Mo.',
             'pieces_joints_recto.required' => 'Le recto de la pièce d\'identité est obligatoire.',
             'pieces_joints_recto.max' => 'Le recto de la pièce d\'identité ne doit pas dépasser 2 Mo.',
@@ -185,7 +186,7 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'statut_emploi' => 'statut d\'emploi',
             'domaine_activite' => 'domaine d\'activité',
             'nom_employeur_principale' => 'nom de l\'employeur principal',
-            'montant_cotis_annuel' => 'montant de cotisation annuelle',
+            // 'montant_cotis_annuel' => 'montant de cotisation annuelle',
             'date_recrutement' => 'date de recrutement',
 
             // Informations entreprise

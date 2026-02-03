@@ -175,7 +175,7 @@ class PaiementController extends Controller
                 'montant' => auth()->user()->mutualiste->droitAdhesion->montant,
                 'lib_order' => auth()->user()->mutualiste->droitAdhesion->libelle,
                 'pay_fees' => 1,
-                'Url_Retour' => urlRetour().$codePaiement,
+                'Url_Retour' => urlRetour() . $codePaiement,
                 'Url_Callback' => urlCallback(),
                 // 'Url_Retour' => route('resultat.paiement',['codePaiement'=>$codePaiement]),
                 // 'Url_Callback' => route('paiements.newCallBack'),
@@ -184,9 +184,8 @@ class PaiementController extends Controller
             // // Paiement::create($data);
             // // initialisation des route d'envoie via la plateforme de paiement
 
-            $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey'=>cleApi()])
-
-            ->post('http://rest-airtime.paysecurehub.com/api/payhub-ws/build-away',$data);
+            $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
+                ->post(urlPaiement(), $data);
             $ResJSON = $reponse->json();
             $code = $ResJSON['code'];
             if ($reponse->status() === 200) {
@@ -222,12 +221,11 @@ class PaiementController extends Controller
                 $action = " $message";
                 Logs::saveLog($module, $action);
             }
-
         } catch (\Throwable $e) {
             // dd($e->getMessage().'test');
             DB::rollback();
             $module = "Module paiement";
-            $action = " Une erreur s'est produite sur le serveur lors de passage sur l'hub de paiement". $e->getMessage();
+            $action = " Une erreur s'est produite sur le serveur lors de passage sur l'hub de paiement" . $e->getMessage();
             Logs::saveLog($module, $action);
             return redirect()->back()->with('error', 'Une erreur s\'est produite, veuillez réessayer.');
             // return redirect()->route('accueil');
@@ -328,6 +326,96 @@ class PaiementController extends Controller
             DB::rollback();
             Log::error('Erreur interne du serveur: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Une erreur s\'est produite, veuillez réessayer.');
+        }
+    }
+
+
+
+
+    // paiement droit d'adhesion
+    public function paiementCarteMembre()
+    {
+        //  dd(auth()->user()->mutualiste->carteMembre);
+        try {
+            DB::beginTransaction();
+            // initialisation du code de paiement avec une valeur unique
+            $codePaiement = generateCode2('Car');
+            // creation d'un nouveau element dans la table PaiementInitiale (debut)
+            $paiementinit = new PaiementInitiale();
+            $paiementinit->code_paiement = $codePaiement;
+            $paiementinit->mutualiste_id = auth()->user()->mutualiste->id;
+            $paiementinit->type_paiement_id = 5;
+            $paiementinit->correspondance_id = auth()->user()->mutualiste->carteMembre->id;
+            $paiementinit->montant_initial = auth()->user()->mutualiste->carteMembre->montant;
+            $paiementinit->save();
+            // fin
+
+
+            $data = [
+                'code_paiement' => $codePaiement,
+                'nom_usager' => auth()->user()->mutualiste->nom,
+                'prenom_usager' => auth()->user()->mutualiste->prenom,
+                'telephone' => auth()->user()->mutualiste->contact,
+                'email' => auth()->user()->mutualiste->email,
+                'libelle_article' => auth()->user()->mutualiste->carteMembre->libelle,
+                'quantite' => 1,
+                'montant' => auth()->user()->mutualiste->carteMembre->montant,
+                'lib_order' => auth()->user()->mutualiste->carteMembre->libelle,
+                'pay_fees' => 1,
+                'Url_Retour' => urlRetour() . $codePaiement,
+                'Url_Callback' => urlCallback(),
+                // 'Url_Retour' => route('resultat.paiement',['codePaiement'=>$codePaiement]),
+                // 'Url_Callback' => route('paiements.newCallBack'),
+            ];
+            // dd('ici');
+            // // Paiement::create($data);
+            // // initialisation des route d'envoie via la plateforme de paiement
+
+            $reponse = Http::withHeaders(['MerchantId' => CREDENSHEL(), 'ApiKey' => cleApi()])
+                ->post(urlPaiement(), $data);
+            $ResJSON = $reponse->json();
+            $code = $ResJSON['code'];
+            if ($reponse->status() === 200) {
+                if ($code === 200) {
+                    DB::commit();
+
+                    if (!empty($ResJSON['url'])) {
+                        $module = "Module paiement";
+                        $action = " Un mutualiste est passe sur l'hub de paiement concernant un paiement de carte Membre";
+                        Logs::saveLog($module, $action);
+                        return redirect()->away($ResJSON['url']);
+                    } else {
+                        toast('Echec d\'authentification à la page demandée !', 'error');
+                        $module = "Module paiement";
+                        $action = " Une erreur s'est produit lors du passage sur le hub de paiement consernant la carte Membre";
+                        Logs::saveLog($module, $action);
+                        return back();
+                    }
+                } else {
+                    $message = messageBrut($ResJSON['message']);
+                    $module = "Module paiement";
+                    $action = " $message";
+                    Logs::saveLog($module, $action);
+                    toast($message, 'error');
+                    return back();
+                }
+                // verification
+            } else {
+                $message = 'Une erreur inattendue s\'est produite, verifier que vous avez accès à internet, ' .
+                    'puis reéssayer. erreur ' . $reponse->status();
+                toast($message, 'error');
+                $module = "Module paiement";
+                $action = " $message";
+                Logs::saveLog($module, $action);
+            }
+        } catch (\Throwable $e) {
+            // dd($e->getMessage().'test');
+            DB::rollback();
+            $module = "Module paiement";
+            $action = " Une erreur s'est produite sur le serveur lors de passage sur l'hub de paiement" . $e->getMessage();
+            Logs::saveLog($module, $action);
+            return redirect()->back()->with('error', 'Une erreur s\'est produite, veuillez réessayer.');
+            // return redirect()->route('accueil');
         }
     }
 

@@ -96,10 +96,11 @@ class InscriptionController extends Controller
             $codeP = generateUniqueCode(10);
             // mutualiste
             $mutualiste = new Mutualiste();
+            $mutualiste->typeAdhesion = $inscription->typeAdhesion;
             $mutualiste->nom = $inscription->nom;
             $mutualiste->prenom = $inscription->prenom;
             $mutualiste->contact = $inscription->contact;
-            $mutualiste->contact_2 = $inscription->contact_2;
+            // $mutualiste->contact_2 = $inscription->contact_2 ?? null;
             $mutualiste->fax = $inscription->fax;
             $mutualiste->email = $inscription->email;
             $mutualiste->adresse = $inscription->adresse;
@@ -128,7 +129,6 @@ class InscriptionController extends Controller
             $mutualiste->statut_emploi = $inscription->statut_emploi;
             $mutualiste->domaine_activite = $inscription->domaine_activite;
             $mutualiste->date_recrutement = $inscription->date_recrutement;
-            $mutualiste->montant_cotis_annuel = $inscription->montant_cotis_annuel;
             $mutualiste->sigle = $inscription->sigle;
             $mutualiste->date_creation = $inscription->date_creation;
             $mutualiste->numero_autorisation = $inscription->numero_autorisation;
@@ -157,6 +157,7 @@ class InscriptionController extends Controller
             $mutualiste->adresse_postale_freelance = $inscription->adresse_postale_freelance;
             $mutualiste->domaine_activite_freelance = $inscription->domaine_activite_freelance;
             $mutualiste->lien_photo = $inscription->avatar;
+            $mutualiste->signature = $inscription->signature;
             $mutualiste->photo_couverture = $inscription->photo_couverture;
             $mutualiste->document_carte_inscript_ONMCI = $inscription->document_carte_inscript_ONMCI;
             $mutualiste->document_autorisation_ouverture = $inscription->document_autorisation_ouverture;
@@ -230,6 +231,7 @@ class InscriptionController extends Controller
             $cotisationMutualiste->cotisation_id = $coti->id;
             $cotisationMutualiste->type_paiement_id = 2;
             $cotisationMutualiste->montant = $coti->montant_a_payer ?? 120000;
+            $cotisationMutualiste->montant_initial = $coti->montant_a_payer ?? 120000;
             $cotisationMutualiste->frequence_paiement = $coti->frequence_paiement;
             $cotisationMutualiste->date_debut = $coti->date_debut;
             $cotisationMutualiste->date_fin = $coti->date_fin;

@@ -20,9 +20,13 @@ use App\Models\FormeJuridique;
 use App\Models\PaiementInitiale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Exception\RequestException;
 use App\Http\Requests\CreationAccesInscriptionRequest;
 use App\Http\Requests\StoreinscriptionUtilisateurRequest;
 
@@ -152,6 +156,7 @@ class HomeController extends Controller
         try {
             DB::beginTransaction();
             $avatar = null;
+            $signature = null;
             $photo_couverture = null;
             $document_autorisation_ouverture = null;
             $document_carte_inscript_ONMCI = null;
@@ -170,6 +175,11 @@ class HomeController extends Controller
             //     }
             // }
 
+            if ($request->hasFile('signature')) {
+                $file_name = md5(uniqid()) . '.' . $request->file('signature')->extension();
+                $request->file('signature')->storeAs('signature-inscription/', $file_name);
+                $signature = 'src-files/signature-inscription/' . $file_name;
+            }
             if ($request->hasFile('avatar')) {
                 $file_name = md5(uniqid()) . '.' . $request->file('avatar')->extension();
                 $request->file('avatar')->storeAs('avatar-inscription/', $file_name);
@@ -206,12 +216,13 @@ class HomeController extends Controller
                 $pieces_joints_verso = 'src-files/pieces_joints_verso-inscription/' . $file_name;
             }
 
-            $etre_auteur = $request->etre_auteur;
             $email = $request->email;
+            $etre_auteur = $request->etre_auteur;
             if ($etre_auteur == 1 || empty($request->nom_auteur)) {
                 $valeur = $request->nom_relation;
             } else {
                 $valeur = $request->nom_auteur;
+                $etre_auteur = 0;
             }
 
 
@@ -255,7 +266,7 @@ class HomeController extends Controller
             $inscription->statut_emploi = $request->statut_emploi;
             $inscription->domaine_activite = $request->domaine_activite;
             $inscription->date_recrutement = $request->date_recrutement;
-            $inscription->montant_cotis_annuel = $request->montant_cotis_annuel;
+            // $inscription->montant_cotis_annuel = $request->montant_cotis_annuel;
             $inscription->sigle = $request->sigle;
             $inscription->date_creation = $request->date_creation;
             $inscription->numero_autorisation = $request->numero_autorisation;
@@ -289,6 +300,7 @@ class HomeController extends Controller
             $inscription->document_carte_inscript_ONMCI = $document_carte_inscript_ONMCI;
             $inscription->document_autorisation_ouverture = $document_autorisation_ouverture;
             $inscription->photo_identite_1 = $photo_identite_1;
+            $inscription->signature = $signature;
             $inscription->code = $code;
             $inscription->status = 2;
             $inscription->save();
@@ -396,11 +408,11 @@ class HomeController extends Controller
             $user->save();
             $user->assignRole('mutualiste');
             $mutualiste->user_id = $user->id;
+            $mutualiste->status = 1;
             $mutualiste->save();
             DB::commit();
             toast('Mutualiste a creer ses acces  avec succès', 'success');
             return redirect()->route('connexion');
-
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -412,6 +424,91 @@ class HomeController extends Controller
 
             Log::error('Erreur interne du serveur: ' . $th->getMessage());
             return redirect()->back()->withInput();
+        }
+    }
+
+
+
+    public function showsPdf(Request $request)
+    {
+        try {
+            $fichier = $request->fichier;
+            // dd($fichier);
+            $pdfUrl = apiHttp($fichier);
+
+            // Solution avec gestion SSL et timeout
+            $response = Http::timeout(30)
+                ->withoutVerifying() // À remplacer en production par un vrai certificat
+                ->get($pdfUrl);
+
+            if ($response->successful()) {
+                return response($response->body(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', 'inline; filename="document.pdf"');
+            } else {
+                $module = "Visualisation de PDF";
+                $action = 'Impossible de récupérer le fichier PDF. Statut HTTP: ' . $response->status();
+                Logs::saveLog($module, $action);
+                return response('Impossible de récupérer le fichier PDF. Statut HTTP: ' . $response->status(), 404);
+            }
+        } catch (RequestException $e) {
+            // Log l'erreur pour débogage
+            Log::error('Erreur SSL ou connexion PDF: ' . $e->getMessage(), [
+                'url' => $pdfUrl ?? 'Non définie',
+                'fichier' => $fichier ?? 'Non défini'
+            ]);
+            $module = "Visualisation de PDF";
+            $action = 'Erreur SSL ou connexion PDF: ' . $e->getMessage();
+            Logs::saveLog($module, $action);
+
+            return response('Erreur de connexion au serveur PDF. Veuillez réessayer plus tard.', 500);
+        } catch (\Exception $e) {
+            Log::error('Erreur générale PDF: ' . $e->getMessage());
+            $module = "Visualisation de PDF";
+            $action = 'Erreur générale PDF : ' . $e->getMessage();
+            Logs::saveLog($module, $action);
+            return response('Erreur interne du serveur.', 500);
+        }
+    }
+
+
+
+
+    public function logout(Request $request)
+    {
+        $user = Auth::user();
+
+        $userRole = null;
+        $userRole2 = null;
+
+        if ($user->administrateur) {
+            $userRole = 'super-administrateur';
+            $userRole2 = 'administrateur';
+
+            $user->administrateur->update([
+                'disponibilite' => 'hors ligne',
+            ]);
+        }
+
+        if ($user->mutualiste) {
+            $userRole = 'mutualiste';
+            $userRole2 = 'mutualiste';
+            // Mettre à jour la disponibilité de l'utilisateur mutualiste
+            $user->mutualiste->update([
+                'disponibilite' => 'hors ligne',
+            ]);
+        }
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Redirection après déconnexion
+        if ($userRole === 'super-administrateur' || $userRole2 === 'administrateur') {
+            return redirect('/login'); // Ou toute autre page de redirection pour l'administrateur
+        } else {
+            return redirect('/connexion'); // Ou toute autre page de redirection
         }
     }
 }
