@@ -1,13 +1,46 @@
 @extends('layouts.home_login', ['title' => 'Page de Connexion'])
+@push('css')
+    <style>
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper input {
+            width: 100%;
+            padding-right: 40px !important;
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        #togglePassword:hover {
+            color: #333;
+        }
+
+        #togglePassword i {
+            font-size: 18px;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="rbt-elements-area bg-color-white rbt-section-gap"
-        style="background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('assets/home/images/millfond.jpg') }}'); height: 100%; width: 100%; background-size: cover;">
+        style="background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('assets/fond.jpg') }}'); height: 100%; width: 100%; background-size: cover;">
         <div class="container">
             <div class="row gy-5 row--30">
                 <!-- Image section -->
                 <div class="col-lg-6 d-none d-lg-block">
                     <div class="thumbnail">
-                        <img class="w-100 radius-6" src="{{ asset('assets/home/images/arrierPLa.png') }}"
+                        <img class="w-100 radius-6" src="{{ asset('assets/medecin.png') }}"
                             style="height: 550px; width:550px;" alt="Connexion Images">
                     </div>
                 </div>
@@ -34,11 +67,10 @@
                                 <label>Mot de passe *</label>
                                 <div class="password-input-wrapper" style="position: relative;">
                                     <input name="password" type="password" id="password"
-                                        class="@error('password') is-invalid @enderror"
-                                        value="{{ old('password') }}" minlength="6" required
-                                        style="padding-right: 40px;">
+                                        class="@error('password') is-invalid @enderror" value="{{ old('password') }}"
+                                        minlength="6" required style="padding-right: 40px;">
                                     <button type="button" id="togglePassword"
-                                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                                         <i class="feather-eye" id="eyeIcon"></i>
                                     </button>
                                 </div>
@@ -81,39 +113,7 @@
         </div>
     </div>
 
-    <style>
-        .password-input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .password-input-wrapper input {
-            width: 100%;
-            padding-right: 40px !important;
-        }
-
-        #togglePassword {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            padding: 5px;
-        }
-
-        #togglePassword:hover {
-            color: #333;
-        }
-
-        #togglePassword i {
-            font-size: 18px;
-        }
-    </style>
-
-    <script>
+      <script>
         document.addEventListener('DOMContentLoaded', function() {
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
@@ -138,3 +138,4 @@
         });
     </script>
 @endsection
+

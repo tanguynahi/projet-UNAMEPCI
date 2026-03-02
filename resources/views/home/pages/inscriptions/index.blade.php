@@ -1321,7 +1321,7 @@
                                 <label for="photo_couverture" class="form-label">Photo de couverture</label>
                                 <div class="document-upload" id="couvertureUpload">
                                     <input type="file" name="photo_couverture" id="photo_couverture"
-                                        class="@error('photo_couverture') is-invalid @enderror">
+                                        class="@error('photo_couverture') is-invalid @enderror" accept=".jpeg ,.png">
                                     <div class="upload-content">
                                         <i class="feather-upload fs-4 mb-2"></i>
                                         <p class="mb-1 upload-text">Cliquez pour télécharger</p>

@@ -468,13 +468,26 @@
                             <!-- Bouton de paiement -->
 
 
-                            <a href="javascript:void(0)" class="btn-payment" id="paymentButton"
+                            {{-- <a href="javascript:void(0)" class="btn-payment" id="paymentButton"
                                 data-url="{{ route('paiement.CarteMembres') }}">
 
                                 <span id="buttonText">
                                     <i class="fas fa-credit-card"></i> Passer au paiement
                                 </span>
-                            </a>
+                            </a> --}}
+
+                            <form action="{{ route('espaPay', 5) }}" method="POST" id="paymentButton">
+                                @csrf
+                                @method('POST')
+                                <input type="hidden" name="montant" value="{{ $carteMembre->montant }}">
+                                <input type="hidden" name="idCarte" value="{{ $carteMembre->id }}">
+                                <input type="hidden" name="libelle" value="{{ $carteMembre->libelle }}">
+                                <button type="submit" class="btn-payment">
+                                    <span id="buttonText">
+                                        <i class="fas fa-credit-card"></i> Passer au paiement
+                                    </span>
+                                </button>
+                            </form>
 
 
                             <!-- Sécurité -->

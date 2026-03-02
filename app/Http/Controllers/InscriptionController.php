@@ -231,7 +231,7 @@ class InscriptionController extends Controller
             $cotisationMutualiste->cotisation_id = $coti->id;
             $cotisationMutualiste->type_paiement_id = 2;
             $cotisationMutualiste->montant = $coti->montant_a_payer ?? 120000;
-            $cotisationMutualiste->montant_initial = $coti->montant_a_payer ?? 120000;
+            // $cotisationMutualiste->montant_initial = $coti->montant_a_payer ?? 120000;
             $cotisationMutualiste->frequence_paiement = $coti->frequence_paiement;
             $cotisationMutualiste->date_debut = $coti->date_debut;
             $cotisationMutualiste->date_fin = $coti->date_fin;

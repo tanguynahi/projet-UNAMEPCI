@@ -429,7 +429,8 @@
                     documentID.style.display = 'none';
                     Enregistrer.style.display = 'none';
                     onlinePayment.style.display = 'block';
-                    paymentForm.action = "{{ route('detteRembou.hub') }}"; // Change action
+                    // paymentForm.action = "{{ route('detteRembou.hub') }}"; // Change action
+                           paymentForm.action = "{{ route('espaPay', 3) }}"; // Change action
                 } else if (modepaiement === "Cash" || modepaiement === "Chèque" || modepaiement === "Virement") {
                     referenceID.style.display = 'block';
                     dateID.style.display = 'block';

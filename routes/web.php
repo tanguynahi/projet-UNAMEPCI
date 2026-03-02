@@ -87,7 +87,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::post('/storeAccesInscription/{id}', 'creatAccesInscrip')->name('compte.creer');
 
     Route::get('/visualiserPDF', 'showsPdf')->name('visualise.pdf');
-    Route::post('/deconnexionU','logout')->name('deconnexion');
+    Route::post('/deconnexionU', 'logout')->name('deconnexion');
 });
 Route::controller(ConnexionMutualisteController::class)->group(function () {
     Route::post('/connexion-mutualiste', 'connexionMutualiste')->name('connexion.mutualiste');
@@ -127,6 +127,14 @@ Route::middleware('auth')->group(function () {
 
 
                 Route::get('/carteMembreMutualiste', 'carteMembreImpayer')->name('carteImpaye');
+
+
+
+                Route::post('/espacesdePaiements/{id}', 'paiementEspace')->name('espaPay');
+                Route::get('/affichagePage/{libelle}/{montant}/{id}/{idCorrespondant}/{facturationID?}', 'PayPage')->name('hubPayPag');
+                Route::post('/traitementapiPay/{id}', 'traitementAppelApiPaiement')->name('pasHubTrait');
+                 Route::get('/paiement/resultatNew/{codePaiement}/{ind}','resulPayment')->name('newResultatPaym');
+
             });
             // route des conversations  concernant la chat ( controller message)
             Route::controller(ConversationController::class)->group(function () {
@@ -276,7 +284,7 @@ Route::middleware('auth')->group(function () {
         'cartemembres' => CarteMembreController::class,
         'taxes' => TaxeController::class,
         'formejuridiques' => FormeJuridiqueController::class,
-        'specialites' =>SpecialiteController::class,
+        'specialites' => SpecialiteController::class,
     ]);
 
     Route::middleware('verifierRoleUtilisateur:super-administrateur,administrateur')->group(function () {

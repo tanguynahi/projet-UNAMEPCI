@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 
 if (!function_exists('calculateEndDate')) {
     function calculateEndDate($duration)
@@ -839,7 +838,7 @@ function urlCallback()
     if ($exe == 'REEL') {
         return "https://mutualpay.paysecurehub.com/paiements/newCallBack";
     } else {
-        return "https://127.0.0.1:8000/paiements/newCallBack";
+        return "https://127.0.0.1:8000/api/paiements/newCallBack";
     }
 }
 function urlPaiement()
@@ -1142,4 +1141,29 @@ function apiHttp($lien)
 function nonDossierCloud()
 {
     return "DOCSLABELIS";
+}
+
+
+
+function urlCallbackLien()
+{
+    $exe = 'REEL';
+    $exe = 'LOCAL';
+    if ($exe == 'REEL') {
+        return "https://muaeci.ci/api/paiements/newCallBackLiens";
+    } else {
+        return "https://127.0.0.1:8000/api/paiements/newCallBackLiens";
+    }
+}
+
+
+
+function ValeurNatureCotisationMu($id)
+{
+    $cotisationMutualiste = CotisationMutualiste::where('id', $id)->first();
+    if (!empty($cotisationMutualiste)) {
+        return $cotisationMutualiste->frequence_paiement;
+    } else {
+        return null;
+    }
 }

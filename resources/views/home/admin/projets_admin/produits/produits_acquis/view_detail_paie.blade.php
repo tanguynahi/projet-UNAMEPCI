@@ -103,7 +103,11 @@
                                     @enderror
                                 </div>
                             </div>
-                            @if ($facturation->periode_id == 3 || $facturation->periode_id == 4 || $facturation->periode_id == 5 || $facturation->periode_id == 2 )
+                            @if (
+                                $facturation->periode_id == 3 ||
+                                    $facturation->periode_id == 4 ||
+                                    $facturation->periode_id == 5 ||
+                                    $facturation->periode_id == 2)
                                 {{-- // les id des periodes : 1 immediat, 2 journaliere, 3 hebdomadaire ,4 mensuelle, 5 Annuelle , 6 Aperiodique --}}
                                 <div class="col-3 mb--20 col-md-3 col-sm-3 col-12">
                                     <label>Montant periodique <span class="text-danger">*</span></label>
@@ -173,7 +177,11 @@
                                         <input id="montant" name="montant" type="text"
                                             value="{{ old('montant') }}" class="@error('montant') is-invalid @enderror"
                                             placeholder="montant"
-                                            @if ($facturation->periode->libelle === 'Immediat' || $facturation->periode_id == 1) min="{{ $facturation->total_apayer }}" @elseif ($facturation->periode_id == 3 || $facturation->periode_id == 4 || $facturation->periode_id == 5 || $facturation->periode_id == 2)  min="{{ $facturation->montant_periodique }}" @endif>
+                                            @if ($facturation->periode->libelle === 'Immediat' || $facturation->periode_id == 1) min="{{ $facturation->total_apayer }}" @elseif (
+                                                $facturation->periode_id == 3 ||
+                                                    $facturation->periode_id == 4 ||
+                                                    $facturation->periode_id == 5 ||
+                                                    $facturation->periode_id == 2)  min="{{ $facturation->montant_periodique }}" @endif>
                                         <div id="error-message" style="color: red; display: none;"></div>
                                         @error('montant')
                                             <span class="invalid-feedback" role="alert">
@@ -264,7 +272,8 @@
                     documentID.style.display = 'none';
                     Enregistrer.style.display = 'none';
                     onlinePayment.style.display = 'block';
-                    paymentForm.action = "{{ route('passeHub.paiement') }}"; // Change action
+                    // paymentForm.action = "{{ route('passeHub.paiement') }}"; // Change action
+                    paymentForm.action = "{{ route('espaPay', 4) }}"; // Change action
                 } else if (modepaiement === "Cash" || modepaiement === "Chèque" || modepaiement === "Virement") {
                     referenceID.style.display = 'block';
                     dateID.style.display = 'block';
@@ -315,7 +324,11 @@
             @if ($facturation->periode->libelle === 'Immediat' || $facturation->periode_id == 1)
                 montantMin = {{ $facturation->total_apayer }};
                 montantMax = {{ $facturation->reste_apayer }};
-            @elseif ($facturation->periode_id == 3 || $facturation->periode_id == 4 || $facturation->periode_id == 5 || $facturation->periode_id == 2)
+            @elseif (
+                $facturation->periode_id == 3 ||
+                    $facturation->periode_id == 4 ||
+                    $facturation->periode_id == 5 ||
+                    $facturation->periode_id == 2)
                 montantMin = {{ $facturation->montant_periodique }};
                 montantMax = {{ $facturation->reste_apayer }};
             @endif

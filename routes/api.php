@@ -21,9 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 // Route::post('/api/payment-callback', [paiementApiController::class, 'handleCallback']);
 
-Route::controller(paiementApiController::class)->group(function(){
+Route::controller(paiementApiController::class)->group(function () {
     Route::post('/paiements/callback', 'callback')->name('paiements.callback');
     Route::post('/paiements/newCallBack', 'newCallBack')->name('paiements.newCallBack');
+
+
+    Route::post('/paiements/newCallBackLiens', 'newCallBack02')->name('pay.newCallBacks');
 });
 
 Route::get('/notifications/unread-count', [NotificationMutualisteController::class, 'unreadCount']);

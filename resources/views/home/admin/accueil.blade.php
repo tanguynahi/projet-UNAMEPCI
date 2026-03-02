@@ -28,7 +28,21 @@
 
                     </div>
                     <center>
-                        <a class="rbt-btn btn-sm" href="{{ route('paiement.adhesion') }}">Payer</a>
+                        {{-- <a class="rbt-btn btn-sm" href="{{ route('paiement.adhesion') }}">Payer</a> --}}
+
+
+                               <form action="{{ route('espaPay', 1) }}" method="POST" id="paymentButton">
+                                @csrf
+                                @method('POST')
+                                {{-- <input type="hidden" name="montant" value="{{ $carteMembre->montant }}">
+                                <input type="hidden" name="idCarte" value="{{ $carteMembre->id }}">
+                                <input type="hidden" name="libelle" value="{{ $carteMembre->libelle }}"> --}}
+                                <button type="submit" class="rbt-btn btn-sm">
+                                    <span id="buttonText">
+                                        <i class="fas fa-credit-card"></i> Passer au paiement
+                                    </span>
+                                </button>
+                            </form>
                     </center>
                     <br>
                 @endif

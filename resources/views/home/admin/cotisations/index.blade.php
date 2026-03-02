@@ -64,7 +64,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($cotisations as $cotisationMutualiste)
+                                {{-- @foreach ($cotisations as $cotisationMutualiste)
                                     <tr>
                                         <th><span class="h6 mb--5">{{ $cotisationMutualiste->cotisation->libelle }}</span>
                                         </th>
@@ -125,6 +125,75 @@
                                             @endif
                                         </td>
                                     </tr>
+                                @endforeach --}}
+
+                                @foreach ($cotisations as $cotisationMutualiste)
+                                   
+                                    @php
+                                        $dateActuel = \Carbon\Carbon::now(); // IMPORTANT
+                                        $dateDebut = \Carbon\Carbon::parse($cotisationMutualiste->date_debut);
+                                        $dateFin = \Carbon\Carbon::parse($cotisationMutualiste->date_fin);
+                                    @endphp
+
+                                    {{-- Afficher seulement les cotisations en cours --}}
+                                    @if ($dateActuel->greaterThanOrEqualTo($dateDebut) && $dateActuel->lessThanOrEqualTo($dateFin))
+                                        <tr>
+                                            <th>
+                                                <span
+                                                    class="h6 mb--5">{{ $cotisationMutualiste->cotisation->libelle }}</span>
+                                            </th>
+                                            <td>{{ formatMontant($cotisationMutualiste->montant) }}</td>
+                                            <td>{{ formatDate($cotisationMutualiste->date_debut) }}</td>
+                                            <td>{{ formatDate($cotisationMutualiste->date_fin) }}</td>
+                                            <td class="d-none d-md-table-cell">
+                                                {{ $cotisationMutualiste->frequence_paiement }}
+                                            </td>
+
+                                            <td>
+
+                                                @if ($dateActuel->greaterThan($dateFin))
+                                                    <span class="badge bg-warning text-dark">TERMINÉE</span>
+                                                @elseif ($cotisationMutualiste->status == 2)
+                                                    <span class="badge bg-primary">EN ATTENTE</span>
+                                                @elseif ($cotisationMutualiste->status == 1)
+                                                    <span class="badge bg-success">SOLDE</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @if ($cotisationMutualiste->status == 2)
+                                                    <form action="{{ route('espaPay', 2) }}" method="POST"
+                                                        id="paiementForm">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <input type="hidden" name="montant"
+                                                            value="{{ $cotisationMutualiste->montant }}">
+                                                        <input type="hidden" name="idCotisation"
+                                                            value="{{ $cotisationMutualiste->id }}">
+                                                        <button type="submit" class="rbg-success-opacity text-center"
+                                                            title="Paiement">
+                                                            <i class="fa fa-credit-card"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                @if (empty($cotisationMutualiste->administrateur_id) || $cotisationMutualiste->status == 5)
+                                                    <a class="rbg-success-opacity text-center mx-2"
+                                                        href="{{ route('resume.cotisationMutual', $cotisationMutualiste->cotisation_id) }}"
+                                                        title="detail des paiements">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="23"
+                                                            height="23" class="me-3" fill="currentColor"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                            <path
+                                                                d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                        </svg>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -136,7 +205,7 @@
     </div>
 
     <!-- Modal pour le paiement annuel -->
-    <div class="modal fade" id="modalPaiementAnnuel" tabindex="-1" aria-labelledby="modalPaiementAnnuelLabel"
+    {{-- <div class="modal fade" id="modalPaiementAnnuel" tabindex="-1" aria-labelledby="modalPaiementAnnuelLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -176,7 +245,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @include('sweetalert::alert')
 
@@ -223,7 +292,8 @@
                 modal.find('#cotisationId').val(cotisationId);
 
                 // Mettre à jour l'action du formulaire
-                var formAction = "{{ route('paiementCotisationAnnuelle.mutualiste', ':id') }}".replace(':id',
+                var formAction = "{{ route('paiementCotisationAnnuelle.mutualiste', ':id') }}".replace(
+                    ':id',
                     cotisationId);
                 modal.find('#formPaiementAnnuel').attr('action', formAction);
 
