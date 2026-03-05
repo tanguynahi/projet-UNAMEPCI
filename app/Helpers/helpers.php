@@ -1107,6 +1107,17 @@ function envoyerMessageMutualiste($mutualiste, $lienDeValidation)
 
     return $message;
 }
+function envoyerMessageInscriptRejet($inscription)
+{
+    $message = "Bonjour $inscription->nom, votre inscription UNAMEPCI a été rejeter . " .
+        "pour motif de  : $inscription->commentaire ";
+
+    $inscription->update([
+        'lien_email' => $message
+    ]);
+
+    return $message;
+}
 
 function appelApiSMS()
 {

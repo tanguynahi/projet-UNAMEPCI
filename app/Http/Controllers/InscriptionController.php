@@ -353,6 +353,130 @@ class InscriptionController extends Controller
     }
     public function rejeter(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all(), $id);
+
+        try {
+            DB::beginTransaction();
+            // inscription
+            $inscription = Inscription::findOrFail($id);
+            $inscription->administrateur_id = auth()->user()->administrateur->id;
+            $inscription->commentaire = $request->commentaire; // Rejetée
+            $inscription->status = 3; // Rejetée
+            $inscription->save();
+            // Générer le lien de validation
+
+            $sujet = "Notification concernant votre demande UNAMEPCI ";
+
+            $message = "
+                Bonjour {$inscription->prenom} {$inscription->nom}, <br><br>
+
+                Nous vous informons que votre demande d'inscription sur la plateforme <strong>UNAMEPCI </strong> n’a malheureusement pas été validée et a été <strong>rejetée</strong> après examen de votre dossier. <br><br>
+
+                <strong>Motif du rejet :</strong> <br>
+                {$inscription->commentaire} <br><br>
+
+                Nous vous invitons à corriger les éléments mentionnés ci-dessus et à effectuer une nouvelle demande si nécessaire. <br><br>
+
+                Pour toute information complémentaire ou assistance, n’hésitez pas à contacter notre support. <br><br>
+
+                Merci de votre compréhension. <br><br>
+
+                Cordialement, <br>
+                <strong>L’équipe UNAMEPCI </strong>
+                ";
+            $url = appelApiEmail();
+            $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+            $data = [
+                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                "destination" => $inscription->email,
+                "sujet" => $sujet,
+                "message" => $template
+            ];
+            $retourAPI = Http::post($url, $data);
+            $res = $retourAPI->json();
+            if ($retourAPI->status() == 200) {
+                (int)$code = $res['status'];
+                if ($code != 200) {
+                    $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                    Log::ajoutLOG($message);
+                    $module = "Envoyer de Mail a  rejeter de  inscription";
+                    $action = "Echec d'envoyer de mail  : $message";
+                    Logs::saveLog($module, $action);
+                } else {
+                    $module = "Envoyer de Mail a  rejeter de  inscription";
+                    $action = "Email envoyer avec success   : $inscription->nom , $inscription->prenom sur son email  $inscription->email";
+                    Logs::saveLog($module, $action);
+                }
+            } else {
+                Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                $module = "Envoyer de Mail a  rejeter de  inscription";
+                $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                Logs::saveLog($module, $action);
+            }
+
+            // envoyer via sms rejeter
+
+            try {
+                $message = envoyerMessageInscriptRejet($inscription);
+
+                $url = appelApiSMS();
+
+                $headers = [
+                    'Environnement' => 'bew', // Remplace par l'environnement approprié
+                    'secretKey' => 'jfdiezaophrh90c(_kfjqlm', // Remplace par ta vraie clé secrète
+                ];
+
+                $data = [
+                    "titre" => "Rejeter de compte UNAMEPCI",
+                    "destination" => $inscription->contact, // Numéro de téléphone
+                    "email" => $inscription->email ?? null, // Facultatif
+                    "texte" => $message,
+                ];
+
+                $retourAPI = Http::withHeaders($headers)->post($url, $data);
+
+                $res = $retourAPI->json();
+
+
+                if ($retourAPI->status() == 200) {
+                    (int)$code = $res['status'];
+                    if ($code != 200) {
+                        $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoyer sms avec les accès";
+                        Log::ajoutLOG($message);
+                        $module = "Envoyer du sms a  rejeter de  inscription";
+                        $action = "Echec d'envoyer du sms  : $message";
+                        Logs::saveLog($module, $action);
+                    } else {
+                        $module = "Envoyer du sms a  rejeter de  inscription";
+                        $action = "Email envoyer avec success   : $inscription->nom , $inscription->prenom sur son email  $inscription->email";
+                        Logs::saveLog($module, $action);
+                    }
+                } else {
+                    Log::error("Erreur lors de l'envoi du sms. Statut API : " . $retourAPI->status());
+
+                    $module = "Envoyer du sms a la rejeter de  inscription";
+                    $action = "Erreur lors de l'envoi du sms. Statut API : " . $retourAPI->status();
+                    Logs::saveLog($module, $action);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                Log::error("Erreur lors de l'envoi du sms. Statut API : " . $th->getMessage());
+            }
+            DB::commit();
+            toast(' Inscription a été rejeter avec succès !', 'success');
+            return redirect()->route('inscriptions.show', ['id' => $inscription->id]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            toast('Une erreur s\'est produit, Veuillez réessayer.', 'error');
+            // Capturer toute autre exception (erreur 500)
+            $module = "Module Inscriptions ";
+            $action = " Une erreur s'est produite lors de l'enregistrement d'une inscription  " . $th->getMessage();
+            Logs::saveLog($module, $action);
+
+            Log::error('Erreur interne du serveur: ' . $th->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 }

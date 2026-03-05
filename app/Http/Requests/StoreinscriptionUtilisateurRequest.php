@@ -28,10 +28,10 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'civilite' => ['required', 'string', 'in:M.,Mme,Mlle'],
             'nom' => ['required', 'string', 'max:100'],
             'prenom' => ['required', 'string', 'max:100'],
-            'contact' => ['required', 'string', 'max:15', 'unique:inscriptions,contact'],
+            'contact' => ['required', 'string', 'max:15', 'unique:mutualistes,contact'],
             'contact_2' => ['nullable', 'string', 'max:15'],
             'fax' => ['nullable', 'string', 'max:50'],
-            'email' => ['required', 'email', 'max:255', 'unique:inscriptions,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:mutualistes,email'],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'nationalite' => ['required', 'string', 'max:100'],
@@ -48,7 +48,7 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'pseudonyme_recon_ONMCI' => ['nullable', 'string', 'max:100'],
 
             // Informations professionnelles
-            'matricule' => ['required', 'string', 'max:50', 'unique:inscriptions,matricule'],
+            'matricule' => ['required', 'string', 'max:50', 'unique:mutualistes,matricule'],
             'raison_social_primaire' => ['required', 'string', 'max:255'],
             'specialite_id' => ['required', 'exists:specialites,id'],
             'fonction' => ['nullable', 'string', 'max:100'],

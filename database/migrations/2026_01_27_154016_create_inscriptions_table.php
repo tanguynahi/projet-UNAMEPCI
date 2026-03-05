@@ -20,10 +20,10 @@ return new class extends Migration
             // infos personnelles
             $table->string('nom');
             $table->string('prenom');
-            $table->string('contact')->unique()->nullable();
-            $table->string('contact_2')->unique()->nullable();
+            $table->string('contact')->nullable();
+            $table->string('contact_2')->nullable();
             $table->string('fax')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('adresse')->nullable();
             $table->enum('civilite', ['M.', 'Mme', 'Mlle'])->default('M.');
             $table->date("date_naissance")->nullable();
@@ -45,7 +45,7 @@ return new class extends Migration
 
 
             //- infos taf principale
-            $table->string('matricule')->unique();
+            $table->string('matricule');
             $table->string("raison_social_primaire")->nullable();
             $table->foreignId('specialite_id')->nullable()->constrained('specialites', 'id');
             $table->string("fonction")->nullable();

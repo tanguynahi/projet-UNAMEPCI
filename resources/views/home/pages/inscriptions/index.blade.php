@@ -307,6 +307,18 @@
         </div>
     </div>
 
+    @if ($errors->any())
+        <div id="validation-error-summary"
+            style="background:#fff3f3;border:1px solid #dc3545;border-radius:8px;padding:16px 20px;margin-bottom:20px;color:#dc3545;">
+            <strong><i class="fas fa-exclamation-triangle"></i> Veuillez corriger les erreurs suivantes :</strong>
+            <ul style="margin:8px 0 0 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('inscriptTraite') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')

@@ -27,10 +27,10 @@
                                     <th>Matricule</th>
                                     <th>Email</th>
                                     <th>Contact</th>
-                                    <th>Ville</th>
-                                    <th>Adresse</th>
-                                    <th>Pièce</th>
-                                    <th>N° Pièce</th>
+                                    {{-- <th>Ville</th> --}}
+                                    {{-- <th>Adresse</th> --}}
+                                    {{-- <th>Pièce</th>
+                                    <th>N° Pièce</th> --}}
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -49,7 +49,7 @@
                                         } elseif ($inscription->status == 1) {
                                             $statusBadge = '<span class="badge bg-success"> Compte Validé </span>';
                                         } else {
-                                            $statusBadge = '<span class="badge bg-danger"> Compte Bloqué </span>';
+                                            $statusBadge = '<span class="badge bg-danger">  Rejetée </span>';
                                         }
                                     @endphp
                                     <tr>
@@ -64,10 +64,10 @@
                                         <td>{{ $inscription->matricule }}</td>
                                         <td>{{ $inscription->email }}</td>
                                         <td>{{ formatPhoneNumber($inscription->contact, '-') ?? '' }}</td>
-                                        <td>{{ $inscription->ville->libelle ?? '' }}</td>
-                                        <td>{{ $inscription->adresse ?? '' }}</td>
-                                        <td>{{ $inscription->typePiece->libelle ?? '' }}</td>
-                                        <td>{{ $inscription->numero_piece ?? '' }}</td>
+                                        {{-- <td>{{ $inscription->ville->libelle ?? '' }}</td> --}}
+                                        {{-- <td>{{ $inscription->adresse ?? '' }}</td> --}}
+                                        {{-- <td>{{ $inscription->typePiece->libelle ?? '' }}</td>
+                                        <td>{{ $inscription->numero_piece ?? '' }}</td> --}}
                                         <td>{!! $statusBadge !!}</td>
                                         <td>
                                             <a href="{{ route('inscriptions.show', $inscription->id) }}" id="ShowAdmin"

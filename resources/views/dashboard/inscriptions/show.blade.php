@@ -752,7 +752,7 @@
                             <div class="col-12">
                                 <div class="d-flex justify-content-end">
                                     <button id="btn_rejeter" class="btn btn-outline-danger mx-2 fw-bold"
-                                        style="display: none">
+                                        style="display: block">
                                         <i class="fa fa-times me-1"></i> Rejeter
                                     </button>
                                     <button id="btn_approuver" class="btn btn-outline-success mx-2 fw-bold">
@@ -787,13 +787,71 @@
                                         <button type="button" id="btn_annuler_rejet" class="btn btn-secondary me-2">
                                             Annuler
                                         </button>
-                                        <button type="submit" class="btn btn-danger">
+                                        <button type="button" class="btn btn-danger" id="btn_confirmer_rejet">
                                             Confirmer le rejet
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </form>
+
+
+                        <div class="modal fade" id="confirmationRejetModal" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <i class="fa fa-exclamation-triangle text-danger me-2"></i>
+                                            Confirmation
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body text-center">
+                                        <h5>Êtes-vous sûr de vouloir rejeter cette inscription ?</h5>
+                                        <p class="text-muted">
+                                            Cette action ne pourra pas être annulée. Toutes les informations de la demande
+                                            seront supprimées de la base de données.
+                                        </p>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Non
+                                        </button>
+
+                                        <button class="btn btn-danger" id="validerRejet">
+                                            Oui
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="pageLoader"
+                            style="
+                                display:none;
+                                position:fixed;
+                                top:0;
+                                left:0;
+                                width:100%;
+                                height:100%;
+                                background:rgba(255,255,255,0.8);
+                                z-index:9999;
+                                align-items:center;
+                                justify-content:center;
+                                flex-direction:column;
+                                font-size:18px;
+                                font-weight:600;
+                                ">
+
+                            <div class="spinner-border text-danger mb-3"></div>
+                            Veuillez patienter...
+
+                        </div>
                     @endif
 
                     <!-- Affichage du commentaire si rejeté ou approuvé -->
@@ -848,6 +906,28 @@
             </div>
         </div>
     </div>
+
+    <div id="pageLoader"
+        style="
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(255,255,255,0.8);
+            z-index:9999;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            font-size:18px;
+            font-weight:600;
+            ">
+
+        <div class="spinner-border text-primary mb-3" role="status"></div>
+        Veuillez patienter...
+
+    </div>
 @endsection
 
 @push('js')
@@ -882,6 +962,58 @@
             @if ($errors->has('commentaire'))
                 $('#rejeter_inscription_form').show();
             @endif
+        });
+    </script>
+
+
+    <script>
+        document.getElementById('approvalForm').addEventListener('submit', function() {
+
+            let btn = this.querySelector('button[type="submit"]');
+
+            // Désactiver le bouton
+            btn.disabled = true;
+
+            // Changer le texte
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> Traitement...';
+
+            // Afficher le loader
+            let loader = document.getElementById('pageLoader');
+            loader.style.display = 'flex';
+
+        });
+    </script>
+
+
+    <script>
+        let modalRejet = new bootstrap.Modal(document.getElementById('confirmationRejetModal'));
+
+        document.getElementById('btn_confirmer_rejet').addEventListener('click', function() {
+
+            // vérifier si le commentaire est rempli
+            let commentaire = document.getElementById('commentaire');
+
+            if (commentaire.value.trim() === '') {
+                commentaire.classList.add('is-invalid');
+                commentaire.focus();
+                return;
+            }
+
+            modalRejet.show();
+        });
+
+
+        document.getElementById('validerRejet').addEventListener('click', function() {
+
+            let btn = document.getElementById('btn_confirmer_rejet');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> Traitement...';
+
+            document.getElementById('pageLoader').style.display = 'flex';
+
+            document.getElementById('rejeter_inscription_form').submit();
+
         });
     </script>
 @endpush
