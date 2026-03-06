@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Logs;
 use App\Models\Service;
-// use Illuminate\Http\Request;
 use App\Models\Paiement;
+// use Illuminate\Http\Request;
+use App\Models\Mutualiste;
 use App\Models\Facturation;
+use App\Models\Administrateur;
 use App\Models\DocumentPaiement;
 use App\Models\PaiementInitiale;
 use App\Models\ProjetMutualiste;
@@ -40,8 +42,16 @@ class DashboardController extends Controller
         $module = "Module Tableau de bord administrateur";
         $action = "a consulte son tableau de bord ";
         Logs::saveLog($module, $action);
+        $nombrAdmin = Administrateur::where('status',1)->count();
+        $nombrMutualiste = Mutualiste::where('status',1)->count();
+        $montantTotal = PaiementInitiale::where('status', 1)->sum('montant_initial');
+        $mntAdhesion = PaiementInitiale::where('status', 1)->where('type_paiement_id', 1)->sum('montant_initial');
+        $mntCotisation = PaiementInitiale::where('status', 1)->where('type_paiement_id', 2)->sum('montant_initial');
+        $mntPret = PaiementInitiale::where('status', 1)->where('type_paiement_id', 3)->sum('montant_initial');
+        $mntProjet = PaiementInitiale::where('status', 1)->where('type_paiement_id', 4)->sum('montant_initial');
+        $mntCarte = PaiementInitiale::where('status', 1)->where('type_paiement_id', 5)->sum('montant_initial');
 
-        return view('dashboard.index');
+        return view('dashboard.index', compact('mntAdhesion', 'mntAdhesion', 'mntCarte', 'mntCotisation', 'mntPret', 'mntProjet','montantTotal','nombrMutualiste','nombrAdmin'));
     }
 
     public function statistiques()
@@ -86,12 +96,12 @@ class DashboardController extends Controller
         // dd($paiements);
         $paiements = PaiementInitiale::where(function ($query) {
             $query->where('p_cash', 1)
-                  ->orWhere(function ($query) {
-                      $query->where('status', 1);
-                  });
+                ->orWhere(function ($query) {
+                    $query->where('status', 1);
+                });
         })
-        ->orderBy('created_at', 'DESC')
-        ->get();
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         $module = "Module Paiement";
         $action = "a consulte la liste des paiements";
@@ -113,7 +123,7 @@ class DashboardController extends Controller
                 $libelle = Service::where('id', $accompa)->value('libelle');
             }
             //    dd($libelle);
-        }else{
+        } else {
             $produit = [];
             $libelle = '';
         }
@@ -131,22 +141,22 @@ class DashboardController extends Controller
             $paiement->status = 1;
             $paiement->save();
             // enregistrement dans la table paiement*
-           $newpaiement= new Paiement();
-                $newpaiement->reference = $paiement->reference;
-                $newpaiement->code_paiement = $paiement->code_paiement;
-                $newpaiement->mutualiste_id = $paiement->mutualiste_id;
-                $newpaiement->type_paiement_id = $paiement->type_paiement_id;
-                $newpaiement->correspondance_id = $paiement->correspondance_id;
-                $newpaiement->montant_initial = $paiement->montant_initial;
-                $newpaiement->p_cash = $paiement->p_cash;
-                $newpaiement->montant_total = $paiement->montant_initial;
-                $newpaiement->moyen_paiement = $paiement->moyen_paiement ?? "Cash" ;
-                $newpaiement->contact_paiement = $paiement->contact_paiement ?? "0000000000";
-                $newpaiement->produit_id = $paiement->produit_id;
-                $newpaiement->date_paiement_final = $paiement->date_paiement_final;
-                $newpaiement->heure_paiement_final = $paiement->heure_paiement_final;
-                $newpaiement->status = 1;
-                $newpaiement->save();
+            $newpaiement = new Paiement();
+            $newpaiement->reference = $paiement->reference;
+            $newpaiement->code_paiement = $paiement->code_paiement;
+            $newpaiement->mutualiste_id = $paiement->mutualiste_id;
+            $newpaiement->type_paiement_id = $paiement->type_paiement_id;
+            $newpaiement->correspondance_id = $paiement->correspondance_id;
+            $newpaiement->montant_initial = $paiement->montant_initial;
+            $newpaiement->p_cash = $paiement->p_cash;
+            $newpaiement->montant_total = $paiement->montant_initial;
+            $newpaiement->moyen_paiement = $paiement->moyen_paiement ?? "Cash";
+            $newpaiement->contact_paiement = $paiement->contact_paiement ?? "0000000000";
+            $newpaiement->produit_id = $paiement->produit_id;
+            $newpaiement->date_paiement_final = $paiement->date_paiement_final;
+            $newpaiement->heure_paiement_final = $paiement->heure_paiement_final;
+            $newpaiement->status = 1;
+            $newpaiement->save();
             //  Paiement::create([
             //     'reference' => $paiement->reference,
             //     'code_paiement' => $paiement->code_paiement,

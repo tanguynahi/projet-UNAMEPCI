@@ -10,7 +10,19 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Montant Global</div>
-                    <div><span class="h6 mb-0 fw-bold">2.500.000</span> <small class="text-success">Fcfa</small></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $montantTotal  ?? 0 }}</span> <small class="text-success">Fcfa</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="col">
+        <div class="card">
+            <div class="card-body d-flex align-items-center">
+                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
+                <div class="flex-fill ms-3 text-truncate">
+                        <div class="small text-uppercase">Total Adhesion</div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $mntAdhesion ?? 0 }}</span> <small class="text-success">Fcfa</small></div>
                 </div>
             </div>
         </div>
@@ -20,41 +32,8 @@
             <div class="card-body d-flex align-items-center">
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Wave</div>
-                    <div><span class="h6 mb-0 fw-bold">900.000</span> <small class="text-success">Fcfa</small></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Orange</div>
-                    <div><span class="h6 mb-0 fw-bold">700.000</span> <small class="text-success">Fcfa</small></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Visa</div>
-                    <div><span class="h6 mb-0 fw-bold">500.000</span> <small class="text-success">Fcfa</small></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Mtn</div>
-                    <div><span class="h6 mb-0 fw-bold">400.000</span> <small class="text-success">Fcfa</small></div>
+                        <div class="small text-uppercase">Total Carte Membre</div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $mntCarte ?? 0 }}</span> <small class="text-success">Fcfa</small></div>
                 </div>
             </div>
         </div>
@@ -65,7 +44,7 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Total Projets</div>
-                    <div><span class="h6 mb-0 fw-bold">2.000.000</span> <small class="text-danger">Fcfa</small></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $mntProjet ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
                 </div>
             </div>
         </div>
@@ -76,7 +55,7 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Total Cotisations</div>
-                    <div><span class="h6 mb-0 fw-bold">500.000</span> <small class="text-danger">Fcfa</small></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $mntCotisation ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
                 </div>
             </div>
         </div>
@@ -87,7 +66,7 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Total Prêts</div>
-                    <div><span class="h6 mb-0 fw-bold">1.500.000</span> <small class="text-danger">Fcfa</small></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $mntPret ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
                 </div>
             </div>
         </div>
@@ -98,7 +77,7 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-users fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Mutualistes</div>
-                    <div><span class="h6 mb-0 fw-bold">11</span></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $nombrMutualiste ?? 0 }}</span></div>
                 </div>
             </div>
         </div>
@@ -110,14 +89,14 @@
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-user-secret fa-lg"></i></div>
                 <div class="flex-fill ms-3 text-truncate">
                     <div class="small text-uppercase">Administrateurs</div>
-                    <div><span class="h6 mb-0 fw-bold">3</span></div>
+                    <div><span class="h6 mb-0 fw-bold">{{ $nombrAdmin ?? 0 }}</span></div>
                 </div>
             </div>
         </div>
     </div>
 </div> <!-- .row end -->
 
-<div class="row g-3 mb-5 row-deck">
+{{-- <div class="row g-3 mb-5 row-deck">
     <div class="col-xl-6 col-lg-12 col-md-12">
         <div class="card">
             <div class="card-header">
@@ -237,7 +216,7 @@
             </div>
         </div> <!-- .card end -->
     </div>
-</div> <!-- .row end -->
+</div> <!-- .row end --> --}}
 
 @endsection
 
