@@ -823,20 +823,20 @@ function cleAPI()
 }
 function urlRetour()
 {
-    $exe = 'REEL';
     $exe = 'LOCAL';
+    $exe = 'REEL';
     if ($exe == 'REEL') {
-        return "https://mutualpay.paysecurehub.com/mutualiste/resultat-Paiement/";
+        return "https://unamepci.org/mutualiste/resultat-Paiement/";
     } else {
         return "https://127.0.0.1:8000/mutualiste/resultat-Paiement/";
     }
 }
 function urlCallback()
 {
-    $exe = 'REEL';
     $exe = 'LOCAL';
+    $exe = 'REEL';
     if ($exe == 'REEL') {
-        return "https://mutualpay.paysecurehub.com/paiements/newCallBack";
+        return "https://unamepci.org/paiements/newCallBack";
     } else {
         return "https://127.0.0.1:8000/api/paiements/newCallBack";
     }
@@ -855,8 +855,8 @@ function urlPaiement()
 
 function appelApiEmail()
 {
-    $exe = 'REEL';
     $exe = 'LOCAL';
+    $exe = 'REEL';
     if ($exe == 'REEL') {
         return "https://mailtremo.paysecurehub.com/api/sendemail";
     } else {
@@ -1158,10 +1158,10 @@ function nonDossierCloud()
 
 function urlCallbackLien()
 {
-    $exe = 'REEL';
     $exe = 'LOCAL';
+    $exe = 'REEL';
     if ($exe == 'REEL') {
-        return "https://muaeci.ci/api/paiements/newCallBackLiens";
+        return "https://unamepci.org/api/paiements/newCallBackLiens";
     } else {
         return "https://127.0.0.1:8000/api/paiements/newCallBackLiens";
     }

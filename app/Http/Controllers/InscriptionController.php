@@ -214,13 +214,13 @@ class InscriptionController extends Controller
                 Logs::saveLog($module, $action);
             }
             // carte membre
-            $taxeCarte = Taxe::findOrFail(2);
+            // $taxeCarte = Taxe::findOrFail(2);
             $carteMembre = new CarteMembre();
             $carteMembre->administrateur_id = auth()->user()->administrateur->id;
             $carteMembre->mutualiste_id = $mutualiste->id;
             $carteMembre->type_paiement_id = 5;
-            $carteMembre->libelle = $taxeCarte->libelle ?? 'Taxe Carte Membre';
-            $carteMembre->montant = $taxeCarte->montant ?? 5000;
+            $carteMembre->libelle =  'Taxe Carte Membre';
+            // $carteMembre->montant = $taxeCarte->montant ?? 5000;
             $carteMembre->save();
 
             // cotisation  annuelle

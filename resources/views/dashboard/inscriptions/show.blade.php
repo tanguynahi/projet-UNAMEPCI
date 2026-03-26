@@ -329,7 +329,7 @@
                                     @if ($inscription->nombre_annee_experience)
                                         <div class="col-md-6 info-item">
                                             <span class="info-label">Années d'expérience:</span>
-                                            <span class="info-value">{{ $inscription->nombre_annee_experience }}</span>
+                                            <span class="info-value">{{ $inscription->nombre_annee_experience }} ans </span>
                                         </div>
                                     @endif
                                     @if ($inscription->nom_employeur_principale)

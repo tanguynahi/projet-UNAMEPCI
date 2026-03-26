@@ -30,6 +30,10 @@ class ConnexionAdministrateurController extends Controller
                 if (Auth::user()->hasAnyRole(['super-administrateur', 'administrateur'])) {
                     // Rediriger l'utilisateur vers /dashboard
                     $message = "Bienvenue ! " . formatGender(auth()->user()->administrateur->genre) . "" . auth()->user()->administrateur->nom . " " . auth()->user()->administrateur->prenom . ".";
+
+                       $user->administrateur->update([
+                        'disponibilite' => 'en ligne',
+                    ]);
                     toast($message, 'success');
                     $module = "Module Connexion Administrateur ";
                     $action = "L'administrateur  " . auth()->user()->administrateur->nom . " " . auth()->user()->administrateur->prenom . "a l'id" . auth()->user()->administrateur->id." a ete connecter";

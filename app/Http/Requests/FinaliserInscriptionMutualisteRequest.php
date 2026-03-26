@@ -85,13 +85,13 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'localisation_entreprise' => 'required|string|max:255',
 
             // ================= FREELANCE =================
-            'raison_social_secondaire_freelance' => 'required|string|max:150',
-            'fonction_occupe_freelance' => 'required|string|max:100',
-            'type_contrat_freelance' => 'required|string|max:50',
-            'telephone_freelance' => 'required|string|max:20',
-            'localisation_freelance' => 'required|string|max:255',
-            'adresse_postale_freelance' => 'required|string|max:255',
-            'domaine_activite_freelance' => 'required|string|max:255',
+            'raison_social_secondaire_freelance' => 'nullable|string|max:150',
+            'fonction_occupe_freelance' => 'nullable|string|max:100',
+            'type_contrat_freelance' => 'nullable|string|max:50',
+            'telephone_freelance' => 'nullable|string|max:20',
+            'localisation_freelance' => 'nullable|string|max:255',
+            'adresse_postale_freelance' => 'nullable|string|max:255',
+            'domaine_activite_freelance' => 'nullable|string|max:255',
             'fax_freelance' => 'nullable|string|max:50',
 
             // ================= RELATION / AUTEUR =================
@@ -108,14 +108,14 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             ],
 
             // ================= FICHIERS =================
-            'lien_photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'pieces_joints_recto' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
-            'pieces_joints_verso' => 'required|file|mimes:jpg,jpeg,png,pdf|max:4096',
-            'photo_couverture' => 'required|image|mimes:jpg,jpeg,png|max:4096',
-            'document_carte_inscript_ONMCI' => 'required|file|mimes:pdf,jpg,jpeg,png|max:4096',
-            'document_autorisation_ouverture' => 'required|file|mimes:pdf,jpg,jpeg,png|max:4096',
-            'photo_identite_1' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'signature' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'lien_photo' => 'required|image|mimes:jpg,jpeg,png|max:5120',
+            'pieces_joints_recto' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'pieces_joints_verso' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'photo_couverture' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'document_carte_inscript_ONMCI' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'document_autorisation_ouverture' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'photo_identite_1' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'signature' => 'required|image|mimes:png,jpg,jpeg|max:5120',
         ];
     }
 

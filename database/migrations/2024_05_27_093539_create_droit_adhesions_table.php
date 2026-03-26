@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('droit_adhesions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('administrateur_id')->nullable()->constrained('administrateurs','id');
-            $table->foreignId('mutualiste_id')->constrained('mutualistes','id');
-            $table->foreignId('type_paiement_id')->constrained('type_paiements','id');
+            $table->foreignId('administrateur_id')->nullable()->constrained('administrateurs', 'id');
+            $table->foreignId('admin_pay')->nullable();
+            $table->foreignId('mutualiste_id')->constrained('mutualistes', 'id');
+            $table->foreignId('type_paiement_id')->constrained('type_paiements', 'id');
             $table->string('libelle');
             $table->bigInteger('montant');
-            $table->enum('status',[1,2])->default(2);
+            $table->enum('status', [1, 2])->default(2);
             $table->softDeletes();
             $table->timestamps();
         });

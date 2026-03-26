@@ -17,12 +17,12 @@ class TaxeSeeder extends Seeder
         Taxe::create([
             'libelle' => "Droit d'adhesion",
             'description' => null,
-            'montant' => 10000,
+            'montant' => 10000, // y compris reglement carte membre 
         ]);
-        Taxe::create([
-            'libelle' => "Reglement Carte Membre",
-            'description' => null,
-            'montant' => 5000,
-        ]);
+        // Taxe::create([
+        //     'libelle' => "Reglement Carte Membre",
+        //     'description' => null,
+        //     'montant' => 5000,
+        // ]);
     }
 }

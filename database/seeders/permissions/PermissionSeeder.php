@@ -12,122 +12,260 @@ class PermissionSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-{
-    $permissions = [
-        'Ajouter un admininistrateur',
-        'Afficher un admininistrateur',
-        'Modifier un admininistrateur',
-        'Supprimer un admininistrateur',
-        'Ajouter un parametre',
-        'Afficher un parametre',
-        'Modifier un parametre',
-        'Supprimer un parametre',
-        'Ajouter un type de compte',
-        'Afficher un type de compte',
-        'Modifier un type de compte',
-        'Supprimer un type de compte',
-        'Ajouter un paiement',
-        'Afficher un paiement',
-        'Modifier un paiement',
-        'Supprimer un paiement',
-        'Ajouter un type de piece',
-        'Afficher un type de piece',
-        'Modifier un type de piece',
-        'Supprimer un type de piece',
-        'Ajouter un corps',
-        'Afficher un corps',
-        'Modifier un corps',
-        'Supprimer un corps',
-        'Ajouter un grade',
-        'Afficher un grade',
-        'Modifier un grade',
-        'Supprimer un grade',
-        'Ajouter une ville',
-        'Afficher une ville',
-        'Modifier une ville',
-        'Supprimer une ville',
-        'Ajouter un mutualiste',
-        'Afficher un mutualiste',
-        'Modifier un mutualiste',
-        'Supprimer un mutualiste',
-        'Ajouter une actualite',
-        'Afficher une actualite',
-        'Modifier une actualite',
-        'Supprimer une actualite',
-        'Ajouter une direction',
-        'Afficher une direction',
-        'Modifier une direction',
-        'Supprimer une direction',
-        'Ajouter une cotisation',
-        'Afficher une cotisation',
-        'Modifier une cotisation',
-        'Supprimer une cotisation',
-        'Ajouter un projet',
-        'Afficher un projet',
-        'Modifier un projet',
-        'Supprimer un projet',
-        'Ajouter des images au projet',
-        'Afficher des images au projet',
-        'Modifier des images au projet',
-        'Supprimer des images au projet',
-        'Ajouter un accompagnement',
-        'Afficher un accompagnement',
-        'Modifier un accompagnement',
-        'Supprimer un accompagnement',
-        'Ajouter un droit d\'ahdesion',
-        'Afficher un droit d\'ahdesion',
-        'Modifier un droit d\'ahdesion',
-        'Supprimer un droit d\'ahdesion',
-        'Ajouter une cotisation de mutualiste',
-        'Afficher une cotisation de mutualiste',
-        'Modifier une cotisation de mutualiste',
-        'Supprimer une cotisation de mutualiste',
-        'Ajouter un projet de mutualiste',
-        'Afficher un projet de mutualiste',
-        'Modifier un projet de mutualiste',
-        'Supprimer un projet de mutualiste',
-        'Ajouter un slide',
-        'Afficher un slide',
-        'Modifier un slide',
-        'Supprimer un slide',
-        'voir la liste des administrateur',
-        'voir la liste des parametres',
-        'voir la liste des codes de validation',
-        'voir la liste des types de compte',
-        'voir la liste des paiements',
-        'voir la liste des types de paiement',
-        'voir la liste des corps d\'armee',
-        'voir la liste des grades',
-        'voir la liste des villes',
-        'voire la liste des mutualistes',
-        'voir la liste des actualites',
-        'voir la liste des directions',
-        'voir la liste des cotisations',
-        'voir la liste des images de projets',
-        'voir la liste des accompagnements',
-        'voir la liste des droits d\'adhesion',
-        'voir la liste de cotisations des mutualistes',
-        'voir la liste de projets des mutualistes',
-        'voir la liste des images de slides',
-        'gerer les codes de validation',
-        'voir la liste des projets',
-        'voir la liste de ses paiements',
-        'voir la liste de ses accompagnements',
-        'voir la liste de ses droits d\'adhesion',
-        'voir la liste de ses cotisations',
-        'voir la liste de ses projets',
-        'Afficher le detail d\'un projet de mutualiste',
-        'Afficher le detail d\'une actualite',
-        'Afficher le detail d\'un projet',
-        'Afficher son profil',
-    ];
+    {
 
-    foreach ($permissions as $permission) {
-        Permission::create([
-            'name' => $permission,
-            'guard_name' => 'web',
-        ]);
+
+
+        $permissions = [
+            "liste-roles",
+            "infos-roles",
+            "ajouter-roles",
+            "modifier-roles",
+            "supprimer-roles",
+
+
+
+            "liste-documents",
+            "infos-documents",
+            "ajouter-documents",
+            "modifier-documents",
+            "supprimer-documents",
+
+
+
+
+
+
+            // Mutualistes
+            "liste-mutualistes",
+            "infos-mutualistes",
+            "ajouter-mutualistes",
+            "modifier-mutualistes",
+            "supprimer-mutualistes",
+
+
+
+
+
+            "liste-inscriptions",
+            "infos-inscriptions",
+            "ajouter-inscriptions",
+            "modifier-inscriptions",
+            "supprimer-inscriptions",
+            "restaurer-inscriptions",
+
+
+            "liste-demandeProduits",
+            "map-demandeProduits",
+            "infos-demandeProduits",
+            "ajouter-demandeProduits",
+            "modifier-demandeProduits",
+            "receptionner-demandeProduits",
+            "analyser-demandeProduits",
+            "rattacher-demandeProduits",
+            "cloturer-demandeProduits",
+            "qualification-demandeProduits",
+
+
+            "liste-messages",
+            "infos-messages",
+            "envoyer-messages",
+            "repondre-messages",
+            "modifier-messages",
+            "supprimer-messages",
+            "restaurer-messages",
+
+
+            "liste-redevances",
+            "infos-redevances",
+            "envoyer-redevances",
+            "repondre-redevances",
+            "modifier-redevances",
+            "supprimer-redevances",
+            "restaurer-redevances",
+
+            "liste-projetMutualistes",
+            "infos-projetMutualistes",
+            "envoyer-projetMutualistes",
+            "repondre-projetMutualistes",
+            "modifier-projetMutualistes",
+            "supprimer-projetMutualistes",
+            "restaurer-projetMutualistes",
+
+            "liste-facturations",
+            "infos-facturations",
+            "modifier-facturations",
+            "supprimer-facturations",
+            "restaurer-facturations",
+
+
+            "liste-services",
+            "infos-services",
+            "ajouter-services",
+            "modifier-services",
+            "supprimer-services",
+            "restaurer-services",
+            "receptionner-services",
+            "rejeter-services",
+
+
+            "liste-projets",
+            "infos-projets",
+            "ajouter-projets",
+            "modifier-projets",
+            "supprimer-projets",
+
+            "liste-demandeAccompagnements",
+            "infos-demandeAccompagnements",
+            "ajouter-demandeAccompagnements",
+            "modifier-demandeAccompagnements",
+            "supprimer-demandeAccompagnements",
+
+
+            // cotisations
+            "liste-cotisations",
+            "infos-cotisations",
+            "ajouter-cotisations",
+            "modifier-cotisations",
+            "supprimer-cotisations",
+
+            "liste-cotisationMutualistes",
+            "infos-cotisationMutualistes",
+            "ajouter-cotisationMutualistes",
+            "modifier-cotisationMutualistes",
+            "supprimer-cotisationMutualistes",
+
+
+            "liste-paiements",
+            "espece-paiements",
+            "infos-paiements",
+            "ajouter-paiements",
+            "modifier-paiements",
+            "supprimer-paiements",
+            "restaurer-paiements",
+
+
+
+            "liste-actualites",
+            "infos-actualites",
+            "ajouter-actualites",
+            "modifier-actualites",
+            "supprimer-actualites",
+            "restaurer-actualites",
+
+
+
+
+
+            "liste-villes",
+            "infos-villes",
+            "ajouter-villes",
+            "modifier-villes",
+            "supprimer-villes",
+            "restaurer-villes",
+
+
+            "liste-slides",
+            "infos-slides",
+            "ajouter-slides",
+            "modifier-slides",
+            "supprimer-slides",
+            "restaurer-slides",
+
+            "liste-typeDocuments",
+            "infos-typeDocuments",
+            "ajouter-typeDocuments",
+            "modifier-typeDocuments",
+            "supprimer-typeDocuments",
+            "restaurer-typeDocuments",
+
+
+
+            "liste-typePieces",
+            "infos-typePieces",
+            "ajouter-typePieces",
+            "modifier-typePieces",
+            "supprimer-typePieces",
+            "restaurer-typePieces",
+
+            "liste-taxes",
+            "infos-taxes",
+            "ajouter-taxes",
+            "modifier-taxes",
+            "supprimer-taxes",
+            "restaurer-taxes",
+
+
+            "liste-formeJuridiques",
+            "infos-formeJuridiques",
+            "ajouter-formeJuridiques",
+            "modifier-formeJuridiques",
+            "supprimer-formeJuridiques",
+            "restaurer-formeJuridiques",
+
+            "liste-specialites",
+            "infos-specialites",
+            "ajouter-specialites",
+            "modifier-specialites",
+            "supprimer-specialites",
+            "restaurer-specialites",
+
+
+
+            "voir-parametres",
+            "voir-profil-parametres",
+            "modifier-profil-parametres",
+            "modifier-mot-de-passe-parametres",
+            "modifier-infos-plateforme-parametres",
+
+
+
+
+            "liste-administrateurs",
+            "infos-administrateurs",
+            "ajouter-administrateurs",
+            "modifier-administrateurs",
+            "supprimer-administrateurs",
+            "restaurer-administrateurs",
+            "changer-statut-administrateurs",
+            "afficher-permissions-administrateurs",
+            "modifier-permissions-administrateurs",
+
+            "liste-permissions",
+            "infos-permissions",
+            "ajouter-permissions",
+            "modifier-permissions",
+            "supprimer-permissions",
+
+
+
+            "liste-carteMembres",
+            "infos-carteMembres",
+            "ajouter-carteMembres",
+            "modifier-carteMembres",
+            "supprimer-carteMembres",
+            "restaurer-carteMembres",
+
+
+
+
+            "voir-montant-total-dashboard",
+            "voir-total-adhesion-dashboard",
+            "voir-total-projet-dashboard",
+            "voir-total-cotisation-dashboard",
+            "voir-total-pret-dashboard",
+            "voir-total-mutualiste-dashboard",
+            "voir-total-administrateur-dashboard",
+
+
+
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
     }
-}
-
 }

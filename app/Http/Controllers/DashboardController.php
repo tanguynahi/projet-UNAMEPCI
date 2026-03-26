@@ -49,9 +49,9 @@ class DashboardController extends Controller
         $mntCotisation = PaiementInitiale::where('status', 1)->where('type_paiement_id', 2)->sum('montant_initial');
         $mntPret = PaiementInitiale::where('status', 1)->where('type_paiement_id', 3)->sum('montant_initial');
         $mntProjet = PaiementInitiale::where('status', 1)->where('type_paiement_id', 4)->sum('montant_initial');
-        $mntCarte = PaiementInitiale::where('status', 1)->where('type_paiement_id', 5)->sum('montant_initial');
+        // $mntCarte = PaiementInitiale::where('status', 1)->where('type_paiement_id', 5)->sum('montant_initial');
 
-        return view('dashboard.index', compact('mntAdhesion', 'mntAdhesion', 'mntCarte', 'mntCotisation', 'mntPret', 'mntProjet','montantTotal','nombrMutualiste','nombrAdmin'));
+        return view('dashboard.index', compact('mntAdhesion', 'mntAdhesion',  'mntCotisation', 'mntPret', 'mntProjet','montantTotal','nombrMutualiste','nombrAdmin'));
     }
 
     public function statistiques()

@@ -52,8 +52,14 @@ class TableaubordController extends Controller
             ->where('status', 2)
             ->count();
         session()->put('NbreCotis', $contCoti);
+        // if ($droit_adhesions && $droit_adhesions->status != 1) {
+        //     $message = 'Veuillez vous acquitter de votre adhesion\nMutualPlay afin de profiter de tous \nles services de la plateforme ce droit d\'adhseion contient non suelement le droit ainsi que la carte membre';
+        //     Session::flash('notification_pour_mutualiste', $message);
+        // }
         if ($droit_adhesions && $droit_adhesions->status != 1) {
-            $message = 'Veuillez vous acquitter de votre adhesion\nMutualPlay afin de profiter de tous \nles services de la plateforme';
+            $message = "Veuillez vous acquitter de votre droit d’adhésion MutualPlay afin de profiter de l’ensemble des services de la plateforme.
+        Ce droit d’adhésion inclut également la carte membre. Ainsi, en effectuant ce paiement, vous bénéficiez automatiquement de votre carte membre.";
+
             Session::flash('notification_pour_mutualiste', $message);
         }
         $module = "Module Espace Mutualiste ";
@@ -368,7 +374,7 @@ class TableaubordController extends Controller
             }
             switch ($id) {
                 case 1:
-                            // dd($request->all(),$id);
+                    // dd($request->all(),$id);
                     // paiement d'adhesions
                     // Les informations d'authentification
                     $auth = new STAuthTresorMoney();
@@ -429,7 +435,7 @@ class TableaubordController extends Controller
 
 
                             // $infosbeneficiaire = new STBeneficiaire();
-                            $infosbeneficiaire['Credentiel'] = env('HUB_KEY_TREMO'); //$obj->CREDENTIAL;
+                            $infosbeneficiaire['Credentiel'] = env('HUB_KEY_TREMO_BMI'); // envoyer sur le compte de bmi
                             $infosbeneficiaire['produits'][] = $infosProduits;
 
                             // env('CALL_BACK_TREMO') urlCallbackLien
@@ -500,7 +506,6 @@ class TableaubordController extends Controller
 
                                 // return $response;
                             }
-
                         }
                     } else {
 
@@ -579,7 +584,7 @@ class TableaubordController extends Controller
                             $paiementinit->mutualiste_id = $mutualiste->id;
                             $paiementinit->type_paiement_id = 2;
                             $paiementinit->correspondance_id = $cotisationMutualiste->id; // id facturations
-                            $paiementinit->montant_initial =  $request->montant ?? $cotisationMutualiste->montant  ;
+                            $paiementinit->montant_initial =  $request->montant ?? $cotisationMutualiste->montant;
                             $paiementinit->contact_paiement = $request->numero;
 
                             $paiementinit->save();
@@ -947,7 +952,7 @@ class TableaubordController extends Controller
 
                     break;
                 case 5:
-                        //  dd($request->all() ,$id,'ss');
+                    //  dd($request->all() ,$id,'ss');
                     // Paiement de carte Membre
                     $auth = new STAuthTresorMoney();
                     $auth->Key = env('KEY_AUTH_TREMO');

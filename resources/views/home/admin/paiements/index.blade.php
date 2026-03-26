@@ -156,7 +156,10 @@
                                 <input type="text" name="montant" value="{{ $montant }}" style="display: none">
                             @endif
                             <div class="col-12 justify-content-center text-center mt-3">
-                                <button type="submit" class="text-center rbt-btn btn-gradient">PAIEMENT</button>
+                                {{-- <button type="submit" class="text-center rbt-btn btn-gradient">PAIEMENT</button> --}}
+                                <button type="submit" id="btnPaiement" class="text-center rbt-btn btn-gradient">
+                                    PAIEMENT
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -169,8 +172,14 @@
     <script>
         function startLoading() {
             document.getElementById('loadingImage').classList.add('rotate');
+
+              const btn = document.getElementById('btnPaiement');
+            btn.disabled = true;
+            btn.innerHTML = "Traitement en cours...";
         }
     </script>
+
+
 
 
 

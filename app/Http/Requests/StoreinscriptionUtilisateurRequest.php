@@ -53,7 +53,7 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'specialite_id' => ['required', 'exists:specialites,id'],
             'fonction' => ['nullable', 'string', 'max:100'],
             'date_debut_metier' => ['nullable', 'date'],
-            'nombre_annee_experience' => ['required', 'integer', 'min:0'],
+            'nombre_annee_experience' => ['required', 'integer', 'min:-1'],
             'statut_emploi' => ['required', 'string'],
             'domaine_activite' => ['nullable', 'string', 'max:255'],
             'nom_employeur_principale' => ['nullable', 'string', 'max:255'],
@@ -94,14 +94,14 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'nom_auteur' => ['nullable', 'string', 'max:255'],
 
             // Fichiers
-            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],
             'signature' => ['required', 'file', 'mimes:jpeg,png,jpg,gif'],
-            'pieces_joints_recto' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
-            'pieces_joints_verso' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
-            'photo_couverture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'document_carte_inscript_ONMCI' => ['nullable', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
-            'document_autorisation_ouverture' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
-            'photo_identite_1' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:2048'],
+            'pieces_joints_recto' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:5120'],
+            'pieces_joints_verso' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:5120'],
+            'photo_couverture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'document_carte_inscript_ONMCI' => ['nullable', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:5120'],
+            'document_autorisation_ouverture' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:5120'],
+            'photo_identite_1' => ['required', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:5120'],
         ];
     }
 
@@ -138,9 +138,9 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             // Messages pour les fichiers
             'avatar.required' => 'La photo de profil est obligatoire.',
             'signature.required' => 'La signature est obligatoire.',
-            'avatar.max' => 'La photo de profil ne doit pas dépasser 2 Mo.',
+            'avatar.max' => 'La photo de profil ne doit pas dépasser 5 Mo.',
             'pieces_joints_recto.required' => 'Le recto de la pièce d\'identité est obligatoire.',
-            'pieces_joints_recto.max' => 'Le recto de la pièce d\'identité ne doit pas dépasser 2 Mo.',
+            'pieces_joints_recto.max' => 'Le recto de la pièce d\'identité ne doit pas dépasser 5 Mo.',
         ];
     }
 

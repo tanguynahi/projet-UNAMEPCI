@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('carte_membres', function (Blueprint $table) {
             $table->id();
             $table->foreignId('administrateur_id')->nullable()->constrained('administrateurs', 'id');
+            $table->foreignId('admin_pay')->nullable();
             $table->foreignId('mutualiste_id')->unique()->constrained('mutualistes', 'id');
             $table->foreignId('type_paiement_id')->constrained('type_paiements', 'id');
             $table->string('libelle');
-            $table->bigInteger('montant');
+            $table->bigInteger('montant')->nullable();
             $table->date('date_delivre')->nullable();
             $table->date('date_expiration')->nullable();
-            $table->enum('genere', [1, 2, 3])->default(2); // en attent de generation
+            $table->enum('genere', [1, 2, 3])->default(2); // en attent de generation (2 non genere , 3 expirer)
             $table->enum('status', [1, 2])->default(2); // en attent de paiement
             $table->softDeletes();
             $table->timestamps();

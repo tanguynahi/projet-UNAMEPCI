@@ -53,7 +53,7 @@
                             </li>
                             <li>
                                 <a
-                                    @if ($status == 1) href="{{ route('carteImpaye') }}" @else href="{{ route('carteImpaye') }}" @endif>
+                                    @if ($status == 1) href="{{ route('carteImpaye') }}"  @endif>
                                     <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
 

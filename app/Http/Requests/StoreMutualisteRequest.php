@@ -48,8 +48,8 @@ class StoreMutualisteRequest extends FormRequest
             'min:3',
             'droit_adhesion'       => 'required',
             'in:0,1',
-            'carte_membre'         => 'required',
-            'in:0,1',
+            // 'carte_membre'         => 'required',
+            // 'in:0,1',
             'cotisation_annuelle'  => 'required',
             'in:0,1',
 
@@ -92,8 +92,8 @@ class StoreMutualisteRequest extends FormRequest
             'droit_adhesion.required' => 'Veuillez indiquer si le droit d’adhésion a été payé.',
             'droit_adhesion.in'       => 'Valeur invalide pour le droit d’adhésion.',
 
-            'carte_membre.required' => 'Veuillez indiquer si la carte membre a été payée.',
-            'carte_membre.in'       => 'Valeur invalide pour la carte membre.',
+            // 'carte_membre.required' => 'Veuillez indiquer si la carte membre a été payée.',
+            // 'carte_membre.in'       => 'Valeur invalide pour la carte membre.',
 
             'cotisation_annuelle.required' => 'Veuillez indiquer si la cotisation annuelle a été payée.',
             'cotisation_annuelle.in'       => 'Valeur invalide pour la cotisation annuelle.',

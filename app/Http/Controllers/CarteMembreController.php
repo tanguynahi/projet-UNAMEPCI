@@ -22,7 +22,7 @@ class CarteMembreController extends Controller
         $module = "Module Carte Membres ";
         $action = " a consulté la liste des Carte Membres ";
         Logs::saveLog($module, $action);
-        $carteMembres = CarteMembre::orderBy('created_at', 'ASC')->where('status', 1)->get();
+        $carteMembres = CarteMembre::orderBy('created_at', 'ASC')->whereIn('status', [1,2])->whereIn('genere', [1,3,2])->get();
         // dd($carteMembres);
         return view('dashboard.cartesMembres.index', compact('carteMembres'));
     }

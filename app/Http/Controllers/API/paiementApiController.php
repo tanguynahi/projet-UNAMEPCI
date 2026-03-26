@@ -411,8 +411,8 @@ class paiementApiController extends Controller
                         (int) $idCord = $paiement->correspondance_id ?? $paiementinit->correspondance_id  ?? 0;
                         switch ($typID) {
                             case 1:
-                                // cas de paiement droit d'adhesion
-                                $mutualisteId = $paiement->mutualiste_id ?? $paiementinit->mutualiste_id;
+                                // cas de paiement droit d'adhesion ( y compris carte membre inclus )
+                                $mutualisteId = $paiement->mutualiste_id ?? $paiementinit->mutualiste_id ?? $mutualiste->id;
                                 $droit_adhesion = DroitAdhesion::where('mutualiste_id', $mutualisteId)->first();
                                 if (!empty($droit_adhesion)) {
                                     $nouveauMontant = $droit_adhesion->montant - $Montant;
@@ -500,6 +500,61 @@ class paiementApiController extends Controller
                                         Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
                                     }
                                 }
+
+                                // carte membre inclus
+
+
+                                $carteMembre = CarteMembre::where('mutualiste_id', $mutualisteId)->first();
+                                if (!empty($carteMembre)) {
+                                    $carteMembre->status = 1;
+                                    $carteMembre->genere = 2;   
+                                    $carteMembre->save();
+
+                                    if ($carteMembre->status == 1) {
+                                        $sujet = "Confirmation de paiement – Carte Membre UNAMEPCI";
+
+                                        $message = "
+                                    Bonjour " . $mutualiste->prenom . " " . $mutualiste->nom . ",<br><br>
+
+                                    Félicitations 🎉 !
+                                    Nous vous informons que le paiement de votre **carte de membre UNAMEPCI** a été effectué avec succès.<br><br>
+                                    Votre adhésion est désormais **active** et vous bénéficiez pleinement des services et avantages offerts par le **Union Nationale des Medecins Prives de Côte d'Ivoire**.<br><br>
+                                    Nous vous remercions pour votre confiance et sommes ravis de vous compter parmi nos membres.<br><br>
+                                    Si vous avez besoin d’assistance ou d’informations complémentaires, notre équipe reste à votre disposition.<br><br>
+                                    Cordialement,<br>
+                                    <strong>L’équipe UNAMEPCI</strong>
+                                    ";
+
+                                        $url = appelApiEmail();
+                                        $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                        $data = [
+                                            'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+                                            "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                            "destination" => $mutualiste->email,
+                                            "sujet" => $sujet,
+                                            "message" => $template
+                                        ];
+                                        $retourAPI = Http::post($url, $data);
+                                        $res = $retourAPI->json();
+
+                                        if ($retourAPI->status() == 200) {
+                                            (int)$code = $res['status'];
+                                            if ($code != 200) {
+                                                $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                                Log::error($message);
+                                            }
+                                        } else {
+                                            Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+                                        }
+                                    }
+                                } else {
+                                    $Chaine .= " id carte membre  incorrecter";
+                                    $module = " paiement ";
+                                    $action = "$Chaine";
+                                    Logs::saveLog($module, $action);
+                                }
+
+
                                 break;
                             case 2:
                                 // cas de cotisation
@@ -587,16 +642,16 @@ class paiementApiController extends Controller
                                 break;
 
                             case 5:
-                                // cas de bordereau
+                                // cas de carte membre
                                 $carteMembre = CarteMembre::findOFail($idCord);
                                 if (!empty($carteMembre)) {
                                     $carteMembre->status = 1;
                                     $carteMembre->save();
 
-                                if ($carteMembre->status == 1) {
-                                    $sujet = "Confirmation de paiement – Carte Membre UNAMEPCI";
+                                    if ($carteMembre->status == 1) {
+                                        $sujet = "Confirmation de paiement – Carte Membre UNAMEPCI";
 
-                                    $message = "
+                                        $message = "
                                     Bonjour " . $mutualiste->prenom . " " . $mutualiste->nom . ",<br><br>
 
                                     Félicitations 🎉 !
@@ -608,39 +663,34 @@ class paiementApiController extends Controller
                                     <strong>L’équipe UNAMEPCI</strong>
                                     ";
 
-                                    $url = appelApiEmail();
-                                    $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
-                                    $data = [
-                                        'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                        "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
-                                        "destination" => $mutualiste->email,
-                                        "sujet" => $sujet,
-                                        "message" => $template
-                                    ];
-                                    $retourAPI = Http::post($url, $data);
-                                    $res = $retourAPI->json();
+                                        $url = appelApiEmail();
+                                        $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                        $data = [
+                                            'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+                                            "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                            "destination" => $mutualiste->email,
+                                            "sujet" => $sujet,
+                                            "message" => $template
+                                        ];
+                                        $retourAPI = Http::post($url, $data);
+                                        $res = $retourAPI->json();
 
-                                    if ($retourAPI->status() == 200) {
-                                        (int)$code = $res['status'];
-                                        if ($code != 200) {
-                                            $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
-                                            Log::error($message);
+                                        if ($retourAPI->status() == 200) {
+                                            (int)$code = $res['status'];
+                                            if ($code != 200) {
+                                                $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                                Log::error($message);
+                                            }
+                                        } else {
+                                            Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
                                         }
-                                    } else {
-                                        Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
                                     }
-                                }
                                 } else {
-                                    $Chaine .= " id bordereau incorrecter";
+                                    $Chaine .= " id carte membre  incorrecter";
                                     $module = " paiement ";
                                     $action = "$Chaine";
                                     Logs::saveLog($module, $action);
                                 }
-
-
-
-
-
 
                                 break;
 

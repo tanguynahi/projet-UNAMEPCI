@@ -87,7 +87,7 @@ class MutualisteController extends Controller
             $codeP = generateUniqueCode(10);
             // dd($request->all(),$codeP) ;
             $droit_adhesion = $data['droit_adhesion'] ?? $request->droit_adhesion;
-            $carte_membre = $data['carte_membre'] ?? $request->carte_membre;
+            // $carte_membre = $data['carte_membre'] ?? $request->carte_membre;
             $cotisation_annuelle = $data['cotisation_annuelle'] ?? $request->cotisation_annuelle;
 
 
@@ -146,6 +146,7 @@ class MutualisteController extends Controller
             if ($droit_adhesion == 0) {
                 $droitAdhesion->status = 2;
             } else {
+                $droitAdhesion->admin_pay = auth()->user()->administrateur->id;
                 $droitAdhesion->status = 1;
             }
             $droitAdhesion->save();
@@ -160,16 +161,17 @@ class MutualisteController extends Controller
                 Logs::saveLog($module, $action);
             }
             // carte membre
-            $taxeCarteMembre = Taxe::findOrFail(2);
+            // $taxeCarteMembre = Taxe::findOrFail(2);
             $carteMembre = new CarteMembre();
             $carteMembre->administrateur_id = auth()->user()->administrateur->id;
             $carteMembre->mutualiste_id = $mutualiste->id;
             $carteMembre->type_paiement_id = 5;
-            $carteMembre->libelle = $taxeCarteMembre->libelle;
-            $carteMembre->montant = $taxeCarteMembre->montant;
-            if ($carte_membre == 0) {
+            $carteMembre->libelle = 'Taxe Carte Membre';
+            // $carteMembre->montant = $taxeCarteMembre->montant;
+            if ($droit_adhesion == 0) {
                 $carteMembre->status = 2;
             } else {
+                $carteMembre->admin_pay = auth()->user()->administrateur->id;
                 $carteMembre->status = 1;
             }
             $carteMembre->save();
@@ -197,6 +199,7 @@ class MutualisteController extends Controller
             $cotisation->date_fin = $coti->date_fin;
             if ($cotisation_annuelle == 1) {
                 $cotisation->montant_paye = $coti->montant_a_payer;
+                $cotisation->admin_pay = auth()->user()->administrateur->id;
                 $cotisation->status = 1;
             }
             $cotisation->save();

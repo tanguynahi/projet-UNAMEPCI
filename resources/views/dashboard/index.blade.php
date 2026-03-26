@@ -1,33 +1,38 @@
-@extends('layouts.dashboard', ['title' => 'FPM MUTUALPAY - TABLEAU DE BORD', 'breadcrumb' => "FPM MUTUALPAY",'toolbar' => '_toolbar'])
+@extends('layouts.dashboard', ['title' => 'FPM MUTUALPAY - TABLEAU DE BORD', 'breadcrumb' => 'FPM MUTUALPAY', 'toolbar' => '_toolbar'])
 @push('css')
-
 @endpush
 @section('content')
-<div class="row row-cols-xxl-5 row-cols-xxl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3 mb-3 row-deck">
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Montant Global</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $montantTotal  ?? 0 }}</span> <small class="text-success">Fcfa</small></div>
+    <div class="row row-cols-xxl-5 row-cols-xxl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3 mb-3 row-deck">
+        @can('voir-montant-total-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Montant Global</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $montantTotal ?? 0 }}</span> <small
+                                    class="text-success">Fcfa</small></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
- 
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                        <div class="small text-uppercase">Total Adhesion</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $mntAdhesion ?? 0 }}</span> <small class="text-success">Fcfa</small></div>
+        @endcan
+
+        @can('voir-total-adhesion-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Total Adhesion</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $mntAdhesion ?? 0 }}</span> <small
+                                    class="text-success">Fcfa</small></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col">
+        @endcan
+        {{-- <div class="col">
         <div class="card">
             <div class="card-body d-flex align-items-center">
                 <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-briefcase fa-lg"></i></div>
@@ -37,66 +42,79 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Total Projets</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $mntProjet ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
+    </div> --}}
+        @can('voir-total-projet-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Total Projets</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $mntProjet ?? 0 }}</span> <small
+                                    class="text-danger">Fcfa</small></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Total Cotisations</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $mntCotisation ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
+        @endcan
+        @can('voir-total-cotisation-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Total Cotisations</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $mntCotisation ?? 0 }}</span> <small
+                                    class="text-danger">Fcfa</small></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Total Prêts</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $mntPret ?? 0 }}</span> <small class="text-danger">Fcfa</small></div>
+        @endcan
+        @can('voir-total-pret-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Total Prêts</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $mntPret ?? 0 }}</span> <small
+                                    class="text-danger">Fcfa</small></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-users fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Mutualistes</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $nombrMutualiste ?? 0 }}</span></div>
+        @endcan
+        @can('voir-total-mutualiste-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-users fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Mutualistes</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $nombrMutualiste ?? 0 }}</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        @endcan
 
-    <div class="col">
-        <div class="card">
-            <div class="card-body d-flex align-items-center">
-                <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-user-secret fa-lg"></i></div>
-                <div class="flex-fill ms-3 text-truncate">
-                    <div class="small text-uppercase">Administrateurs</div>
-                    <div><span class="h6 mb-0 fw-bold">{{ $nombrAdmin ?? 0 }}</span></div>
+        @can('voir-total-administrateur-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-user-secret fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Administrateurs</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $nombrAdmin ?? 0 }}</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div> <!-- .row end -->
+        @endcan
+    </div> <!-- .row end -->
 
-{{-- <div class="row g-3 mb-5 row-deck">
+    {{-- <div class="row g-3 mb-5 row-deck">
     <div class="col-xl-6 col-lg-12 col-md-12">
         <div class="card">
             <div class="card-header">
@@ -217,7 +235,6 @@
         </div> <!-- .card end -->
     </div>
 </div> <!-- .row end --> --}}
-
 @endsection
 
 @push('js')
@@ -308,7 +325,9 @@
                     }
                 }],
                 labels: ['Plan 1', 'Plan 2', 'Plan 3', 'Plan 4'],
-                colors: ['var(--chart-color1)', 'var(--chart-color2)', 'var(--chart-color3)', 'var(--chart-color4)'],
+                colors: ['var(--chart-color1)', 'var(--chart-color2)', 'var(--chart-color3)',
+                    'var(--chart-color4)'
+                ],
                 dataLabels: {
                     enabled: false
                 },

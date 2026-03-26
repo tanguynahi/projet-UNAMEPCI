@@ -160,9 +160,11 @@
                             </div>
 
 
-                            <div class="col-lg-4 col-md-4">
-                                <label class="fw-bold">Avez-vous payé le droit d’adhésion ? <span
-                                        class="text-danger">*</span></label>
+                            <div class="col-lg-6 col-md-6">
+                                <label class="fw-bold">
+                                    Avez-vous réglé votre droit d’adhésion (incluant la carte membre) ?
+                                    <span class="text-danger">*</span>
+                                </label>
 
                                 <div class="d-flex gap-4 mt-2">
                                     <div class="form-check">
@@ -185,7 +187,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-lg-4 col-md-4">
+                            {{-- <div class="col-lg-4 col-md-4">
                                 <label class="fw-bold">Avez-vous payé la taxe de la carte membre ? <span
                                         class="text-danger">*</span></label>
 
@@ -208,11 +210,11 @@
                                 @error('carte_membre')
                                     <span class="text-danger small">{{ $message }}</span>
                                 @enderror
-                            </div>
+                            </div> --}}
 
-                            <div class="col-lg-4 col-md-4">
+                            <div class="col-lg-6 col-md-6">
                                 <label class="fw-bold">Avez-vous payé la cotisation annuelle de l’année en cours ?<span
-                                        class="text-danger">*</span></label>        
+                                        class="text-danger">*</span></label>
 
                                 <div class="d-flex gap-4 mt-2">
                                     <div class="form-check">

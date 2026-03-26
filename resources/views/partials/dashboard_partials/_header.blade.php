@@ -203,22 +203,28 @@
                                     </div>
                                 </div>
                                 <div class="list-group m-2 mb-3">
-                                    <a class="list-group-item list-group-item-action border-0" href="#"><i
-                                            class="w30 fa fa-user"></i>Mon profil</a>
-                                    <a class="list-group-item list-group-item-action border-0" href="#"><i
-                                            class="w30 fa fa-gear"></i>Paramètres</a>
-                                </div>
-                                <a class="btn bg-secondary text-light text-uppercase rounded-0" href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
-                                <form id="logout-form" action="{{ route('deconnexion') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form>
+                                    @if ('voir-profil-parametres')
+                                        <a class="list-group-item list-group-item-action border-0"
+                                            href="{{ route('administrateurs.profil') }}"><i
+                                                class="w30 fa fa-user"></i>Mon profil</a>
+                                    @endif
+                                    @if ('voir-parametres')
+                                        <a class="list-group-item list-group-item-action border-0"
+                                            href="{{ route('parametres.index') }}"><i
+                                                class="w30 fa fa-gear"></i>Paramètres</a>
+                                    @endcan
                             </div>
+                            <a class="btn bg-secondary text-light text-uppercase rounded-0" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
+                            <form id="logout-form" action="{{ route('deconnexion') }}" method="POST"
+                                class="d-none">
+                                @csrf
+                            </form>
                         </div>
                     </div>
-                </li>
-            </ul>
-        </nav>
-    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>
 </header>

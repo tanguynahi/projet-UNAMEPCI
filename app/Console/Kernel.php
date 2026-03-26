@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // planigue journaliere
-        $schedule->command('cotisation:generer')->dailyAt('14:37');
+        $schedule->command('cotisation:generer')->dailyAt('00:00');
         // planigue hedbomadaire
         $schedule->command('cotisation:hebdomadaire')->weeklyOn(1, '00:00');
         // planigue mensuelle
@@ -21,6 +21,8 @@ class Kernel extends ConsoleKernel
         // planification annuelle
         $schedule->command('cotisation:annuelle')->yearly();
         // $schedule->command('cotisation:generer')->weeklyOn(1, '09:35') tout les lundis a 09:35
+        // planigue renouvellement des droits d'adhesion ainsi que la carte membre
+        $schedule->command('app:renouvellement-adhesion')->everyMinute();
     }
 
     /**

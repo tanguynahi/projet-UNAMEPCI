@@ -64,10 +64,13 @@
 
                                         <td>{!! $statusBadge !!}</td>
                                         <td>
-                                            <a href="{{ route('cartemembres.show', $cartemembre->id) }}" id="ShowAdmin"
-                                                class="btn btn-link btn-sm text-success infoIcon" data-bs-toggle="tooltip"
-                                                data-bs-toggle="modal" data-bs-target="#info_admin" data-bs-placement="top"
-                                                title="Infos"><i class="fa fa-eye"></i></a>
+                                            @if ($cartemembre->status == 1)
+                                                <a href="{{ route('cartemembres.show', $cartemembre->id) }}" id="ShowAdmin"
+                                                    class="btn btn-link btn-sm text-success infoIcon"
+                                                    data-bs-toggle="tooltip" data-bs-toggle="modal"
+                                                    data-bs-target="#info_admin" data-bs-placement="top" title="Infos"><i
+                                                        class="fa fa-eye"></i></a>
+                                            @endif
                                             {{-- <a href="{{ route('mutualistes.edit', $cartemembre->id) }}" id="EditAdmin"
                                                 class="btn btn-link btn-sm text-primary editIcon"
                                                 data-bs-target="#edit_admin" title="Modifier"><i

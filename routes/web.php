@@ -4,6 +4,7 @@ use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TaxeController;
 use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\GradeController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\TypePieceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CotisationController;
 use App\Http\Controllers\MutualisteController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\TypeCompteController;
 use App\Http\Controllers\CarteMembreController;
@@ -133,8 +135,7 @@ Route::middleware('auth')->group(function () {
                 Route::post('/espacesdePaiements/{id}', 'paiementEspace')->name('espaPay');
                 Route::get('/affichagePage/{libelle}/{montant}/{id}/{idCorrespondant}/{facturationID?}', 'PayPage')->name('hubPayPag');
                 Route::post('/traitementapiPay/{id}', 'traitementAppelApiPaiement')->name('pasHubTrait');
-                 Route::get('/paiement/resultatNew/{codePaiement}/{ind}','resulPayment')->name('newResultatPaym');
-
+                Route::get('/paiement/resultatNew/{codePaiement}/{ind}', 'resulPayment')->name('newResultatPaym');
             });
             // route des conversations  concernant la chat ( controller message)
             Route::controller(ConversationController::class)->group(function () {
@@ -230,6 +231,14 @@ Route::middleware('auth')->group(function () {
             Route::post('/accepterPaiementCash/{id}', 'accepterPaiement')->name('accepter.paiementcash');
             Route::post('/refuserPaiementCash/{id}', 'refuserPaiement')->name('refuser.paiementcash');
         });
+
+        Route::controller(AdministrateurController::class)->group(function(){
+            Route::get('/permissionAdministrateur/{id}','listePermission')->name('administrateurs.permissions');
+            Route::post('/permissionAdministrateurTraitement/{id}','permissionStoreAdmin')->name('administrateurs.permissions.store');
+            Route::get('/pageProfilAdministrateur','profilAdministrateur')->name('administrateurs.profil');
+            Route::post('/pageProfilAdministrateurTraitement','traitementProfil')->name('administrateurs.profil.traitement');
+            Route::post('/pageProfilAdministrateurTraitementAcces','traitementAcces')->name('administrateurs.profil.traitementAcces');
+        });
     });
     Route::controller(MessageController::class)->group(function () {
         Route::post('/traitementAdministrateurEt/{id}', 'storeV')->name('message.administrateur');
@@ -285,6 +294,8 @@ Route::middleware('auth')->group(function () {
         'taxes' => TaxeController::class,
         'formejuridiques' => FormeJuridiqueController::class,
         'specialites' => SpecialiteController::class,
+        'permissions' => PermissionController::class,
+        'roles' => RoleController::class,
     ]);
 
     Route::middleware('verifierRoleUtilisateur:super-administrateur,administrateur')->group(function () {
