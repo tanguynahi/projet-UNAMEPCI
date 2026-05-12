@@ -26,7 +26,13 @@ class AdministrateurController extends Controller
      */
     public function index()
     {
-        $administrateurs = Administrateur::where('id', '<>', 1)->orderBy('created_at', 'DESC')->get();
+        // $administrateurs = Administrateur::where('id', '<>', 1)->orderBy('created_at', 'DESC')->get();
+$administrateurs = Administrateur::whereHas('user.roles', function ($query) {
+        // $query->where('name', 'super-administrateur');
+        $query->where('name', 'administrateur');
+    })
+    ->orderBy('created_at', 'DESC')
+    ->get();
         $villes = Ville::orderBy('libelle', 'ASC')->get();
         $module = "Module Administrateur ";
         $action = " a consulté la liste des administrateurs ";
@@ -168,6 +174,13 @@ class AdministrateurController extends Controller
     public function edit(Administrateur $administrateur)
     {
         //
+        $villes = Ville::orderBy('libelle', 'ASC')->get();
+
+        $roles = Role::where('id', '!=', 3)
+            ->where('id', '!=', 4)
+            ->orderBy('name', 'asc')
+            ->get();
+        return view('dashboard.admins.edit', compact('villes', 'roles', 'administrateur'));
     }
 
     /**
@@ -175,7 +188,66 @@ class AdministrateurController extends Controller
      */
     public function update(UpdateAdministrateurRequest $request, Administrateur $administrateur)
     {
-        //
+
+
+          try {
+
+            DB::beginTransaction();
+
+            $request->validated();
+
+            // Création user
+            $user = User::where('email', $administrateur->email)->first();
+
+
+            // Roles
+            $roleIds = $request->input('role_id');
+
+            $roleNames = Role::whereIn('id', (array) $roleIds)
+                ->pluck('name')
+                ->toArray();
+
+            $user->syncRoles($roleNames);
+
+            // Upload photo
+            $administrateur = Administrateur::findOrFail($administrateur->id);
+            $lien_photo = null;
+            if ($request->hasFile('lien_photo')) {
+                $file_name = Carbon::now()->timestamp . '.' . $request->lien_photo->extension();
+                $request->lien_photo->storeAs('images-administrateurs/', $file_name);
+                $lien_photo = 'src-files/images-administrateurs/' . $file_name;
+            }
+
+            // retirer champs inutiles
+            $data = [
+                "nom" => $request->nom,
+                "prenom" => $request->prenom,
+                "ville_id" => $request->ville_id,
+                "adresse" => $request->adresse,
+                "contact" => $request->contact,
+                "genre" => $request->genre,
+                "email" => $request->email,
+                "user_id" => $user->id,
+                "lien_photo" => $lien_photo,
+            ];
+
+            $administrateur->update($data);
+
+            DB::commit();
+
+            toast('Compte administrateur mis à jour avec succès !', 'success');
+
+            return redirect()->route('administrateurs.index');
+        } catch (\Exception $e) {
+
+            DB::rollback();
+
+            toast('Une erreur s\'est produite, veuillez réessayer.', 'error');
+
+            Log::error('Erreur interne du serveur: ' . $e->getMessage());
+
+            return redirect()->back();
+        }
     }
 
     /**

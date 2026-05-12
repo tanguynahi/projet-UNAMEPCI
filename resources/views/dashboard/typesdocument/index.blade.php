@@ -14,8 +14,10 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
-                        <a href="{{ route('typedocuments.create') }}" class="btn btn-primary d-inline">Ajouter un
-                            type de document</a>
+                        @can('ajouter-typeDocuments')
+                            <a href="{{ route('typedocuments.create') }}" class="btn btn-primary d-inline">Ajouter un
+                                type de document</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body" id="show_all_types_paiement">
@@ -60,17 +62,20 @@
                                                     data-bs-toggle="tooltip" data-bs-toggle="modal"
                                                     data-bs-target="#info_type_document" data-bs-placement="top"
                                                     title="Infos"><i class="fa fa-eye"></i></a> --}}
-                                                <a href="{{ route('typedocuments.edit', $typedocument->id) }}"
-                                                    id="EditTypeDocument" class="btn btn-link btn-sm text-primary editIcon"
-                                                    data-bs-toggle="tooltip" data-bs-target="#edit_type_document"
-                                                    title="Modifier"><i class="fa fa-pencil"></i></a>
-                                                @if (Auth::user()->hasRole('super-administrateur'))
+                                                @can('modifier-typeDocuments')
+                                                    <a href="{{ route('typedocuments.edit', $typedocument->id) }}"
+                                                        id="EditTypeDocument" class="btn btn-link btn-sm text-primary editIcon"
+                                                        data-bs-toggle="tooltip" data-bs-target="#edit_type_document"
+                                                        title="Modifier"><i class="fa fa-pencil"></i></a>
+                                                @endcan
+                                                {{-- @if (Auth::user()->hasRole('super-administrateur')) --}}
+                                                @can('supprimer-typeDocuments')
                                                     <a href="#deleteModal{{ $typedocument->id }}" id="DeleteTypeDocument"
                                                         class="btn btn-link btn-sm text-danger deleteIcon"
-                                                        data-bs-toggle="modal" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="Supprimer"><i
-                                                            class="fa fa-trash"></i></a>
-                                                @endif
+                                                        data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Supprimer"><i class="fa fa-trash"></i></a>
+                                                @endcan
+                                                {{-- @endif --}}
                                             @endif
                                         </td>
                                     </tr>

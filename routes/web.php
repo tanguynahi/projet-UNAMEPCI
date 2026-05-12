@@ -32,7 +32,7 @@ use App\Http\Controllers\CarteMembreController;
 use App\Http\Controllers\FacturationController;
 use App\Http\Controllers\ImageProjetController;
 use App\Http\Controllers\InscriptionController;
-use App\http\Controllers\Chat\MessageController;
+use App\Http\Controllers\Chat\MessageController;
 use App\Http\Controllers\TypeDocumentController;
 use App\Http\Controllers\TypePaiementController;
 use App\Http\Controllers\DroitAdhesionController;

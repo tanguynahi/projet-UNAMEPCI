@@ -14,9 +14,11 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
-                        <a href="{{ route('formejuridiques.create') }}" class="btn btn-primary d-inline">Ajouter une Forme
-                            Juridique
-                        </a>
+                        @can('ajouter-formeJuridiques')
+                            <a href="{{ route('formejuridiques.create') }}" class="btn btn-primary d-inline">Ajouter une Forme
+                                Juridique
+                            </a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body" id="show_all_types_piece">

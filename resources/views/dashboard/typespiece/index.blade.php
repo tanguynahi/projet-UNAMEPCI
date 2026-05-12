@@ -14,8 +14,10 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
-                        <a href="{{ route('typepieces.create') }}" class="btn btn-primary d-inline">Ajouter un
-                            type de pièce</a>
+                        @can('ajouter-typePieces')
+                            <a href="{{ route('typepieces.create') }}" class="btn btn-primary d-inline">Ajouter un
+                                type de pièce</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body" id="show_all_types_piece">
@@ -60,18 +62,21 @@
                                                     data-bs-toggle="tooltip" data-bs-toggle="modal"
                                                     data-bs-target="#info_type_piece" data-bs-placement="top"
                                                     title="Infos"><i class="fa fa-eye"></i></a> --}}
-                                                <a href="{{ route('typepieces.edit', $typepiece->id) }}" id="EditTypePiece"
-                                                    class="btn btn-link btn-sm text-primary editIcon"
-                                                    data-bs-toggle="tooltip" data-bs-target="#edit_type_piece"
-                                                    title="Modifier"><i class="fa fa-pencil"></i></a>
+                                                @can('modifier-typePieces')
+                                                    <a href="{{ route('typepieces.edit', $typepiece->id) }}" id="EditTypePiece"
+                                                        class="btn btn-link btn-sm text-primary editIcon"
+                                                        data-bs-toggle="tooltip" data-bs-target="#edit_type_piece"
+                                                        title="Modifier"><i class="fa fa-pencil"></i></a>
+                                                @endcan
 
-                                                @if (Auth::user()->hasRole('super-administrateur'))
+                                                {{-- @if (Auth::user()->hasRole('super-administrateur')) --}}
+                                                @can('supprimer-typePieces')
                                                     <a href="#deleteModal{{ $typepiece->id }}" id="DeleteTypePiece"
                                                         class="btn btn-link btn-sm text-danger deleteIcon"
-                                                        data-bs-toggle="modal" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top" title="Supprimer"><i
-                                                            class="fa fa-trash"></i></a>
-                                                @endif
+                                                        data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                        title="Supprimer"><i class="fa fa-trash"></i></a>
+                                                @endcan
+                                                {{-- @endif --}}
                                             @endif
                                         </td>
                                     </tr>

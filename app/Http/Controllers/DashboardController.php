@@ -42,7 +42,12 @@ class DashboardController extends Controller
         $module = "Module Tableau de bord administrateur";
         $action = "a consulte son tableau de bord ";
         Logs::saveLog($module, $action);
-        $nombrAdmin = Administrateur::where('status',1)->count();
+        $nombrAdmin = Administrateur::whereHas('user.roles', function ($query) {
+        // $query->where('name', 'super-administrateur');
+        $query->where('name', 'administrateur');
+    })
+    ->orderBy('created_at', 'DESC')
+    ->count();
         $nombrMutualiste = Mutualiste::where('status',1)->count();
         $montantTotal = PaiementInitiale::where('status', 1)->sum('montant_initial');
         $mntAdhesion = PaiementInitiale::where('status', 1)->where('type_paiement_id', 1)->sum('montant_initial');

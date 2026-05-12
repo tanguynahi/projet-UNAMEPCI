@@ -77,10 +77,12 @@
                                                     data-bs-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#info_admin"
                                                     data-bs-placement="top" title="Infos"><i class="fa fa-eye"></i></a>
                                             @endcan
-                                            {{-- <a href="{{ route('administrateurs.edit', $administrateur->id) }}"
-                                                id="EditAdmin" class="btn btn-link btn-sm text-primary editIcon"
-                                                data-bs-target="#edit_admin" title="Modifier"><i
-                                                    class="fa fa-pencil"></i></a> --}}
+                                            @can('modifier-administrateurs')
+                                                <a href="{{ route('administrateurs.edit', $administrateur->id) }}"
+                                                    id="EditAdmin" class="btn btn-link btn-sm text-primary editIcon"
+                                                    data-bs-target="#edit_admin" title="Modifier"><i
+                                                        class="fa fa-pencil"></i></a>
+                                            @endcan
                                             @can('supprimer-administrateurs')
                                                 <a href="#deleteModal{{ $administrateur->id }}" id="DeleteAdministrateur"
                                                     class="btn btn-link btn-sm text-danger deleteIcon" data-bs-toggle="modal"
