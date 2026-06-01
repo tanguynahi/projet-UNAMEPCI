@@ -65,6 +65,25 @@
                                                 {{ $paiement->moyen_paiement }}</span></u>
                                     </p>
                                 </div>
+                                @if($paiement->cheque_numero)
+                                    <div class="col-6 col-lg-6 col-sm-6 col-md-6">
+                                        <p> <span> Numéro de chèque :</span>
+                                            <u>
+                                                <span class="text-uppercase fw-bold">
+                                                    {{ $paiement->cheque_numero }}</span></u>
+                                        </p>
+                                    </div>
+                                @endif
+                                @if($paiement->banque_autre)
+                                    <div class="col-6 col-lg-6 col-sm-6 col-md-6">
+                                        <p> <span> Banque :</span>
+                                            <u>
+                                                <span class="text-uppercase fw-bold">
+                                                    {{ $paiement->banque_autre }}</span></u>
+                                        </p>
+                                    </div>
+                                @endif
+
                                 <div class="col-6 col-lg-6 col-sm-6 col-md-6">
                                     <p> <span> Date de paiement :</span>
                                         <u>
@@ -226,7 +245,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="row mb-5">
                                 <h6><u>Informations Mutualiste</u></h6>
-                                <img src="/{{ $paiement->mutualiste->lien_photo }}" class="img-thumbnail"
+                                <img src="{{ asset($paiement->mutualiste->lien_photo) }}" class="img-thumbnail"
                                     style="height: 80px; width: 100px;" alt="Image du mutualiste">
 
                                 <div class="col-lg-6 col-md-6">
@@ -236,8 +255,8 @@
                                     </h5>
                                     <p class="mb-0 text-primary fs-6 fw-bold">
                                         <i class="fa fa-envelope text-muted"></i> <a class=""
-                                            href="mailto:{{ $paiement->mutualiste->user->email }}">
-                                            {{ $paiement->mutualiste->user->email }}</a>
+                                            href="mailto:{{ $paiement->mutualiste->email ?? '' }}">
+                                            {{ $paiement->mutualiste->email ?? '' }}</a>
                                     </p>
                                     <p class="mb-0 text-primary fs-6 fw-bold">
                                         <i class="fa fa-phone text-muted"></i> <a

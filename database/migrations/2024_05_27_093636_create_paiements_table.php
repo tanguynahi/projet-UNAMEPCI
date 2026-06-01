@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('moyen_paiement');
             $table->string('contact_paiement');
             $table->bigInteger('produit_id')->nullable(); // le produit
+            $table->string('cheque_numero')->nullable(); // ajouter le numero de cheque
+            $table->string('banque_autre')->nullable(); // ajouter le nom de la banque
             $table->string('date_paiement_final')->nullable();
             $table->string('heure_paiement_final')->nullable();
             $table->foreignId('admin_pay')->nullable();

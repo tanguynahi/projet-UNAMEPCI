@@ -22,6 +22,10 @@ class Inscription extends Model
     {
         return $this->belongsTo(Ville::class);
     }
+     public function villePersonnel(): BelongsTo
+    {
+        return $this->belongsTo(Ville::class);
+    }
     public function typePiece(): BelongsTo
     {
         return $this->belongsTo(TypePiece::class);

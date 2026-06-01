@@ -23,6 +23,8 @@ return new class extends Migration
             $table->bigInteger('montant_total')->nullable();
             $table->string('moyen_paiement')->nullable(); //  savoir si c'est en ligne ou pas
             $table->string('contact_paiement')->nullable();
+            $table->string('cheque_numero')->nullable();
+            $table->string('banque_autre')->nullable();
             $table->string('date_paiement_initial')->nullable();
             $table->string('heure_paiement_initial')->nullable();
             $table->bigInteger('produit_id')->nullable(); // les produits

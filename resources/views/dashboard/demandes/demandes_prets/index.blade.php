@@ -79,7 +79,8 @@
                                         <span>{{ formatGender($demandeaccompagnement->mutualiste->genre) }} {{
                                             $demandeaccompagnement->mutualiste->nom }} {{
                                             $demandeaccompagnement->mutualiste->prenom }}</span><br>
-                                        <p class="my-2">Grade : {{ $demandeaccompagnement->mutualiste->grade->libelle }}</p>
+                                        <p class="my-2">Specialite : {{ $demandeaccompagnement->mutualiste->specialite->libelle }}</p>
+                                        <p class="my-2">Fonction : {{ $demandeaccompagnement->mutualiste->fonction }}</p>
                                     </td>
                                     <td>{{ formatMontant($demandeaccompagnement->montant_voulue) }}</td>
                                     <td>{{ formatMontant($demandeaccompagnement->montant_apayer) }}</td>
@@ -100,13 +101,13 @@
                                             data-bs-toggle="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#info_demande_pret" data-bs-placement="top" title="Infos"><i
                                                 class="fa fa-eye"></i></a>
-
+{{--
                                         @if (Auth::user()->hasRole('super-administrateur'))
                                         <a href="#deleteModal{{ $demandeaccompagnement->id }}" id="DeleteDemandePret"
                                             class="btn btn-link btn-sm text-danger deleteIcon" data-bs-toggle="modal"
                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer"><i
                                                 class="fa fa-trash"></i></a>
-                                        @endif
+                                        @endif --}}
 
                                         @endif
                                     </td>

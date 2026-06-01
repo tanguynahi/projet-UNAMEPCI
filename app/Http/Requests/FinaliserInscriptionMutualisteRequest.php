@@ -34,13 +34,13 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'prenom' => 'required|string|min:2|max:150',
             'contact' => 'required|string|min:8|max:20',
             'contact_2' => 'nullable|string|max:20',
-            'fax' => 'nullable|string|max:50',
+            // 'fax' => 'nullable|string|max:50',
             'email' => 'nullable|email|unique:users,email',
             'date_naissance' => 'required|date',
             'lieu_naissance' => 'required|string|max:100',
             'nationalite' => 'required|string|max:100',
             'situation_matrimoniale' => 'required|string|max:50',
-            'nombre_charge' => 'required|integer|min:0',
+            // 'nombre_charge' => 'required|integer|min:0',
             'adresse' => 'required|string|max:255',
             'date_adhesion_unamepci' => 'required|date',
 
@@ -49,10 +49,11 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'numero_piece' => 'required|string|max:100',
             'date_etablissement_piece' => 'required|date',
             'lieu_etablissement_piece' => 'required|string|max:100',
+            'date_expiration_piece' => ['required', 'date'],
 
             // ================= ONMCI =================
             'numero_inscription_ONMCI' => 'required|string|max:100',
-            'pseudonyme_recon_ONMCI' => 'required|string|max:100',
+            // 'pseudonyme_recon_ONMCI' => 'required|string|max:100',
 
             // ================= PROFESSION =================
             'matricule' => 'nullable|string|max:100',
@@ -62,9 +63,16 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'date_debut_metier' => 'required|date',
             'nombre_annee_experience' => 'required|integer|min:0',
             'statut_emploi' => 'required|string|max:50',
-            'domaine_activite' => 'required|string|max:255',
+            // 'domaine_activite' => 'required|string|max:255',
             'nom_employeur_principale' => 'required|string|max:150',
             // 'montant_cotis_annuel' => 'required|numeric|min:0',
+
+             'niveau_intervention' => ['required', 'string'],
+            'precise_intervention' => ['nullable', 'string'],
+
+            'ville_personnel_id' => ['required', 'exists:villes,id'],
+            'commune_personnel' => ['nullable', 'string', 'max:255'],
+
             'date_recrutement' => 'required|date',
 
             // ================= ENTREPRISE =================
@@ -85,20 +93,20 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'localisation_entreprise' => 'required|string|max:255',
 
             // ================= FREELANCE =================
-            'raison_social_secondaire_freelance' => 'nullable|string|max:150',
-            'fonction_occupe_freelance' => 'nullable|string|max:100',
-            'type_contrat_freelance' => 'nullable|string|max:50',
-            'telephone_freelance' => 'nullable|string|max:20',
-            'localisation_freelance' => 'nullable|string|max:255',
-            'adresse_postale_freelance' => 'nullable|string|max:255',
-            'domaine_activite_freelance' => 'nullable|string|max:255',
-            'fax_freelance' => 'nullable|string|max:50',
+            // 'raison_social_secondaire_freelance' => 'nullable|string|max:150',
+            // 'fonction_occupe_freelance' => 'nullable|string|max:100',
+            // 'type_contrat_freelance' => 'nullable|string|max:50',
+            // 'telephone_freelance' => 'nullable|string|max:20',
+            // 'localisation_freelance' => 'nullable|string|max:255',
+            // 'adresse_postale_freelance' => 'nullable|string|max:255',
+            // 'domaine_activite_freelance' => 'nullable|string|max:255',
+            // 'fax_freelance' => 'nullable|string|max:50',
 
             // ================= RELATION / AUTEUR =================
-            'relation_tiers' => 'required|boolean',
-            // 'nom_relation' => 'required_if:relation_tiers,1|string|max:150',
-            'etre_auteur' => 'nullable|boolean',
-            'nom_auteur' => 'nullable|string|max:150',
+            // 'relation_tiers' => 'required|boolean',
+            // // 'nom_relation' => 'required_if:relation_tiers,1|string|max:150',
+            // 'etre_auteur' => 'nullable|boolean',
+            // 'nom_auteur' => 'nullable|string|max:150',
 
             // ================= SECURITE =================
             'password' => [
@@ -132,7 +140,7 @@ class FinaliserInscriptionMutualisteRequest extends FormRequest
             'image' => 'Le champ :attribute doit être une image.',
             'mimes' => 'Le fichier :attribute doit être de type :values.',
             'max' => 'Le champ :attribute ne doit pas dépasser :max.',
-            'nom_relation.required_if' => 'Le nom de la relation est obligatoire.',
+            // 'nom_relation.required_if' => 'Le nom de la relation est obligatoire.',
         ];
     }
 

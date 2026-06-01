@@ -208,7 +208,7 @@ class MutualisteController extends Controller
             // Générer le lien de validation
             $lienDeValidation = URL::temporarySignedRoute(
                 'validation.inscription',
-                now()->addHours(24), // Définissez la durée de validité du lien
+                // now()->addHours(24), // Définissez la durée de validité du lien
                 ['code' => $mutualiste->code]
             );
             Mutualiste::where('id', $mutualiste->id)->update([
@@ -238,7 +238,7 @@ class MutualisteController extends Controller
                 (int)$code = $res['status'];
                 if ($code != 200) {
                     $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
-                    Log::ajoutLOG($message);
+                    // Log::ajoutLOG($message);
                     $module = "Envoyer de Mail a la creation Mutualiste";
                     $action = "Echec d'envoyer de mail  : $message";
                     Logs::saveLog($module, $action);
@@ -254,6 +254,61 @@ class MutualisteController extends Controller
                 $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
                 Logs::saveLog($module, $action);
             }
+
+
+
+
+
+
+            /// envoyer le sms de validation
+            try {
+                $message = envoyerMessageMutualiste($mutualiste, $lienDeValidation);
+
+                $url = appelApiSMS();
+
+                $headers = [
+                    'Environnement' => 'bew', // Remplace par l'environnement approprié
+                    'secretKey' => 'jfdiezaophrh90c(_kfjqlm', // Remplace par ta vraie clé secrète
+                ];
+
+                $data = [
+                    "titre" => "Création de compte UNAMEPCI", // Titre du message
+                    "destination" => $mutualiste->contact, // Numéro de téléphone
+                    "email" => $mutualiste->email ?? null, // Facultatif
+                    "texte" => $message,
+                ];
+
+                $retourAPI = Http::withHeaders($headers)->post($url, $data);
+
+                $res = $retourAPI->json();
+
+
+                if ($retourAPI->status() == 200) {
+                    (int)$code = $res['status'];
+                    if ($code != 200) {
+                        $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoyer sms avec les accès";
+                        // Log::ajoutLOG($message);
+                        $module = "Envoyer du sms a la creation du compte Mutualiste";
+                        $action = "Echec d'envoyer du sms  : $message";
+                        Logs::saveLog($module, $action);
+                    } else {
+                        $module = "Envoyer du sms a la creation du compte Mutualiste";
+                        $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                        Logs::saveLog($module, $action);
+                    }
+                } else {
+                    Log::error("Erreur lors de l'envoi du sms. Statut API : " . $retourAPI->status());
+
+                    $module = "Envoyer du sms a la creation du compte Mutualiste";
+                    $action = "Erreur lors de l'envoi du sms. Statut API : " . $retourAPI->status();
+                    Logs::saveLog($module, $action);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                Log::error("Erreur lors de l'envoi du sms. Statut API : " . $th->getMessage());
+            }
+
+
             DB::commit();
             // Envoyer un message de succès
             // Alert::success('Succès', 'Mutualiste ajouté avec succès.');
@@ -460,13 +515,13 @@ class MutualisteController extends Controller
             $contact_1 = $mutualiste->contact ?? $data['contact'];
 
 
-            $etre_auteur = $request->etre_auteur ?? 0;
-            if ($etre_auteur == 1 || empty($request->nom_auteur)) {
-                $valeur = $request->nom_relation ?? $data['nom_relation'];
-            } else {
-                $valeur = $request->nom_auteur ?? $data['nom_relation'];
-                $etre_auteur = 0;
-            }
+            // $etre_auteur = $request->etre_auteur ?? 0;
+            // if ($etre_auteur == 1 || empty($request->nom_auteur)) {
+            //     $valeur = $request->nom_relation ?? $data['nom_relation'];
+            // } else {
+            //     $valeur = $request->nom_auteur ?? $data['nom_relation'];
+            //     $etre_auteur = 0;
+            // }
 
             $mutualiste->update([
                 'user_id' => $userId,
@@ -475,30 +530,38 @@ class MutualisteController extends Controller
                 'prenom' => $data['prenom'],
                 'contact' => $contact_1,
                 'contact_2' => $data['contact_2'],
-                'fax' => $data['fax'],
+                // 'fax' => $data['fax'],
                 'adresse' => $data['adresse'],
                 'civilite' => $data['civilite'],
                 'date_naissance' => $data['date_naissance'],
                 'lieu_naissance' => $data['lieu_naissance'],
                 'nationalite' => $data['nationalite'],
                 'situation_matrimoniale' => $data['situation_matrimoniale'],
-                'nombre_charge' => $data['nombre_charge'],
+                // 'nombre_charge' => $data['nombre_charge'],
                 'date_adhesion_unamepci' => $data['date_adhesion_unamepci'],
                 'type_piece_id' => $data['type_piece_id'],
                 'numero_piece' => $data['numero_piece'],
                 'date_etablissement_piece' => $data['date_etablissement_piece'],
+                'date_expiration_piece' => $data['date_expiration_piece'],
+
                 'lieu_etablissement_piece' => $data['lieu_etablissement_piece'],
                 'ville_id' => $data['ville_id'],
                 'numero_inscription_ONMCI' => $data['numero_inscription_ONMCI'],
-                'pseudonyme_recon_ONMCI' => $data['pseudonyme_recon_ONMCI'],
+                // 'pseudonyme_recon_ONMCI' => $data['pseudonyme_recon_ONMCI'],
                 'raison_social_primaire' => $data['raison_social_primaire'],
                 'specialite_id' => $data['specialite_id'],
                 'fonction' => $data['fonction'],
                 'date_debut_metier' => $data['date_debut_metier'],
                 'nombre_annee_experience' => $data['nombre_annee_experience'],
                 'nom_employeur_principale' => $data['nom_employeur_principale'],
+
+                'niveau_intervention' => $data['niveau_intervention'],
+                'precise_intervention' => $data['precise_intervention'],
+                'ville_personnel_id' => $data['ville_personnel_id'],
+                'commune_personnel' => $data['commune_personnel'],
+
                 'statut_emploi' => $data['statut_emploi'],
-                'domaine_activite' => $data['domaine_activite'],
+                // 'domaine_activite' => $data['domaine_activite'],
                 'date_recrutement' => $data['date_recrutement'],
                 'sigle' => $data['sigle'],
                 'date_creation' => $data['date_creation'],
@@ -514,18 +577,19 @@ class MutualisteController extends Controller
                 'email_entreprise' => $data['email_entreprise'],
                 'telephone_entreprise' => $data['telephone_entreprise'],
                 'fax_entreprise' => $data['fax_entreprise'],
-                'etre_auteur' => $etre_auteur,
-                'nom_auteur' => $valeur,
-                'relation_tiers' => $data['relation_tiers'],
-                'nom_relation' => $data['nom_relation'] ?? $request->nom_auteur,
-                'raison_social_secondaire_freelance' => $data['raison_social_secondaire_freelance'],
-                'fonction_occupe_freelance' => $data['fonction_occupe_freelance'],
-                'type_contrat_freelance' => $data['type_contrat_freelance'],
-                'telephone_freelance' => $data['telephone_freelance'],
-                'fax_freelance' => $data['fax_freelance'],
-                'localisation_freelance' => $data['localisation_freelance'],
-                'adresse_postale_freelance' => $data['adresse_postale_freelance'],
-                'domaine_activite_freelance' => $data['domaine_activite_freelance'],
+
+                // 'etre_auteur' => $etre_auteur,
+                // 'nom_auteur' => $valeur,
+                // 'relation_tiers' => $data['relation_tiers'],
+                // 'nom_relation' => $data['nom_relation'] ?? $request->nom_auteur,
+                // 'raison_social_secondaire_freelance' => $data['raison_social_secondaire_freelance'],
+                // 'fonction_occupe_freelance' => $data['fonction_occupe_freelance'],
+                // 'type_contrat_freelance' => $data['type_contrat_freelance'],
+                // 'telephone_freelance' => $data['telephone_freelance'],
+                // 'fax_freelance' => $data['fax_freelance'],
+                // 'localisation_freelance' => $data['localisation_freelance'],
+                // 'adresse_postale_freelance' => $data['adresse_postale_freelance'],
+                // 'domaine_activite_freelance' => $data['domaine_activite_freelance'],
 
                 'lien_photo' => $lien_photo,
                 'photo_couverture' => $photo_couverture,
@@ -628,7 +692,7 @@ class MutualisteController extends Controller
             $specialites = Specialite::where('status', 1)->get();
             $formeJuridiques = FormeJuridique::where('status', 1)->get();
             $villes = Ville::orderBy('libelle', 'ASC')->get();
-            $droitAdhesions = DroitAdhesion::all();
+            // $droitAdhesions = DroitAdhesion::all();
             // Vérifiez si le mutualiste contient des données
             if ($mutualiste->exists()) {
                 // Si le mutualiste existe et contient des données, redirigez-le vers le formulaire pour compléter les autres informations de compte
@@ -739,7 +803,7 @@ class MutualisteController extends Controller
     public function modificationMutualiste(MutualisteEspaceUpdateRequest $request, $id)
     {
         try {
-            $mutualiste = Mutualiste::find($id);
+            $mutualiste = Mutualiste::findOrFail($id);
 
             if (!$mutualiste) {
                 toast("Une erreur s'est produite, Mutualiste introuvable.", 'error');
@@ -813,20 +877,23 @@ class MutualisteController extends Controller
             $mutualiste->lieu_naissance = htmlspecialchars($request->lieu_naissance);
             $mutualiste->nationalite = htmlspecialchars($request->nationalite);
             $mutualiste->situation_matrimoniale = htmlspecialchars($request->situation_matrimoniale);
-            $mutualiste->nombre_charge = $request->nombre_charge;
+            // $mutualiste->nombre_charge = $request->nombre_charge;
             $mutualiste->date_adhesion_unamepci = $request->date_adhesion_unamepci;
             $mutualiste->email = htmlspecialchars($request->email);
             $mutualiste->contact = htmlspecialchars($request->contact);
             $mutualiste->contact_2 = htmlspecialchars($request->contact_2);
-            $mutualiste->fax = htmlspecialchars($request->fax);
+
+            // $mutualiste->fax = htmlspecialchars($request->fax);
+
             $mutualiste->ville_id = $request->ville_id;
             $mutualiste->adresse = htmlspecialchars($request->adresse);
             $mutualiste->type_piece_id = $request->type_piece_id;
             $mutualiste->numero_piece = htmlspecialchars($request->numero_piece);
             $mutualiste->date_etablissement_piece = $request->date_etablissement_piece;
+            $mutualiste->date_expiration_piece = $request->date_expiration_piece;
             $mutualiste->lieu_etablissement_piece = htmlspecialchars($request->lieu_etablissement_piece);
             $mutualiste->numero_inscription_ONMCI = htmlspecialchars($request->numero_inscription_ONMCI);
-            $mutualiste->pseudonyme_recon_ONMCI = htmlspecialchars($request->pseudonyme_recon_ONMCI);
+            // $mutualiste->pseudonyme_recon_ONMCI = htmlspecialchars($request->pseudonyme_recon_ONMCI);
             $mutualiste->raison_social_primaire = htmlspecialchars($request->raison_social_primaire);
             $mutualiste->specialite_id = $request->specialite_id;
             $mutualiste->fonction = htmlspecialchars($request->fonction);
@@ -834,8 +901,13 @@ class MutualisteController extends Controller
             $mutualiste->nombre_annee_experience = $request->nombre_annee_experience;
             $mutualiste->nom_employeur_principale = htmlspecialchars($request->nom_employeur_principale);
             $mutualiste->statut_emploi = htmlspecialchars($request->statut_emploi);
-            $mutualiste->domaine_activite = htmlspecialchars($request->domaine_activite);
+            // $mutualiste->domaine_activite = htmlspecialchars($request->domaine_activite);
             $mutualiste->date_recrutement = $request->date_recrutement;
+
+            $mutualiste->niveau_intervention = $request->niveau_intervention;
+            $mutualiste->precise_intervention = $request->precise_intervention;
+            $mutualiste->commune_personnel = $request->commune_personnel;
+            $mutualiste->ville_personnel_id = $request->ville_personnel_id;
 
             $mutualiste->sigle = htmlspecialchars($request->sigle);
             $mutualiste->date_creation = $request->date_creation;
@@ -853,20 +925,20 @@ class MutualisteController extends Controller
             $mutualiste->fax_entreprise = htmlspecialchars($request->fax_entreprise);
 
             // Gestion des champs boolean (checkbox)
-            $mutualiste->relation_tiers = $request->has('relation_tiers') ? 1 : 0;
-            $mutualiste->nom_relation = htmlspecialchars($request->nom_relation);
-            $mutualiste->etre_auteur = $request->has('etre_auteur') ? 1 : 0;
-            $mutualiste->nom_auteur = htmlspecialchars($request->nom_auteur);
+            // $mutualiste->relation_tiers = $request->has('relation_tiers') ? 1 : 0;
+            // $mutualiste->nom_relation = htmlspecialchars($request->nom_relation);
+            // $mutualiste->etre_auteur = $request->has('etre_auteur') ? 1 : 0;
+            // $mutualiste->nom_auteur = htmlspecialchars($request->nom_auteur);
 
             // Travail freelance
-            $mutualiste->raison_social_secondaire_freelance = htmlspecialchars($request->raison_social_secondaire_freelance);
-            $mutualiste->fonction_occupe_freelance = htmlspecialchars($request->fonction_occupe_freelance);
-            $mutualiste->type_contrat_freelance = htmlspecialchars($request->type_contrat_freelance);
-            $mutualiste->telephone_freelance = htmlspecialchars($request->telephone_freelance);
-            $mutualiste->fax_freelance = htmlspecialchars($request->fax_freelance);
-            $mutualiste->localisation_freelance = htmlspecialchars($request->localisation_freelance);
-            $mutualiste->adresse_postale_freelance = htmlspecialchars($request->adresse_postale_freelance);
-            $mutualiste->domaine_activite_freelance = htmlspecialchars($request->domaine_activite_freelance);
+            // $mutualiste->raison_social_secondaire_freelance = htmlspecialchars($request->raison_social_secondaire_freelance);
+            // $mutualiste->fonction_occupe_freelance = htmlspecialchars($request->fonction_occupe_freelance);
+            // $mutualiste->type_contrat_freelance = htmlspecialchars($request->type_contrat_freelance);
+            // $mutualiste->telephone_freelance = htmlspecialchars($request->telephone_freelance);
+            // $mutualiste->fax_freelance = htmlspecialchars($request->fax_freelance);
+            // $mutualiste->localisation_freelance = htmlspecialchars($request->localisation_freelance);
+            // $mutualiste->adresse_postale_freelance = htmlspecialchars($request->adresse_postale_freelance);
+            // $mutualiste->domaine_activite_freelance = htmlspecialchars($request->domaine_activite_freelance);
 
             $mutualiste->save();
             DB::commit();
@@ -919,5 +991,314 @@ class MutualisteController extends Controller
         Logs::saveLog($module, $action);
         toast('Vos Mot de passe a été modifié avec succès !', 'success');
         return redirect()->back();
+    }
+
+    // reenvoyer le lien d'inscription
+    // public function resendLinkInscription($id)
+    // {
+    //     try {
+    //         $mutualiste = Mutualiste::findOrFail($id);
+
+    //         if (!$mutualiste) {
+    //             toast('Mutualiste non trouvé', 'error');
+    //             return redirect()->back();
+    //         }
+
+    //         $lienDeValidation = route('validation.inscription', ['code' => $mutualiste->code]) ?? $mutualiste->lien_email;
+    //         $sujet = "Validation de votre  compte UNAMEPCI";
+    //         $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+    //                     Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+    //                     <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+    //                     <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+    //                     </div>
+    //                            Merci d'utiliser notre plateforme! <br>
+    //                     Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+    //                             ";
+    //         $url = appelApiEmail();
+    //         $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+    //         $data = [
+    //             'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+    //             "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+    //             "destination" => $mutualiste->email,
+    //             "sujet" => $sujet,
+    //             "message" => $template
+    //         ];
+    //         $retourAPI = Http::post($url, $data);
+    //         $res = $retourAPI->json();
+    //         if ($retourAPI->status() == 200) {
+    //             (int)$code = $res['status'];
+    //             if ($code != 200) {
+    //                 $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+    //                 // Log::ajoutLOG($message);
+    //                 $module = "Envoyer de Mail a la creation Mutualiste";
+    //                 $action = "Echec d'envoyer de mail  : $message";
+    //                 Logs::saveLog($module, $action);
+    //             } else {
+    //                 $module = "Envoyer de Mail a la creation Mutualiste";
+    //                 $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+    //                 Logs::saveLog($module, $action);
+    //             }
+    //         } else {
+    //             Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+    //             $module = "Envoyer de Mail a la creation Mutualiste";
+    //             $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+    //             Logs::saveLog($module, $action);
+    //         }
+    //         toast('Le lien d\'inscription a été renvoyé avec succès.', 'success');
+    //         return redirect()->back();
+    //     } catch (\Exception $e) {
+    //         Log::error('Erreur lors du renvoi du lien d\'inscription: ' . $e->getMessage());
+    //         toast('Une erreur s\'est produite, veuillez réessayer.', 'error');
+
+    //         $module = "Envoyer de Mail a la creation Mutualiste";
+    //         $action = "Erreur lors du renvoi du lien d\'inscription " . $e->getMessage();
+    //         Logs::saveLog($module, $action);
+    //         return redirect()->back();
+    //     }
+    // }
+
+
+    // reenvoyer le lien d'inscription
+    public function resendLinkInscription($id)
+    {
+        try {
+
+            // Recherche du mutualiste
+            $mutualiste = Mutualiste::findOrFail($id);
+
+            if (!$mutualiste) {
+
+                toast('Mutualiste non trouvé', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Mutualiste introuvable ID : " . $id
+                );
+
+                return redirect()->back();
+            }
+
+            // Vérification email
+            if (empty($mutualiste->email)) {
+
+                toast('Aucun email trouvé pour ce mutualiste', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Email vide pour le mutualiste ID : " . $mutualiste->id
+                );
+
+                return redirect()->back();
+            }
+
+            // Génération du lien
+            $lienDeValidation = route(
+                'validation.inscription',
+                ['code' => $mutualiste->code]
+            );
+
+            if (empty($lienDeValidation)) {
+
+                toast('Lien de validation introuvable', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Lien de validation vide pour le mutualiste ID : " . $mutualiste->id
+                );
+
+                return redirect()->back();
+            }
+
+            // Sujet
+            $sujet = "Validation de votre compte UNAMEPCI";
+
+            // Message HTML
+            $message = "
+            Bonjour {$mutualiste->prenom} {$mutualiste->nom}, <br><br>
+
+            Merci pour la première étape de votre inscription sur UNAMEPCI. <br>
+
+            Veuillez cliquer sur le bouton ci-dessous pour finaliser votre inscription et valider votre compte.<br><br>
+
+            <div style='margin-top:3px; margin-bottom:3px; text-align:center;'>
+                <a href='{$lienDeValidation}' class='bouton'>
+                    POURSUIVRE
+                </a>
+            </div>
+
+            <br>
+
+            Merci d'utiliser notre plateforme ! <br>
+
+            Si vous rencontrez des problèmes avec votre compte,
+            n'hésitez pas à nous contacter.
+        ";
+
+            // Génération du template
+            try {
+
+                $template = View::make(
+                    'home.admin.paiements.paiementAdhesion',
+                    ['contenumess' => $message]
+                )->render();
+            } catch (\Exception $e) {
+
+                Log::error("Erreur template email : " . $e->getMessage());
+
+                toast('Erreur de génération du template email', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Erreur template : " . $e->getMessage()
+                );
+
+                return redirect()->back();
+            }
+
+            // URL API
+            $url = appelApiEmail();
+
+            if (empty($url)) {
+
+                toast('Configuration API email introuvable', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "URL API email vide"
+                );
+
+                return redirect()->back();
+            }
+
+            // Données API
+            $data = [
+                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
+                'key_rsa' => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'destination' => $mutualiste->email,
+                'sujet' => $sujet,
+                'message' => $template
+            ];
+
+            // Appel API
+            try {
+
+                $retourAPI = Http::timeout(30)->post($url, $data);
+            } catch (\Exception $e) {
+
+                Log::error("Erreur connexion API Email : " . $e->getMessage());
+
+                toast('Impossible de contacter le serveur email', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Erreur connexion API : " . $e->getMessage()
+                );
+
+                return redirect()->back();
+            }
+
+            // Vérification statut HTTP
+            if (!$retourAPI->successful()) {
+
+                Log::error(
+                    "Erreur API Email HTTP : " .
+                        $retourAPI->status()
+                );
+
+                toast('Erreur lors de l\'envoi de l\'email', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Erreur HTTP API : " . $retourAPI->status()
+                );
+
+                return redirect()->back();
+            }
+
+            // Réponse JSON
+            $res = $retourAPI->json();
+
+            if (!$res) {
+
+                toast('Réponse API invalide', 'error');
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    "Réponse API vide ou invalide"
+                );
+
+                return redirect()->back();
+            }
+
+            // Status API
+            $code = $res['status'] ?? 500;
+
+            // Message API
+            $messageErreur = '';
+
+            if (isset($res['message'])) {
+
+                if (is_array($res['message'])) {
+
+                    $messageErreur = messageBrut($res['message']);
+                } else {
+
+                    $messageErreur = $res['message'];
+                }
+            }
+
+            // Vérification succès API
+            if ((int)$code !== 200) {
+
+                $messageLog = "Erreur API : "
+                    . $code
+                    . " DETAIL : "
+                    . $messageErreur;
+
+                Log::error($messageLog);
+
+                Logs::saveLog(
+                    "Envoyer de Mail a la creation Mutualiste",
+                    $messageLog
+                );
+
+                toast('Erreur lors de l\'envoi du mail', 'error');
+
+                return redirect()->back();
+            }
+
+            // Succès
+            Logs::saveLog(
+                "Envoyer de Mail a la creation Mutualiste",
+                "Email envoyé avec succès à "
+                    . $mutualiste->email
+            );
+
+            toast(
+                'Le lien d\'inscription a été renvoyé avec succès.',
+                'success'
+            );
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+
+            Log::error(
+                'Erreur lors du renvoi du lien d\'inscription : '
+                    . $e->getMessage()
+            );
+
+            Logs::saveLog(
+                "Envoyer de Mail a la creation Mutualiste",
+                "Erreur générale : " . $e->getMessage()
+            );
+
+            toast(
+                'Une erreur s\'est produite, veuillez réessayer.',
+                'error'
+            );
+
+            return redirect()->back();
+        }
     }
 }

@@ -100,8 +100,19 @@ class InscriptionController extends Controller
             $mutualiste->nom = $inscription->nom;
             $mutualiste->prenom = $inscription->prenom;
             $mutualiste->contact = $inscription->contact;
-            // $mutualiste->contact_2 = $inscription->contact_2 ?? null;
-            $mutualiste->fax = $inscription->fax;
+            // $mutualiste->contact_2 = $inscription->contact_2 ?? null;77
+
+
+
+            $mutualiste->date_expiration_piece = $inscription->date_expiration_piece; // ajouter
+            $mutualiste->niveau_intervention = $inscription->niveau_intervention; // ajouter
+            $mutualiste->precise_intervention = $inscription->precise_intervention; // ajouter
+            $mutualiste->ville_personnel_id = $inscription->ville_personnel_id; // ajouter
+            $mutualiste->commune_personnel = $inscription->commune_personnel; // ajouter
+
+
+
+            // $mutualiste->fax = $inscription->fax;
             $mutualiste->email = $inscription->email;
             $mutualiste->adresse = $inscription->adresse;
             $mutualiste->civilite = $inscription->civilite;
@@ -109,7 +120,7 @@ class InscriptionController extends Controller
             $mutualiste->lieu_naissance = $inscription->lieu_naissance;
             $mutualiste->nationalite = $inscription->nationalite;
             $mutualiste->situation_matrimoniale = $inscription->situation_matrimoniale;
-            $mutualiste->nombre_charge = $inscription->nombre_charge;
+            // $mutualiste->nombre_charge = $inscription->nombre_charge;
             $mutualiste->date_adhesion_unamepci = $inscription->date_adhesion_unamepci;
             $mutualiste->type_piece_id = $inscription->type_piece_id;
             $mutualiste->numero_piece = $inscription->numero_piece;
@@ -118,7 +129,7 @@ class InscriptionController extends Controller
             $mutualiste->pieces_joints_recto = $inscription->pieces_joints_recto;
             $mutualiste->pieces_joints_verso = $inscription->pieces_joints_verso;
             $mutualiste->numero_inscription_ONMCI = $inscription->numero_inscription_ONMCI;
-            $mutualiste->pseudonyme_recon_ONMCI = $inscription->pseudonyme_recon_ONMCI;
+            // $mutualiste->pseudonyme_recon_ONMCI = $inscription->pseudonyme_recon_ONMCI;
             $mutualiste->matricule = $inscription->matricule;
             $mutualiste->raison_social_primaire = $inscription->raison_social_primaire;
             $mutualiste->specialite_id = $inscription->specialite_id;
@@ -127,7 +138,7 @@ class InscriptionController extends Controller
             $mutualiste->nombre_annee_experience = $inscription->nombre_annee_experience;
             $mutualiste->nom_employeur_principale = $inscription->nom_employeur_principale;
             $mutualiste->statut_emploi = $inscription->statut_emploi;
-            $mutualiste->domaine_activite = $inscription->domaine_activite;
+            // $mutualiste->domaine_activite = $inscription->domaine_activite;
             $mutualiste->date_recrutement = $inscription->date_recrutement;
             $mutualiste->sigle = $inscription->sigle;
             $mutualiste->date_creation = $inscription->date_creation;
@@ -144,18 +155,22 @@ class InscriptionController extends Controller
             $mutualiste->email_entreprise = $inscription->email_entreprise;
             $mutualiste->telephone_entreprise = $inscription->telephone_entreprise;
             $mutualiste->fax_entreprise = $inscription->fax_entreprise;
-            $mutualiste->relation_tiers = $inscription->relation_tiers;
-            $mutualiste->nom_relation = $inscription->nom_relation;
-            $mutualiste->etre_auteur = $inscription->etre_auteur;
-            $mutualiste->nom_auteur = $inscription->nom_auteur;
-            $mutualiste->raison_social_secondaire_freelance = $inscription->raison_social_secondaire_freelance;
-            $mutualiste->fonction_occupe_freelance = $inscription->fonction_occupe_freelance;
-            $mutualiste->type_contrat_freelance = $inscription->type_contrat_freelance;
-            $mutualiste->telephone_freelance = $inscription->telephone_freelance;
-            $mutualiste->fax_freelance = $inscription->fax_freelance;
-            $mutualiste->localisation_freelance = $inscription->localisation_freelance;
-            $mutualiste->adresse_postale_freelance = $inscription->adresse_postale_freelance;
-            $mutualiste->domaine_activite_freelance = $inscription->domaine_activite_freelance;
+
+
+            // $mutualiste->relation_tiers = $inscription->relation_tiers;
+            // $mutualiste->nom_relation = $inscription->nom_relation;
+            // $mutualiste->etre_auteur = $inscription->etre_auteur;
+            // $mutualiste->nom_auteur = $inscription->nom_auteur;
+
+            // $mutualiste->raison_social_secondaire_freelance = $inscription->raison_social_secondaire_freelance;
+            // $mutualiste->fonction_occupe_freelance = $inscription->fonction_occupe_freelance;
+            // $mutualiste->type_contrat_freelance = $inscription->type_contrat_freelance;
+            // $mutualiste->telephone_freelance = $inscription->telephone_freelance;
+            // $mutualiste->fax_freelance = $inscription->fax_freelance;
+            // $mutualiste->localisation_freelance = $inscription->localisation_freelance;
+            // $mutualiste->adresse_postale_freelance = $inscription->adresse_postale_freelance;
+            // $mutualiste->domaine_activite_freelance = $inscription->domaine_activite_freelance;
+
             $mutualiste->lien_photo = $inscription->avatar;
             $mutualiste->signature = $inscription->signature;
             $mutualiste->photo_couverture = $inscription->photo_couverture;
@@ -164,6 +179,8 @@ class InscriptionController extends Controller
             $mutualiste->photo_identite_1 = $inscription->photo_identite_1;
             $mutualiste->code = $codeP;
             $mutualiste->save();
+
+
             $module = "Module Mutualiste ";
             $action = " a créé un mutualiste : $mutualiste->nom , $mutualiste->prenom";
             Logs::saveLog($module, $action);
@@ -240,15 +257,15 @@ class InscriptionController extends Controller
             // Générer le lien de validation
             $lienDeValidation = URL::temporarySignedRoute(
                 'creatAccesNewInscrits',
-                now()->addHours(24), // Définissez la durée de validité du lien
+                // now()->addHours(24), // Définissez la durée de validité du lien
                 ['code' => $mutualiste->code]
             );
             Mutualiste::where('id', $mutualiste->id)->update([
                 'lien_email' => $lienDeValidation,
             ]);
-            $sujet = "Validation de votre  compte MUTUALPAY";
+            $sujet = "Validation de votre  compte UNAMEPCI";
             $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
-                        Merci pour la première étape de votre inscription sur MUTUALPAY. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                        Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
                         <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
                         <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
                         </div>
@@ -270,7 +287,7 @@ class InscriptionController extends Controller
                 (int)$code = $res['status'];
                 if ($code != 200) {
                     $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
-                    Log::ajoutLOG($message);
+                    // Log::ajoutLOG($message);
                     $module = "Envoyer de Mail a la creation Mutualiste";
                     $action = "Echec d'envoyer de mail  : $message";
                     Logs::saveLog($module, $action);
@@ -300,7 +317,7 @@ class InscriptionController extends Controller
                 ];
 
                 $data = [
-                    "titre" => "Création de compte MAE-CI",
+                    "titre" => "Création de compte UNAMEPCI", // Titre du message
                     "destination" => $mutualiste->contact, // Numéro de téléphone
                     "email" => $mutualiste->email ?? null, // Facultatif
                     "texte" => $message,
@@ -315,7 +332,7 @@ class InscriptionController extends Controller
                     (int)$code = $res['status'];
                     if ($code != 200) {
                         $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoyer sms avec les accès";
-                        Log::ajoutLOG($message);
+                        // Log::ajoutLOG($message);
                         $module = "Envoyer du sms a la creation du compte Mutualiste";
                         $action = "Echec d'envoyer du sms  : $message";
                         Logs::saveLog($module, $action);
@@ -337,7 +354,7 @@ class InscriptionController extends Controller
             }
 
             DB::commit();
-            toast(' Inscription a été Valider avec succès !', 'success');
+            toast('Inscription a été Valider avec succès !', 'success');
             return redirect()->route('inscriptions.index');
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -399,7 +416,7 @@ class InscriptionController extends Controller
                 (int)$code = $res['status'];
                 if ($code != 200) {
                     $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
-                    Log::ajoutLOG($message);
+                    // Log::ajoutLOG($message);
                     $module = "Envoyer de Mail a  rejeter de  inscription";
                     $action = "Echec d'envoyer de mail  : $message";
                     Logs::saveLog($module, $action);
@@ -444,7 +461,7 @@ class InscriptionController extends Controller
                     (int)$code = $res['status'];
                     if ($code != 200) {
                         $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoyer sms avec les accès";
-                        Log::ajoutLOG($message);
+                        // Log::ajoutLOG($message);
                         $module = "Envoyer du sms a  rejeter de  inscription";
                         $action = "Echec d'envoyer du sms  : $message";
                         Logs::saveLog($module, $action);

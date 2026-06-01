@@ -17,6 +17,11 @@ class PermissionSeeder extends Seeder
 
 
         $permissions = [
+
+            "liste-statistiques",
+
+
+
             "liste-roles",
             "infos-roles",
             "ajouter-roles",
@@ -256,6 +261,7 @@ class PermissionSeeder extends Seeder
             "voir-total-pret-dashboard",
             "voir-total-mutualiste-dashboard",
             "voir-total-administrateur-dashboard",
+            "voir-total-adhesion-attente-dashboard",
 
 
 

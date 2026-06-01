@@ -14,8 +14,8 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
-                        {{-- <a href="{{ route('projetmutualistes.create') }}" class="btn btn-primary d-inline">Ajouter une
-                            acquisition</a> --}}
+                        <a href="{{ route('projetmutualistes.create') }}" class="btn btn-primary d-inline">Ajouter une
+                            acquisition</a>
                     </div>
                 </div>
                 <div class="card-body" id="show_all_admin">

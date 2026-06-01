@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Logs;
 use App\Models\Message;
+use App\Models\Parametre;
 use App\Models\Mutualiste;
 use App\Models\CarteMembre;
 use App\Models\Conversation;
@@ -81,7 +82,8 @@ class CarteMembreController extends Controller
         }
 
         $mutualiste = Mutualiste::findOrFail($CarteMembre->mutualiste_id);
-        return view('dashboard.cartesMembres.show', compact('mutualiste', 'CarteMembre'));
+        $parametre = Parametre::findOrFail(1);
+        return view('dashboard.cartesMembres.show', compact('mutualiste', 'CarteMembre','parametre'));
     }
 
     /**

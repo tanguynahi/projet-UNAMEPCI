@@ -144,12 +144,12 @@
                             <p class="mb-0">{{ $mutualiste->situation_matrimoniale ?? 'Non spécifiée' }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small mb-1">Nombre de charges</label>
-                            <p class="mb-0">{{ $mutualiste->nombre_charge ?? 'Non spécifié' }}</p>
+                            <label class="form-label text-muted small mb-1">Ville (d'habitation)</label>
+                            <p class="mb-0">{{ $mutualiste->villePersonnel->libelle ?? 'Non spécifié' }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small mb-1">Fax</label>
-                            <p class="mb-0">{{ $mutualiste->fax ?? 'Non spécifié' }}</p>
+                            <label class="form-label text-muted small mb-1">Commune </label>
+                            <p class="mb-0">{{ $mutualiste->commune_personnel ?? 'Non spécifié' }}</p>
                         </div>
                         <div class="col-12">
                             <label class="form-label text-muted small mb-1">Contact supplémentaire</label>
@@ -185,6 +185,12 @@
                             </p>
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small mb-1">Date d'expiration</label>
+                            <p class="mb-0">
+                                {{ $mutualiste->date_expiration_piece ? $mutualiste->date_expiration_piece : 'Non spécifiée' }}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label class="form-label text-muted small mb-1">Lieu d'établissement</label>
                             <p class="mb-0">{{ $mutualiste->lieu_etablissement_piece ?? 'Non spécifié' }}</p>
                         </div>
@@ -192,17 +198,14 @@
                             <label class="form-label text-muted small mb-1">Numéro ONMCI</label>
                             <p class="mb-0">{{ $mutualiste->numero_inscription_ONMCI ?? 'Non spécifié' }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted small mb-1">Pseudonyme ONMCI</label>
-                            <p class="mb-0">{{ $mutualiste->pseudonyme_recon_ONMCI ?? 'Non spécifié' }}</p>
-                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Informations professionnelles principales -->
-        <div class="col-12">
+        <div class="col-6">
             <div class="card">
                 <div class="card-header">
                     <h6 class="card-title mb-0">
@@ -211,18 +214,29 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label text-muted small mb-1">Raison sociale</label>
                             <p class="mb-0">{{ $mutualiste->raison_social_primaire ?? 'Non spécifiée' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label text-muted small mb-1">Spécialité</label>
                             <p class="mb-0">{{ $mutualiste->specialite->libelle ?? 'Non spécifiée' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label text-muted small mb-1">Fonction</label>
                             <p class="mb-0">{{ $mutualiste->fonction ?? 'Non spécifiée' }}</p>
                         </div>
+                        @if (empty($mutualiste->precise_intervention))
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label text-muted small mb-1">Niveau d'intervention</label>
+                                <p class="mb-0">{{ $mutualiste->niveau_intervention ?? 'Non spécifiée' }}</p>
+                            </div>
+                        @else
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label text-muted small mb-1">Niveau d'intervention</label>
+                                <p class="mb-0">{{ $mutualiste->precise_intervention ?? 'Non spécifiée' }}</p>
+                            </div>
+                        @endif
                         <div class="col-md-3 mb-3">
                             <label class="form-label text-muted small mb-1">Date début métier</label>
                             <p class="mb-0">
@@ -251,10 +265,10 @@
                             <label class="form-label text-muted small mb-1">Nom employeur</label>
                             <p class="mb-0">{{ $mutualiste->nom_employeur_principale ?? 'Non spécifié' }}</p>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        {{-- <div class="col-md-4 mb-3">
                             <label class="form-label text-muted small mb-1">Domaine d'activité</label>
                             <p class="mb-0">{{ $mutualiste->domaine_activite ?? 'Non spécifié' }}</p>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -339,7 +353,7 @@
         </div>
 
         <!-- Informations freelance et relations -->
-        <div class="col-lg-6">
+        {{-- <div class="col-lg-6">
             <div class="card h-100">
                 <div class="card-header">
                     <h6 class="card-title mb-0">
@@ -410,7 +424,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Documents -->
         @if (

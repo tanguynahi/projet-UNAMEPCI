@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+    @php
+    use App\Models\Parametre;
+        $parametre = Parametre::findOrFail(1);
+    @endphp
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Simple Transactional Email</title>
@@ -363,7 +367,7 @@
             <td class="container">
                 <div class="content">
                     <div style="text-align: center;margin: 5px;">
-                        <img src="{{ asset('logomutualpay.jpg') }}" alt="Image Logo" style="width: 75px; height:75px">
+                        <img src="{{ asset($parametre->lien_logo ?? 'logomutualpay.jpg') }}" alt="Image Logo" style="width: 75px; height:75px">
                     </div>
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="main">
                         <tr>
@@ -384,7 +388,7 @@
                             </tr>
                             <tr>
                                 <td class="content-block powered-by">
-                                    <a href="https://mutualpay.paysecurehub.com">Mutualpay</a> | Tel : (+225) 2722421619
+                                    <a href="https://unamepci.org">UNAMEPCI</a> | Tel : {{ $parametre->contact_1 ?? '(+225) 2722421619' }}
                                     <br><br>
                                 </td>
                             </tr>

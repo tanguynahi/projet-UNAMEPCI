@@ -38,14 +38,15 @@ class MutualisteEspaceUpdateRequest extends FormRequest
             'lieu_naissance' => 'nullable|string|max:255',
             'nationalite' => 'nullable|string|max:100',
             'situation_matrimoniale' => 'nullable|string|max:100',
-            'nombre_charge' => 'nullable|integer|min:0',
+            // 'nombre_charge' => 'nullable|integer|min:0',
             'date_adhesion_unamepci' => 'nullable|date',
 
             // Coordonnées
             // 'email' => 'required|email|max:255|unique:mutualistes,email,' . $mutualisteId,
             // 'contact' => 'nullable|string|max:20|unique:mutualistes,contact,' . $mutualisteId,
             // 'contact_2' => 'nullable|string|max:20|unique:mutualistes,contact_2,' . $mutualisteId,
-            'fax' => 'nullable|string|max:50',
+
+            // 'fax' => 'nullable|string|max:50',
             'ville_id' => 'nullable|exists:villes,id',
             'adresse' => 'nullable|string|max:500',
 
@@ -53,11 +54,12 @@ class MutualisteEspaceUpdateRequest extends FormRequest
             'type_piece_id' => 'nullable|exists:type_pieces,id',
             'numero_piece' => 'nullable|string|max:100',
             'date_etablissement_piece' => 'nullable|date',
+            'date_expiration_piece' => 'nullable|date',
             'lieu_etablissement_piece' => 'nullable|string|max:255',
 
             // Informations ONMCI
             'numero_inscription_ONMCI' => 'nullable|string|max:100',
-            'pseudonyme_recon_ONMCI' => 'nullable|string|max:255',
+            // 'pseudonyme_recon_ONMCI' => 'nullable|string|max:255',
 
             // Activité principale
             'raison_social_primaire' => 'nullable|string|max:500',
@@ -66,10 +68,20 @@ class MutualisteEspaceUpdateRequest extends FormRequest
             'date_debut_metier' => 'nullable|date',
             'nombre_annee_experience' => 'nullable|integer|min:0',
             'nom_employeur_principale' => 'nullable|string|max:255',
+
+            'niveau_intervention' => 'nullable|string|max:255',
+            'precise_intervention' => 'nullable|string|max:255',
+            'commune_personnel' => 'nullable|string|max:255',
+
+            'ville_personnel_id' => 'nullable|exists:villes,id',
+
+
+
+
             'statut_emploi' => 'nullable|string|max:100',
-            'domaine_activite' => 'nullable|string|max:500',
+            // 'domaine_activite' => 'nullable|string|max:500',
             'date_recrutement' => 'nullable|date',
-         
+
 
             // Informations entreprise
             'sigle' => 'nullable|string|max:100',
@@ -87,21 +99,21 @@ class MutualisteEspaceUpdateRequest extends FormRequest
             'telephone_entreprise' => 'nullable|string|max:20',
             'fax_entreprise' => 'nullable|string|max:50',
 
-            // Relations
-            'relation_tiers' => 'nullable|boolean',
-            'nom_relation' => 'nullable|string|max:255',
-            'etre_auteur' => 'nullable|boolean',
-            'nom_auteur' => 'nullable|string|max:255',
+            // // Relations
+            // 'relation_tiers' => 'nullable|boolean',
+            // 'nom_relation' => 'nullable|string|max:255',
+            // 'etre_auteur' => 'nullable|boolean',
+            // 'nom_auteur' => 'nullable|string|max:255',
 
             // Travail freelance
-            'raison_social_secondaire_freelance' => 'nullable|string|max:500',
-            'fonction_occupe_freelance' => 'nullable|string|max:255',
-            'type_contrat_freelance' => 'nullable|string|max:100',
-            'telephone_freelance' => 'nullable|string|max:20',
-            'fax_freelance' => 'nullable|string|max:50',
-            'localisation_freelance' => 'nullable|string|max:500',
-            'adresse_postale_freelance' => 'nullable|string|max:500',
-            'domaine_activite_freelance' => 'nullable|string|max:500',
+            // 'raison_social_secondaire_freelance' => 'nullable|string|max:500',
+            // 'fonction_occupe_freelance' => 'nullable|string|max:255',
+            // 'type_contrat_freelance' => 'nullable|string|max:100',
+            // 'telephone_freelance' => 'nullable|string|max:20',
+            // 'fax_freelance' => 'nullable|string|max:50',
+            // 'localisation_freelance' => 'nullable|string|max:500',
+            // 'adresse_postale_freelance' => 'nullable|string|max:500',
+            // 'domaine_activite_freelance' => 'nullable|string|max:500',
 
             // Fichiers
             'photo_couverture' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5120',

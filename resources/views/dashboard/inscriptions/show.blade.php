@@ -1,4 +1,4 @@
-@extends('layouts.dashboard', ['title' => 'Détails Inscription', 'toolbar' => '_toolbar2', 'breadcrumb' => 'Détails Inscription'])
+@extends('layouts.dashboard', ['title' => 'Détails adherant', 'toolbar' => '_toolbar2', 'breadcrumb' => 'Détails Adherant'])
 @push('css')
     <style>
         .info-section {
@@ -86,7 +86,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-title mb-0">Détails de l'inscription</h6>
+                        <h6 class="card-title mb-0">Détails de l'adhésion</h6>
                         <div class="dropdown morphing scale-left">
                             <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Plein écran">
                                 <i class="icon-size-fullscreen"></i>
@@ -208,13 +208,26 @@
                                         <span
                                             class="info-value">{{ $inscription->situation_matrimoniale ?? 'Non renseigné' }}</span>
                                     </div>
-                                    @if ($inscription->nombre_charge)
+                                    @if ($inscription->ville_personnel_id)
+                                        <div class="col-md-6 info-item">
+                                            <span class="info-label">Ville:</span>
+                                            <span class="info-value">{{ $inscription->villePersonnel->libelle }}</span>
+                                        </div>
+                                    @endif
+                                    @if ($inscription->commune_personnel)
+                                        <div class="col-md-6 info-item">
+                                            <span class="info-label">Commune:</span>
+                                            <span class="info-value">{{ $inscription->commune_personnel }}</span>
+                                        </div>
+                                    @endif
+
+                                    {{-- @if ($inscription->nombre_charge)
                                         <div class="col-md-6 info-item">
                                             <span class="info-label">Nombre de charges:</span>
                                             <span class="info-value">{{ $inscription->nombre_charge }}</span>
                                         </div>
-                                    @endif
-                                    <div class="col-md-12 info-item">
+                                    @endif --}}
+                                    <div class="col-md-6 info-item">
                                         <span class="info-label">Adresse:</span>
                                         <span class="info-value">{{ $inscription->adresse ?? 'Non renseigné' }}</span>
                                     </div>
@@ -242,6 +255,13 @@
                                             <span class="info-label">Date d'établissement:</span>
                                             <span
                                                 class="info-value">{{ formatDate($inscription->date_etablissement_piece) }}</span>
+                                        </div>
+                                    @endif
+                                    @if ($inscription->date_expiration_piece)
+                                        <div class="col-md-6 info-item">
+                                            <span class="info-label">Date d'expiration:</span>
+                                            <span
+                                                class="info-value">{{ formatDate($inscription->date_expiration_piece) }}</span>
                                         </div>
                                     @endif
                                     @if ($inscription->lieu_etablissement_piece)
@@ -329,7 +349,20 @@
                                     @if ($inscription->nombre_annee_experience)
                                         <div class="col-md-6 info-item">
                                             <span class="info-label">Années d'expérience:</span>
-                                            <span class="info-value">{{ $inscription->nombre_annee_experience }} ans </span>
+                                            <span class="info-value">{{ $inscription->nombre_annee_experience }} ans
+                                            </span>
+                                        </div>
+                                    @endif
+                                     @if ($inscription->niveau_intervention)
+                                        <div class="col-md-6 info-item">
+                                            <span class="info-label">Niveau d'intervention:</span>
+                                            <span class="info-value">{{ $inscription->niveau_intervention }}</span>
+                                        </div>
+                                    @endif
+                                     @if ($inscription->precise_intervention)
+                                        <div class="col-md-6 info-item">
+                                            <span class="info-label">Précision sur l'intervention:</span>
+                                            <span class="info-value">{{ $inscription->precise_intervention }}</span>
                                         </div>
                                     @endif
                                     @if ($inscription->nom_employeur_principale)
@@ -344,12 +377,12 @@
                                             <span class="info-value">{{ $inscription->statut_emploi }}</span>
                                         </div>
                                     @endif
-                                    @if ($inscription->domaine_activite)
+                                    {{-- @if ($inscription->domaine_activite)
                                         <div class="col-md-6 info-item">
                                             <span class="info-label">Domaine d'activité:</span>
                                             <span class="info-value">{{ $inscription->domaine_activite }}</span>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                     @if ($inscription->date_recrutement)
                                         <div class="col-md-6 info-item">
                                             <span class="info-label">Date de recrutement:</span>
@@ -456,7 +489,7 @@
                             </div>
 
                             <!-- Section Activité freelance -->
-                            @if ($inscription->raison_social_secondaire_freelance || $inscription->fonction_occupe_freelance)
+                            {{-- @if ($inscription->raison_social_secondaire_freelance || $inscription->fonction_occupe_freelance)
                                 <div class="info-section">
                                     <h6><i class="fa fa-user-tie me-2"></i>Activité freelance</h6>
                                     <div class="row">
@@ -502,7 +535,7 @@
                                         @endif
                                     </div>
                                 </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
 
@@ -688,7 +721,7 @@
                     </div>
 
                     <!-- Section Relations -->
-                    @if ($inscription->relation_tiers || $inscription->etre_auteur)
+                    {{-- @if ($inscription->relation_tiers || $inscription->etre_auteur)
                         <div class="info-section mt-3">
                             <h6><i class="fa fa-users me-2"></i>Relations professionnelles</h6>
                             <div class="row">
@@ -723,7 +756,7 @@
                                 @endif
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
 
                     <!-- Section Historique -->
                     <div class="info-section mt-3">
@@ -809,7 +842,7 @@
                                     </div>
 
                                     <div class="modal-body text-center">
-                                        <h5>Êtes-vous sûr de vouloir rejeter cette inscription ?</h5>
+                                        <h5>Êtes-vous sûr de vouloir rejeter cette adhésion ?</h5>
                                         <p class="text-muted">
                                             Cette action ne pourra pas être annulée. Toutes les informations de la demande
                                             seront supprimées de la base de données.
@@ -886,7 +919,7 @@
                 <div class="modal-body text-center">
                     <div class="mb-4">
                         <i class="fa fa-question-circle fa-4x text-primary mb-3"></i>
-                        <h5>Êtes-vous sûr de vouloir approuver cette inscription ?</h5>
+                        <h5>Êtes-vous sûr de vouloir approuver cette adhésion ?</h5>
                         <p class="text-muted mt-2">Cette action ne pourra pas être annulée.</p>
                     </div>
                 </div>

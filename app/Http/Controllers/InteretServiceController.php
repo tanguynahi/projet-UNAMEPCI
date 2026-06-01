@@ -21,7 +21,8 @@ class InteretServiceController extends Controller
     {
         //
         $InteretServices = InteretService::where('service_id', $id)->orderBy('created_at', 'DESC')->get();
-        $libelle = Service::where('id', $id)->first()->value('libelle');
+        $libelle = Service::where('id', $id)->value('libelle');
+        // dd($libelle);
         $module = "Module Interet";
         $action = " a consulter la liste des interet du service : $libelle";
         Logs::saveLog($module, $action);

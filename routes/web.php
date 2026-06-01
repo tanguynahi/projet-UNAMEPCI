@@ -220,6 +220,9 @@ Route::middleware('auth')->group(function () {
         Route::controller(DashboardController::class)->group(function () {
             Route::get('/dashboard', 'index')->name('dashboard');
             Route::get('/dashboard-statistiques', 'statistiques')->name('dashboard.stats');
+
+            Route::get('/admin/mutualiste-paiements/{mutualisteId}', 'getstatistiquesPaiement')->name('mutualiste.paiements');
+
             Route::get('/paiements-projets', 'PaiementsProjets')->name('paiements.projets');
             Route::get('/paiements-cotisations', 'PaiementsProjets')->name('paiements.cotisations');
             Route::get('/paiements-accompagnements', 'PaiementsProjets')->name('paiements.accompagnements');
@@ -230,14 +233,27 @@ Route::middleware('auth')->group(function () {
             Route::get('/detailPaiement-cash/{id}', 'detailPaiementCaisse')->name('detail.paiementcash');
             Route::post('/accepterPaiementCash/{id}', 'accepterPaiement')->name('accepter.paiementcash');
             Route::post('/refuserPaiementCash/{id}', 'refuserPaiement')->name('refuser.paiementcash');
+            Route::get('ajouter-paiement', 'ajouterPaiement')->name('ajouter.paiement');
+            Route::post('/traitement-ajout-paiement', 'enregistrePaiement')->name('store.paiement');
+
+            Route::get('/caisse/projets-mutualiste/{mutualiste_id}', 'getProjetsMutualiste')->name('caisse.projets.mutualiste');
+
+            Route::get('/caisse/cotisations-mutualiste/{mutualiste_id}', 'getCotisationsMutualiste')->name('caisse.cotisations.mutualiste');
+            Route::get('/caisse/droits-adhesion-mutualiste/{mutualiste_id}', 'getAdhesionsMutualiste')->name('caisse.droits.adhesion.mutualiste');
+
+            Route::get('/paiement/recherchAdmin/{codePaiement}/{ind}', 'resulPay')->name('removePlay');
+
+            Route::get('/caisse/services-accompagnement-mutualiste/{mutualiste}', 'servicesAccompagnementMutualiste')
+                ->name('caisse.services.accompagnement');
+
         });
 
-        Route::controller(AdministrateurController::class)->group(function(){
-            Route::get('/permissionAdministrateur/{id}','listePermission')->name('administrateurs.permissions');
-            Route::post('/permissionAdministrateurTraitement/{id}','permissionStoreAdmin')->name('administrateurs.permissions.store');
-            Route::get('/pageProfilAdministrateur','profilAdministrateur')->name('administrateurs.profil');
-            Route::post('/pageProfilAdministrateurTraitement','traitementProfil')->name('administrateurs.profil.traitement');
-            Route::post('/pageProfilAdministrateurTraitementAcces','traitementAcces')->name('administrateurs.profil.traitementAcces');
+        Route::controller(AdministrateurController::class)->group(function () {
+            Route::get('/permissionAdministrateur/{id}', 'listePermission')->name('administrateurs.permissions');
+            Route::post('/permissionAdministrateurTraitement/{id}', 'permissionStoreAdmin')->name('administrateurs.permissions.store');
+            Route::get('/pageProfilAdministrateur', 'profilAdministrateur')->name('administrateurs.profil');
+            Route::post('/pageProfilAdministrateurTraitement', 'traitementProfil')->name('administrateurs.profil.traitement');
+            Route::post('/pageProfilAdministrateurTraitementAcces', 'traitementAcces')->name('administrateurs.profil.traitementAcces');
         });
     });
     Route::controller(MessageController::class)->group(function () {
@@ -254,6 +270,9 @@ Route::middleware('auth')->group(function () {
     // recherche sur un mutualiste
     // Route::get('/recherche-message',[TrieMessageController::class, 'index'])->name('recherche.message');
 
+    Route::controller(MutualisteController::class)->group(function () {
+        Route::get('/reenvoyer-mutualiste/{id}', 'resendLinkInscription')->name('reenvoyerMail.mutualiste');
+    });
     Route::resources([
         'mutualistes' => MutualisteController::class,
         'administrateurs' => AdministrateurController::class,
@@ -362,5 +381,11 @@ Route::middleware('auth')->group(function () {
 
         Route::put('/inscriptions/{id}/approuver', [InscriptionController::class, 'approuver'])->name('inscriptions.approuver');
         Route::put('/inscriptions/{id}/rejeter', [InscriptionController::class, 'rejeter'])->name('inscriptions.rejeter');
+
+
+        Route::controller(ServiceController::class)->group(function () {
+            Route::get('/services/{id}/desactiver', 'desactiver')->name('services.desactiver');
+            Route::put('/services/{id}/activer', 'restaurer')->name('service.restaure');
+        });
     });
 });

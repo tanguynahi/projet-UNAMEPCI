@@ -799,15 +799,34 @@ function formatJour($date)
         return $date->format('d M Y, à H:i');
     }
 }
-function messageBrut(array $tableauDeChaines)
+// function messageBrut(array $tableauDeChaines)
+// {
+//     $chainefinale = '';
+//     // Parcourir le tableau et afficher chaque élément
+//     foreach ($tableauDeChaines as $chaine) {
+//         $chainefinale .= $chaine . "\n";
+//     }
+//     return $chainefinale;
+// }
+
+function messageBrut($tableauDeChaines)
 {
     $chainefinale = '';
-    // Parcourir le tableau et afficher chaque élément
+
+    // Transformer en tableau si c'est une string
+    if (is_string($tableauDeChaines)) {
+        $tableauDeChaines = [$tableauDeChaines];
+    }
+
     foreach ($tableauDeChaines as $chaine) {
         $chainefinale .= $chaine . "\n";
     }
+
     return $chainefinale;
 }
+
+
+
 
 function CREDENSHEL()
 {
@@ -1177,4 +1196,13 @@ function ValeurNatureCotisationMu($id)
     } else {
         return null;
     }
+}
+
+
+
+
+function adhesionAttent()
+{
+    $inscrires = Inscription::where('status', 2)->count();
+    return $inscrires ?? 0;
 }

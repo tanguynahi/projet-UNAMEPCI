@@ -144,18 +144,22 @@
                                                 </a>
 
 
-                                                <a href="{{ route('services.edit', $service->id) }}" id="EditDirection"
+                                                {{-- <a href="{{ route('services.edit', $service->id) }}" id="EditDirection"
                                                     class="btn btn-link btn-sm text-primary editIcon"
                                                     data-bs-toggle="tooltip" data-bs-target="#edit_direction"
-                                                    title="Modifier"><i class="fa fa-pencil"></i></a>
+                                                    title="Modifier"><i class="fa fa-pencil"></i></a> --}}
+                                                <a href="{{ route('services.desactiver', $service->id) }}" id="desactiverDirection"
+                                                    class="btn btn-link btn-sm text-danger editIcon"
+                                                    data-bs-toggle="tooltip" data-bs-target="#edit_direction"
+                                                    title="Desactiver"><i class="fa fa-ban"></i></a>
 
-                                                @if (Auth::user()->hasRole('super-administrateur'))
+                                                {{-- @if (Auth::user()->hasRole('super-administrateur'))
                                                     <a href="#deleteModal{{ $service->id }}" id="DeleteDirection"
                                                         class="btn btn-link btn-sm text-danger deleteIcon"
                                                         data-bs-toggle="modal" data-bs-toggle="tooltip"
                                                         data-bs-placement="top" data-bs-target="#delete_direction"
                                                         title="Supprimer"><i class="fa fa-trash"></i></a>
-                                                @endif
+                                                @endif --}}
                                             @endif
                                         </td>
                                     </tr>

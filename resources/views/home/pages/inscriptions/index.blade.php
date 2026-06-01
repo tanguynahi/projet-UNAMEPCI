@@ -3745,10 +3745,6 @@
     </script>
 @endpush --}}
 
-
-
-
-
 @extends('layouts.home', ['title' => "Formulaire d'identification"])
 @push('css')
     <style>
@@ -4099,14 +4095,30 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInUp {
@@ -4114,6 +4126,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -4121,11 +4134,25 @@
         }
 
         @keyframes progress {
-            0% { width: 0%; }
-            30% { width: 30%; }
-            60% { width: 70%; }
-            90% { width: 90%; }
-            100% { width: 100%; }
+            0% {
+                width: 0%;
+            }
+
+            30% {
+                width: 30%;
+            }
+
+            60% {
+                width: 70%;
+            }
+
+            90% {
+                width: 90%;
+            }
+
+            100% {
+                width: 100%;
+            }
         }
 
         /* Désactivation des champs pendant le chargement */
@@ -4237,12 +4264,12 @@
                         <div class="form-nav-item" data-section="section-entreprise">
                             <i class="feather-home me-2"></i> Informations Entreprise
                         </div>
-                        <div class="form-nav-item" data-section="section-freelance">
+                        {{-- <div class="form-nav-item" data-section="section-freelance">
                             <i class="feather-users me-2"></i> Informations Freelance
-                        </div>
-                        <div class="form-nav-item" data-section="section-relations">
+                        </div> --}}
+                        {{-- <div class="form-nav-item" data-section="section-relations">
                             <i class="feather-link me-2"></i> Relations et Auteur
-                        </div>
+                        </div> --}}
                         <div class="form-nav-item" data-section="section-documents">
                             <i class="feather-file me-2"></i> Documents à télécharger
                         </div>
@@ -4344,6 +4371,36 @@
                                 @enderror
                             </div>
 
+                            <div class="col-md-4">
+                                <label for="situation_matrimoniale" class="form-label required-field">Situation
+                                    Matrimoniale</label>
+                                <div class="rbt-modern-select bg-transparent height-45">
+                                    <select
+                                        class="form-control form-control-custom select-custom @error('situation_matrimoniale') is-invalid @enderror"
+                                        name="situation_matrimoniale" id="situation_matrimoniale" required>
+                                        <option value="">Sélectionnez...</option>
+                                        <option value="Célibataire"
+                                            {{ old('situation_matrimoniale') == 'Célibataire' ? 'selected' : '' }}>
+                                            Célibataire
+                                        </option>
+                                        <option value="Marié(e)"
+                                            {{ old('situation_matrimoniale') == 'Marié(e)' ? 'selected' : '' }}>Marié(e)
+                                        </option>
+                                        <option value="Divorcé(e)"
+                                            {{ old('situation_matrimoniale') == 'Divorcé(e)' ? 'selected' : '' }}>
+                                            Divorcé(e)
+                                        </option>
+                                        <option value="Veuf/Veuve"
+                                            {{ old('situation_matrimoniale') == 'Veuf/Veuve' ? 'selected' : '' }}>
+                                            Veuf/Veuve
+                                        </option>
+                                    </select>
+                                </div>
+                                @error('situation_matrimoniale')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <!-- Contacts -->
                             <div class="col-md-4">
                                 <label for="contact" class="form-label required-field">Contact Principal</label>
@@ -4373,7 +4430,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <label for="fax" class="form-label">Fax</label>
                                 <input type="text" id="fax" name="fax" value="{{ old('fax') }}"
                                     class="form-control form-control-custom @error('fax') is-invalid @enderror"
@@ -4381,11 +4438,12 @@
                                 @error('fax')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <!-- Email -->
                             <div class="col-md-6">
-                                <label for="email" class="form-label required-field">Email     <small class="text-muted">Ce email servira d'identifiant (login)</small></label>
+                                <label for="email" class="form-label required-field">Email <small
+                                        class="text-muted">Ce email servira d'identifiant (login)</small></label>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}"
                                     class="form-control form-control-custom @error('email') is-invalid @enderror" required
                                     placeholder="votre@email.com">
@@ -4430,37 +4488,9 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="situation_matrimoniale" class="form-label required-field">Situation
-                                    Matrimoniale</label>
-                                <div class="rbt-modern-select bg-transparent height-45">
-                                    <select
-                                        class="form-control form-control-custom select-custom @error('situation_matrimoniale') is-invalid @enderror"
-                                        name="situation_matrimoniale" id="situation_matrimoniale" required>
-                                        <option value="">Sélectionnez...</option>
-                                        <option value="Célibataire"
-                                            {{ old('situation_matrimoniale') == 'Célibataire' ? 'selected' : '' }}>
-                                            Célibataire
-                                        </option>
-                                        <option value="Marié(e)"
-                                            {{ old('situation_matrimoniale') == 'Marié(e)' ? 'selected' : '' }}>Marié(e)
-                                        </option>
-                                        <option value="Divorcé(e)"
-                                            {{ old('situation_matrimoniale') == 'Divorcé(e)' ? 'selected' : '' }}>
-                                            Divorcé(e)
-                                        </option>
-                                        <option value="Veuf/Veuve"
-                                            {{ old('situation_matrimoniale') == 'Veuf/Veuve' ? 'selected' : '' }}>
-                                            Veuf/Veuve
-                                        </option>
-                                    </select>
-                                </div>
-                                @error('situation_matrimoniale')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
 
-                            <div class="col-md-4">
+
+                            {{-- <div class="col-md-4">
                                 <label for="nombre_charge" class="form-label">Nombre de personnes à charge</label>
                                 <input type="number" id="nombre_charge" name="nombre_charge"
                                     value="{{ old('nombre_charge', 0) }}"
@@ -4469,9 +4499,9 @@
                                 @error('nombre_charge')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="adresse" class="form-label required-field">Adresse personnelle</label>
                                 <input type="text" id="adresse" name="adresse" value="{{ old('adresse') }}"
                                     class="form-control form-control-custom @error('adresse') is-invalid @enderror"
@@ -4482,7 +4512,7 @@
                             </div>
 
                             <!-- Date adhésion UNAMEPCI -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="date_adhesion_unamepci" class="form-label">Date d'adhésion UNAMEPCI</label>
                                 <input type="date" id="date_adhesion_unamepci" name="date_adhesion_unamepci"
                                     value="{{ old('date_adhesion_unamepci') }}"
@@ -4503,7 +4533,7 @@
 
                         <div class="row g-3">
                             <!-- Type de pièce -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="type_piece_id" class="form-label required-field">Type de pièce
                                     d'identité</label>
                                 <div class="rbt-modern-select bg-transparent height-45">
@@ -4524,7 +4554,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="numero_piece" class="form-label required-field">Numéro de la pièce</label>
                                 <input type="text" id="numero_piece" name="numero_piece"
                                     value="{{ old('numero_piece') }}"
@@ -4547,8 +4577,19 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            <div class="col-md-4">
+                                <label for="date_expiration_piece" class="form-label required-field">Date D’expiration
+                                </label>
+                                <input type="date" id="date_expiration_piece" name="date_expiration_piece"
+                                    value="{{ old('date_expiration_piece') }}"
+                                    class="form-control form-control-custom @error('date_expiration_piece') is-invalid @enderror"
+                                    required min="{{ date('Y-m-d') }}">
+                                @error('date_expiration_piece')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <label for="lieu_etablissement_piece" class="form-label required-field">Lieu
                                     d'établissement</label>
                                 <input type="text" id="lieu_etablissement_piece" name="lieu_etablissement_piece"
@@ -4561,7 +4602,7 @@
                             </div>
 
                             <!-- ONMCI -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="numero_inscription_ONMCI" class="form-label">N° d'inscription ONMCI</label>
                                 <input type="text" id="numero_inscription_ONMCI" name="numero_inscription_ONMCI"
                                     value="{{ old('numero_inscription_ONMCI') }}"
@@ -4572,7 +4613,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label for="pseudonyme_recon_ONMCI" class="form-label">Pseudonyme de reconnaissance
                                     ONMCI</label>
                                 <input type="text" id="pseudonyme_recon_ONMCI" name="pseudonyme_recon_ONMCI"
@@ -4582,7 +4623,7 @@
                                 @error('pseudonyme_recon_ONMCI')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <!-- Upload des pièces -->
                             <div class="col-md-6">
@@ -4681,7 +4722,7 @@
                             </div>
 
                             <!-- Expérience -->
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label for="date_debut_metier" class="form-label">Date de début dans le métier</label>
                                 <input type="date" id="date_debut_metier" name="date_debut_metier"
                                     value="{{ old('date_debut_metier') }}"
@@ -4702,7 +4743,37 @@
                                 @error('nombre_annee_experience')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div> --}}
+                            <div class="col-md-6">
+                                <label for="date_debut_metier" class="form-label">
+                                    Date de début dans le métier
+                                </label>
+
+                                <input type="date" id="date_debut_metier" name="date_debut_metier"
+                                    value="{{ old('date_debut_metier') }}"
+                                    class="form-control form-control-custom @error('date_debut_metier') is-invalid @enderror"
+                                    max="{{ date('Y-m-d') }}">
+
+                                @error('date_debut_metier')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
+
+                            <div class="col-md-6">
+                                <label for="nombre_annee_experience" class="form-label required-field">
+                                    Nombre d'années d'expérience
+                                </label>
+
+                                <input type="number" id="nombre_annee_experience" name="nombre_annee_experience"
+                                    value="{{ old('nombre_annee_experience') }}"
+                                    class="form-control form-control-custom @error('nombre_annee_experience') is-invalid @enderror"
+                                    min="0" placeholder="0" readonly>
+
+                                @error('nombre_annee_experience')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
 
                             <div class="col-md-6">
                                 <label for="statut_emploi" class="form-label required-field">Statut d'emploi</label>
@@ -4717,9 +4788,13 @@
                                             CDD</option>
                                         <option value="CDI" {{ old('statut_emploi') == 'CDI' ? 'selected' : '' }}>
                                             CDI</option>
+
                                         <option value="Retraité"
                                             {{ old('statut_emploi') == 'Retraité' ? 'selected' : '' }}>
                                             Retraité</option>
+                                        <option value="Vacation"
+                                            {{ old('statut_emploi') == 'Vacation' ? 'selected' : '' }}>
+                                            Vacation</option>
                                     </select>
                                 </div>
                                 @error('statut_emploi')
@@ -4727,8 +4802,165 @@
                                 @enderror
                             </div>
 
-                            <!-- Domaine d'activité et employeur -->
+                            {{-- <div class="col-md-6">
+                                <label for="niveau_intervention" class="form-label required-field">Niveau
+                                    D’Intervention</label>
+                                <div class="rbt-modern-select bg-transparent height-45">
+                                    <select
+                                        class="form-control form-control-custom select-custom @error('niveau_intervention') is-invalid @enderror"
+                                        name="niveau_intervention" id="niveau_intervention" required>
+                                        <option value="">Sélectionnez...</option>
+                                        <option value="cabinet_medicaux"
+                                            {{ old('niveau_intervention') == 'cabinet_medicaux ' ? 'selected' : '' }}>
+                                            CABINE MEDICAUX</option>
+                                        <option value="centre"
+                                            {{ old('niveau_intervention') == 'centre' ? 'selected' : '' }}>
+                                            CENTRE</option>
+                                        <option value="clinique"
+                                            {{ old('niveau_intervention') == 'clinique' ? 'selected' : '' }}>
+                                            CLINIQUE</option>
+                                        <option value="polyclinique"
+                                            {{ old('niveau_intervention') == 'polyclinique' ? 'selected' : '' }}>
+                                            POLYCLINIQUE</option>
+                                        <option value="centre_imagerie"
+                                            {{ old('niveau_intervention') == 'centre_imagerie' ? 'selected' : '' }}>
+                                            CENTRE D’IMAGERIE</option>
+                                        <option value="laboratoire"
+                                            {{ old('niveau_intervention') == 'laboratoire' ? 'selected' : '' }}>
+                                            LABORATOIRE</option>
+                                        <option value="autre"
+                                            {{ old('niveau_intervention') == 'autre' ? 'selected' : '' }}>
+                                            AUTRE</option>
+                                    </select>
+                                </div>
+                                @error('niveau_intervention')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-12">
+                                <label for="precise_intervention" class="form-label">Préciser Niveau
+                                    d'intervention</label>
+                                <input type="text" id="precise_intervention" name="precise_intervention"
+                                    value="{{ old('precise_intervention') }}"
+                                    class="form-control form-control-custom @error('precise_intervention') is-invalid @enderror"
+                                    placeholder="Commune">
+                                @error('precise_intervention')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div> --}}
                             <div class="col-md-6">
+                                <label for="niveau_intervention" class="form-label required-field">
+                                    Niveau D’Intervention
+                                </label>
+
+                                <div class="rbt-modern-select bg-transparent height-45">
+                                    <select
+                                        class="form-control form-control-custom select-custom @error('niveau_intervention') is-invalid @enderror"
+                                        name="niveau_intervention" id="niveau_intervention" required>
+
+                                        <option value="">Sélectionnez...</option>
+
+                                        <option value="cabinet_medicaux"
+                                            {{ old('niveau_intervention') == 'cabinet_medicaux' ? 'selected' : '' }}>
+                                            CABINET MEDICAUX
+                                        </option>
+
+                                        <option value="centre"
+                                            {{ old('niveau_intervention') == 'centre' ? 'selected' : '' }}>
+                                            CENTRE
+                                        </option>
+
+                                        <option value="clinique"
+                                            {{ old('niveau_intervention') == 'clinique' ? 'selected' : '' }}>
+                                            CLINIQUE
+                                        </option>
+
+                                        <option value="polyclinique"
+                                            {{ old('niveau_intervention') == 'polyclinique' ? 'selected' : '' }}>
+                                            POLYCLINIQUE
+                                        </option>
+
+                                        <option value="centre_imagerie"
+                                            {{ old('niveau_intervention') == 'centre_imagerie' ? 'selected' : '' }}>
+                                            CENTRE D’IMAGERIE
+                                        </option>
+
+                                        <option value="laboratoire"
+                                            {{ old('niveau_intervention') == 'laboratoire' ? 'selected' : '' }}>
+                                            LABORATOIRE
+                                        </option>
+
+                                        <option value="autre"
+                                            {{ old('niveau_intervention') == 'autre' ? 'selected' : '' }}>
+                                            AUTRE
+                                        </option>
+                                    </select>
+                                </div>
+
+                                @error('niveau_intervention')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+
+                            <div class="col-md-12" id="div_precise_intervention" style="display: none;">
+                                <label for="precise_intervention" class="form-label">
+                                    Préciser Niveau d'intervention
+                                </label>
+
+                                <input type="text" id="precise_intervention" name="precise_intervention"
+                                    value="{{ old('precise_intervention') }}"
+                                    class="form-control form-control-custom @error('precise_intervention') is-invalid @enderror"
+                                    placeholder="Précisez ici">
+
+                                @error('precise_intervention')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+
+
+
+
+
+
+                            <!-- Adresse personnelle  -->
+                            <div class="col-md-6">
+                                <label for="ville_personnel_id" class="form-label required-field">Ville</label>
+                                <div class="rbt-modern-select bg-transparent height-45">
+                                    <select
+                                        class="form-control form-control-custom select-custom @error('ville_personnel_id') is-invalid @enderror"
+                                        name="ville_personnel_id" id="ville_personnel_id" required>
+                                        <option value="">Sélectionnez...</option>
+                                        @foreach ($villes as $ville)
+                                            <option value="{{ $ville->id }}"
+                                                {{ old('ville_personnel_id') == $ville->id ? 'selected' : '' }}>
+                                                {{ $ville->libelle }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('ville_personnel_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="commune_personnel" class="form-label">Commune</label>
+                                <input type="text" id="commune_personnel" name="commune_personnel"
+                                    value="{{ old('commune_personnel') }}"
+                                    class="form-control form-control-custom @error('commune_personnel') is-invalid @enderror"
+                                    placeholder="Commune">
+                                @error('commune_personnel')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+
+
+                            <!-- Domaine d'activité et employeur -->
+                            {{-- <div class="col-md-6">
                                 <label for="domaine_activite" class="form-label">Domaine d'activité</label>
                                 <input type="text" id="domaine_activite" name="domaine_activite"
                                     value="{{ old('domaine_activite') }}"
@@ -4737,7 +4969,7 @@
                                 @error('domaine_activite')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-6">
                                 <label for="nom_employeur_principale" class="form-label">Nom de l'employeur
@@ -4964,7 +5196,7 @@
                     </div>
 
                     <!-- Section 5: Informations Freelance -->
-                    <div class="form-section conditional-hidden" id="section-freelance">
+                    {{-- <div class="form-section conditional-hidden" id="section-freelance">
                         <h3 class="form-section-title">
                             <i class="feather-users me-2"></i> Informations Freelance/Activité Secondaire
                         </h3>
@@ -5090,10 +5322,10 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Section 6: Relations et Information sur l'Auteur -->
-                    <div class="form-section conditional-hidden" id="section-relations">
+                    {{-- <div class="form-section conditional-hidden" id="section-relations">
                         <h3 class="form-section-title">
                             <i class="feather-link me-2"></i> Relations et Information sur l'Auteur
                         </h3>
@@ -5154,7 +5386,7 @@
                                     placeholder="Nom de la personne qui a effectué votre adhésion">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Section 7: Documents à télécharger -->
                     <div class="form-section conditional-hidden" id="section-documents">
@@ -5182,14 +5414,14 @@
 
                             <!-- Carte inscription ONMCI -->
                             <div class="col-md-6">
-                                <label for="document_carte_inscript_ONMCI" class="form-label ">Carte
+                                <label for="document_carte_inscript_ONMCI" class="form-label required-field">Carte
                                     d'inscription
                                     ONMCI</label>
                                 <div class="document-upload" id="carteOnmciUpload">
                                     <input type="file" name="document_carte_inscript_ONMCI"
                                         id="document_carte_inscript_ONMCI"
                                         class="@error('document_carte_inscript_ONMCI') is-invalid @enderror"
-                                        accept="application/pdf,.pdf" >
+                                        accept="application/pdf,.pdf" required>
                                     <div class="upload-content">
                                         <i class="feather-upload fs-4 mb-2"></i>
                                         <p class="mb-1 upload-text">Cliquez pour télécharger</p>
@@ -5276,7 +5508,8 @@
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="rbt-btn btn-secondary" id="prevSection" style="display: none;">
+                                <button type="button" class="rbt-btn btn-secondary" id="prevSection"
+                                    style="display: none;">
                                     <i class="feather-arrow-left me-2"></i>Précédent
                                 </button>
 
@@ -5304,13 +5537,18 @@
             <div class="medical-symbol">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Caducée (symbole médical) -->
-                    <path d="M50 15 L50 85 M30 35 L70 35 M30 65 L70 65" stroke="white" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="50" cy="50" r="12" stroke="white" stroke-width="3" fill="none"/>
-                    <path d="M38 28 L50 15 L62 28" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <path d="M38 72 L50 85 L62 72" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M50 15 L50 85 M30 35 L70 35 M30 65 L70 65" stroke="white" stroke-width="4"
+                        stroke-linecap="round" />
+                    <circle cx="50" cy="50" r="12" stroke="white" stroke-width="3" fill="none" />
+                    <path d="M38 28 L50 15 L62 28" stroke="white" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
+                    <path d="M38 72 L50 85 L62 72" stroke="white" stroke-width="3" fill="none"
+                        stroke-linecap="round" />
                     <!-- Serpent du caducée -->
-                    <path d="M30 45 Q40 40 45 45 Q50 50 55 45 Q60 40 70 45" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M30 55 Q40 60 45 55 Q50 50 55 55 Q60 60 70 55" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M30 45 Q40 40 45 45 Q50 50 55 45 Q60 40 70 45" stroke="white" stroke-width="2.5"
+                        fill="none" stroke-linecap="round" />
+                    <path d="M30 55 Q40 60 45 55 Q50 50 55 55 Q60 60 70 55" stroke="white" stroke-width="2.5"
+                        fill="none" stroke-linecap="round" />
                 </svg>
             </div>
             <div class="loader-text">Traitement en cours</div>
@@ -5324,6 +5562,75 @@
 @endsection
 
 @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const niveauIntervention = document.getElementById('niveau_intervention');
+            const divPrecise = document.getElementById('div_precise_intervention');
+
+            function togglePreciseField() {
+
+                if (niveauIntervention.value === 'autre') {
+                    divPrecise.style.display = 'block';
+                } else {
+                    divPrecise.style.display = 'none';
+                }
+            }
+
+            // Vérification au chargement
+            togglePreciseField();
+
+            // Vérification au changement
+            niveauIntervention.addEventListener('change', togglePreciseField);
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const dateDebut = document.getElementById('date_debut_metier');
+            const experience = document.getElementById('nombre_annee_experience');
+
+            function calculExperience() {
+
+                if (!dateDebut.value) {
+                    experience.value = '';
+                    return;
+                }
+
+                const debut = new Date(dateDebut.value);
+                const aujourdHui = new Date();
+
+                let annees = aujourdHui.getFullYear() - debut.getFullYear();
+
+                // Vérifie si la date anniversaire est passée cette année
+                const moisActuel = aujourdHui.getMonth();
+                const jourActuel = aujourdHui.getDate();
+
+                const moisDebut = debut.getMonth();
+                const jourDebut = debut.getDate();
+
+                if (
+                    moisActuel < moisDebut ||
+                    (moisActuel === moisDebut && jourActuel < jourDebut)
+                ) {
+                    annees--;
+                }
+
+                // Empêche les valeurs négatives
+                experience.value = annees >= 0 ? annees : 0;
+            }
+
+            // Calcul automatique au changement
+            dateDebut.addEventListener('change', calculExperience);
+
+            // Calcul au chargement si ancienne valeur
+            calculExperience();
+
+        });
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -5335,8 +5642,8 @@
                 'section-documents-identite',
                 'section-professionnel',
                 'section-entreprise',
-                'section-freelance',
-                'section-relations',
+                // 'section-freelance',
+                // 'section-relations',
                 'section-documents'
             ];
 
@@ -5377,7 +5684,8 @@
                         // Vérifier la signature avant soumission
                         const signatureFile = document.getElementById('signature');
                         const signatureCanvas = document.getElementById('signature-pad');
-                        const isCanvasBlank = !signatureCanvas || signatureCanvas.toDataURL() === document.createElement('canvas').toDataURL();
+                        const isCanvasBlank = !signatureCanvas || signatureCanvas.toDataURL() === document
+                            .createElement('canvas').toDataURL();
 
                         if (!signatureFile.files.length && isCanvasBlank) {
                             Swal.fire({

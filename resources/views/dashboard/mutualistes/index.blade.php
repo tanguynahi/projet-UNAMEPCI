@@ -14,6 +14,7 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
+                                                        {{-- <a href="{{ route('mutualistes.importer') }}" class="btn btn-success d-inline">Importer</a> --}}
                         <a href="{{ route('mutualistes.create') }}" class="btn btn-primary d-inline">Ajouter un
                             mutualiste</a>
                     </div>
@@ -24,7 +25,7 @@
                             <thead>
                                 <tr>
                                     <th>N°</th>
-                                    <th>Mutualiste</th>
+                                    <th>Membres</th>
                                     <th>Specialite</th>
                                     <th>Fonction</th>
                                     <th>Matricule</th>
@@ -66,7 +67,7 @@
                                         <td>
                                             <img src="{{ $imgUrl }}" class="avatar sm rounded me-2"
                                                 alt="profile-image">
-                                            <span>{{ $mutualiste->civilite ?? '' }}{{ $mutualiste->nom ?? '' }}
+                                            <span>{{ $mutualiste->civilite ?? '' }} {{ $mutualiste->nom ?? '' }}
                                                 {{ $mutualiste->prenom ?? '' }}</span>
                                         </td>
                                         <td>{{ $mutualiste->specialite->libelle ?? '' }}</td>
@@ -100,6 +101,13 @@
                                                         data-bs-placement="top" title="Supprimer"><i
                                                             class="fa fa-trash"></i></a>
                                                 @endif
+                                            @else
+                                                <a href="{{ route('reenvoyerMail.mutualiste', $mutualiste->id) }}"
+                                                    id="ResendLinkInscription"
+                                                    class="btn btn-link btn-sm text-success resendIcon"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                    title="Renvoyer le lien d'inscription"><i
+                                                        class="fa fa-envelope"></i></a>
                                             @endif
                                         </td>
                                     </tr>

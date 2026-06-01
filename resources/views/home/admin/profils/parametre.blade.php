@@ -268,7 +268,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="nombre_charge">Nombre de charges</label>
                                         <input id="nombre_charge" type="number" name="nombre_charge"
@@ -280,9 +280,9 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div class="rbt-form-group">
                                         <label for="date_adhesion_unamepci">Date d'adhésion UNAMEPCI</label>
                                         <input id="date_adhesion_unamepci" type="date" name="date_adhesion_unamepci"
@@ -343,7 +343,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="fax">Fax</label>
                                         <input id="fax" type="text" name="fax"
@@ -355,22 +355,23 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-6 mb--20 col-md-6 col-sm-6 col-6">
-                                    <label>Ville</label>
+                                    <label>Ville ( d'habitation)</label>
                                     <div class="rbt-modern-select bg-transparent height-45">
-                                        <select class="w-100 @error('ville_id') is-invalid @enderror" name="ville_id"
-                                            id="ville_id" autocomplete="ville_id" autofocus>
+                                        <select class="w-100 @error('ville_personnel_id') is-invalid @enderror"
+                                            name="ville_personnel_id" id="ville_personnel_id"
+                                            autocomplete="ville_personnel_id" autofocus>
                                             <option value="">Sélectionnez la ville</option>
                                             @foreach ($villes as $ville)
                                                 <option value="{{ $ville->id }}"
-                                                    {{ old('ville_id', $mutualiste->ville_id) == $ville->id ? 'selected' : '' }}>
+                                                    {{ old('ville_personnel_id', $mutualiste->ville_personnel_id) == $ville->id ? 'selected' : '' }}>
                                                     {{ $ville->libelle }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('ville_id')
+                                        @error('ville_personnel_id')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -378,6 +379,19 @@
                                     </div>
                                 </div>
 
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    <div class="rbt-form-group">
+                                        <label for="commune_personnel">Commune </label>
+                                        <input id="commune_personnel" name="commune_personnel" type="text"
+                                            value="{{ old('commune_personnel', $mutualiste->commune_personnel) }}"
+                                            class=" @error('commune_personnel') is-invalid @enderror">
+                                        @error('commune_personnel')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="adresse">Adresse</label>
@@ -392,6 +406,7 @@
                                     </div>
                                 </div>
                             </div>
+
 
                             <!-- SECTION 3: Pièce d'identité -->
                             <div class="form-section row">
@@ -432,7 +447,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4">
                                     <div class="rbt-form-group">
                                         <label for="date_etablissement_piece">Établie le</label>
                                         <input id="date_etablissement_piece" type="date"
@@ -446,8 +461,21 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                                    <div class="rbt-form-group">
+                                        <label for="date_expiration_piece">expire le</label>
+                                        <input id="date_expiration_piece" type="date" name="date_expiration_piece"
+                                            value="{{ old('date_expiration_piece', $mutualiste->date_expiration_piece) }}"
+                                            class=" @error('date_expiration_piece') is-invalid @enderror">
+                                        @error('date_expiration_piece')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4">
                                     <div class="rbt-form-group">
                                         <label for="lieu_etablissement_piece">Lieu d'établissement</label>
                                         <input id="lieu_etablissement_piece" type="text"
@@ -509,7 +537,7 @@
                             <div class="form-section row">
                                 <h5 class="section-title">Informations ONMCI</h5>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-6">
                                     <div class="rbt-form-group">
                                         <label for="numero_inscription_ONMCI">Numéro d'inscription ONMCI</label>
                                         <input id="numero_inscription_ONMCI" type="text"
@@ -524,7 +552,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="pseudonyme_recon_ONMCI">Pseudonyme reconnaissance ONMCI</label>
                                         <input id="pseudonyme_recon_ONMCI" type="text" name="pseudonyme_recon_ONMCI"
@@ -536,7 +564,7 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     @php
@@ -612,6 +640,8 @@
                                     </div>
                                 </div>
 
+
+
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="fonction">Fonction</label>
@@ -631,7 +661,8 @@
                                         <label for="date_debut_metier">Date début métier</label>
                                         <input id="date_debut_metier" type="date" name="date_debut_metier"
                                             value="{{ old('date_debut_metier', $mutualiste->date_debut_metier) }}"
-                                            class=" @error('date_debut_metier') is-invalid @enderror">
+                                            class=" @error('date_debut_metier') is-invalid @enderror"
+                                            max="{{ date('Y-m-d') }}">
                                         @error('date_debut_metier')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -645,7 +676,8 @@
                                         <label for="nombre_annee_experience">Nombre d'années d'expérience</label>
                                         <input id="nombre_annee_experience" type="number" name="nombre_annee_experience"
                                             value="{{ old('nombre_annee_experience', $mutualiste->nombre_annee_experience) }}"
-                                            class=" @error('nombre_annee_experience') is-invalid @enderror">
+                                            class=" @error('nombre_annee_experience') is-invalid @enderror"
+                                            min="0" placeholder="0" readonly>
                                         @error('nombre_annee_experience')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -672,18 +704,111 @@
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="statut_emploi">Statut emploi</label>
-                                        <input id="statut_emploi" type="text" name="statut_emploi"
-                                            value="{{ old('statut_emploi', $mutualiste->statut_emploi) }}"
-                                            class=" @error('statut_emploi') is-invalid @enderror">
-                                        @error('statut_emploi')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                        <div class="rbt-modern-select bg-transparent height-45">
+                                            <select class="w-100 @error('statut_emploi') is-invalid @enderror"
+                                                name="statut_emploi" id="statut_emploi" autocomplete="statut_emploi"
+                                                autofocus>
+
+                                                <option value="">Sélectionnez...</option>
+                                                <option value="Stage"
+                                                    {{ old('statut_emploi', $mutualiste->statut_emploi) == 'Stage' ? 'selected' : '' }}>
+                                                    Stage</option>
+                                                <option value="CDD"
+                                                    {{ old('statut_emploi', $mutualiste->statut_emploi) == 'CDD' ? 'selected' : '' }}>
+                                                    CDD</option>
+                                                <option value="CDI"
+                                                    {{ old('statut_emploi', $mutualiste->statut_emploi) == 'CDI' ? 'selected' : '' }}>
+                                                    CDI</option>
+
+                                                <option value="Retraité"
+                                                    {{ old('statut_emploi', $mutualiste->statut_emploi) == 'Retraité' ? 'selected' : '' }}>
+                                                    Retraité</option>
+                                                <option value="Vacation"
+                                                    {{ old('statut_emploi', $mutualiste->statut_emploi) == 'Vacation' ? 'selected' : '' }}>
+                                                    Vacation</option>
+                                            </select>
+                                            @error('statut_emploi')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
 
+
+
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    <label for="niveau_intervention" class="form-label required-field">
+                                        Niveau D’Intervention
+                                    </label>
+
+                                    <div class="rbt-modern-select bg-transparent height-45">
+                                        <select
+                                            class="form-control form-control-custom select-custom @error('niveau_intervention') is-invalid @enderror"
+                                            name="niveau_intervention" id="niveau_intervention" required>
+
+                                            <option value="">Sélectionnez...</option>
+
+                                            <option value="cabinet_medicaux"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'cabinet_medicaux' ? 'selected' : '' }}>
+                                                CABINET MEDICAUX
+                                            </option>
+
+                                            <option value="centre"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'centre' ? 'selected' : '' }}>
+                                                CENTRE
+                                            </option>
+
+                                            <option value="clinique"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'clinique' ? 'selected' : '' }}>
+                                                CLINIQUE
+                                            </option>
+
+                                            <option value="polyclinique"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'polyclinique' ? 'selected' : '' }}>
+                                                POLYCLINIQUE
+                                            </option>
+
+                                            <option value="centre_imagerie"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'centre_imagerie' ? 'selected' : '' }}>
+                                                CENTRE D’IMAGERIE
+                                            </option>
+
+                                            <option value="laboratoire"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'laboratoire' ? 'selected' : '' }}>
+                                                LABORATOIRE
+                                            </option>
+
+                                            <option value="autre"
+                                                {{ old('niveau_intervention', $mutualiste->niveau_intervention) == 'autre' ? 'selected' : '' }}>
+                                                AUTRE
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    @error('niveau_intervention')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+                                <div class="col-md-6" id="div_precise_intervention" style="display: none;">
+                                    <label for="precise_intervention" class="form-label">
+                                        Préciser Niveau d'intervention
+                                    </label>
+
+                                    <input type="text" id="precise_intervention" name="precise_intervention"
+                                        value="{{ old('precise_intervention', $mutualiste->precise_intervention) }}"
+                                        class="form-control form-control-custom @error('precise_intervention') is-invalid @enderror"
+                                        placeholder="Précisez ici">
+
+                                    @error('precise_intervention')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
                                         <label for="domaine_activite">Domaine d'activité</label>
                                         <input id="domaine_activite" type="text" name="domaine_activite"
@@ -695,7 +820,7 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
@@ -808,7 +933,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="precise_forme_juridique_block"
+                                    style="display: none;">
                                     <div class="rbt-form-group">
                                         <label for="precise_forme_juridique">Précisez forme juridique</label>
                                         <input id="precise_forme_juridique" type="text" name="precise_forme_juridique"
@@ -821,6 +947,30 @@
                                         @enderror
                                     </div>
                                 </div>
+
+
+
+                                <div class="col-6 mb--20 col-md-6 col-sm-6 col-6">
+                                    <label>Ville</label>
+                                    <div class="rbt-modern-select bg-transparent height-45">
+                                        <select class="w-100 @error('ville_id') is-invalid @enderror" name="ville_id"
+                                            id="ville_id" autocomplete="ville_id" autofocus>
+                                            <option value="">Sélectionnez la ville</option>
+                                            @foreach ($villes as $ville)
+                                                <option value="{{ $ville->id }}"
+                                                    {{ old('ville_id', $mutualiste->ville_id) == $ville->id ? 'selected' : '' }}>
+                                                    {{ $ville->libelle }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('ville_id')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                                     <div class="rbt-form-group">
@@ -972,7 +1122,7 @@
                             </div>
 
                             <!-- SECTION 7: Relations -->
-                            <div class="form-section row">
+                            {{-- <div class="form-section row">
                                 <h5 class="section-title">Relations</h5>
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
@@ -1028,10 +1178,10 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- SECTION 8: Travail freelance -->
-                            <div class="form-section row">
+                            {{-- <div class="form-section row">
                                 <h5 class="section-title">Travail freelance</h5>
 
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-6">
@@ -1149,7 +1299,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- SECTION 9: Documents supplémentaires -->
                             {{-- <div class="form-section row">
@@ -1236,6 +1386,106 @@
 @endsection
 
 @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const formeJuridique = document.getElementById('forme_juridique_id');
+            const preciseField = document.getElementById('precise_forme_juridique_block');
+
+            function togglePreciseField() {
+
+                // Récupère le texte de l'option sélectionnée
+                const selectedText = formeJuridique.options[formeJuridique.selectedIndex]
+                    .text
+                    .trim()
+                    .toLowerCase();
+
+                // Vérifie si "Autre" est sélectionné
+                if (selectedText === 'autre') {
+                    preciseField.style.display = 'block';
+                } else {
+                    preciseField.style.display = 'none';
+                    document.getElementById('precise_forme_juridique').value = '';
+                }
+            }
+
+            // Exécute au chargement
+            togglePreciseField();
+
+            // Exécute au changement
+            formeJuridique.addEventListener('change', togglePreciseField);
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const niveauIntervention = document.getElementById('niveau_intervention');
+            const divPrecise = document.getElementById('div_precise_intervention');
+
+            function togglePreciseField() {
+
+                if (niveauIntervention.value === 'autre') {
+                    divPrecise.style.display = 'block';
+                } else {
+                    divPrecise.style.display = 'none';
+                }
+            }
+
+            // Vérification au chargement
+            togglePreciseField();
+
+            // Vérification au changement
+            niveauIntervention.addEventListener('change', togglePreciseField);
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const dateDebut = document.getElementById('date_debut_metier');
+            const experience = document.getElementById('nombre_annee_experience');
+
+            function calculExperience() {
+
+                if (!dateDebut.value) {
+                    experience.value = '';
+                    return;
+                }
+
+                const debut = new Date(dateDebut.value);
+                const aujourdHui = new Date();
+
+                let annees = aujourdHui.getFullYear() - debut.getFullYear();
+
+                // Vérifie si la date anniversaire est passée cette année
+                const moisActuel = aujourdHui.getMonth();
+                const jourActuel = aujourdHui.getDate();
+
+                const moisDebut = debut.getMonth();
+                const jourDebut = debut.getDate();
+
+                if (
+                    moisActuel < moisDebut ||
+                    (moisActuel === moisDebut && jourActuel < jourDebut)
+                ) {
+                    annees--;
+                }
+
+                // Empêche les valeurs négatives
+                experience.value = annees >= 0 ? annees : 0;
+            }
+
+            // Calcul automatique au changement
+            dateDebut.addEventListener('change', calculExperience);
+
+            // Calcul au chargement si ancienne valeur
+            calculExperience();
+
+        });
+    </script>
+
     <script>
         document.getElementById('customButton').addEventListener('click', function(event) {
             event.preventDefault();

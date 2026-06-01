@@ -163,7 +163,7 @@ class HomeController extends Controller
             $photo_identite_1 = null;
             $pieces_joints_recto = null;
             $pieces_joints_verso = null;
-            $valeur = '';
+            // $valeur = '';
 
             if ($request->hasFile('signature')) {
                 $file_name = md5(uniqid()) . '.' . $request->file('signature')->extension();
@@ -230,13 +230,13 @@ class HomeController extends Controller
             }
 
             $email = $request->email;
-            $etre_auteur = $request->etre_auteur;
-            if ($etre_auteur == 1 || empty($request->nom_auteur)) {
-                $valeur = $request->nom_relation;
-            } else {
-                $valeur = $request->nom_auteur;
-                $etre_auteur = 0;
-            }
+            // $etre_auteur = $request->etre_auteur;
+            // if ($etre_auteur == 1 || empty($request->nom_auteur)) {
+            //     $valeur = $request->nom_relation;
+            // } else {
+            //     $valeur = $request->nom_auteur;
+            //     $etre_auteur = 0;
+            // }
 
 
 
@@ -249,7 +249,7 @@ class HomeController extends Controller
             $inscription->prenom = $request->prenom;
             $inscription->contact = $request->contact;
             $inscription->contact_2 = $request->contact_2;
-            $inscription->fax = $request->fax;
+            // $inscription->fax = $request->fax;
             $inscription->email = $email ?? $request->email;
             $inscription->adresse = $request->adresse;
             $inscription->civilite = $request->civilite;
@@ -257,18 +257,19 @@ class HomeController extends Controller
             $inscription->lieu_naissance = $request->lieu_naissance;
             $inscription->nationalite = $request->nationalite;
             $inscription->situation_matrimoniale = $request->situation_matrimoniale;
-            $inscription->nombre_charge = $request->nombre_charge;
+            // $inscription->nombre_charge = $request->nombre_charge;
             $inscription->date_adhesion_unamepci = $request->date_adhesion_unamepci;
             $inscription->type_piece_id = $request->type_piece_id;
             $inscription->numero_piece = $request->numero_piece;
             $inscription->date_etablissement_piece = $request->date_etablissement_piece;
+            $inscription->date_expiration_piece = $request->date_expiration_piece; // ajouter
             $inscription->lieu_etablissement_piece = $request->lieu_etablissement_piece;
             // les fichier
             $inscription->pieces_joints_recto = $pieces_joints_recto;
             $inscription->pieces_joints_verso = $pieces_joints_verso;
 
             $inscription->numero_inscription_ONMCI = $request->numero_inscription_ONMCI;
-            $inscription->pseudonyme_recon_ONMCI = $request->pseudonyme_recon_ONMCI;
+            // $inscription->pseudonyme_recon_ONMCI = $request->pseudonyme_recon_ONMCI;
             $inscription->matricule = $request->matricule;
             $inscription->raison_social_primaire = $request->raison_social_primaire;
             $inscription->specialite_id = $request->specialite_id;
@@ -277,7 +278,11 @@ class HomeController extends Controller
             $inscription->nombre_annee_experience = $request->nombre_annee_experience;
             $inscription->nom_employeur_principale = $request->nom_employeur_principale;
             $inscription->statut_emploi = $request->statut_emploi;
-            $inscription->domaine_activite = $request->domaine_activite;
+            $inscription->niveau_intervention = $request->niveau_intervention; // ajouter
+            $inscription->precise_intervention = $request->precise_intervention; // ajouter
+            $inscription->ville_personnel_id = $request->ville_personnel_id; // ajouter
+            $inscription->commune_personnel = $request->commune_personnel; // ajouter
+            // $inscription->domaine_activite = $request->domaine_activite;
             $inscription->date_recrutement = $request->date_recrutement;
             // $inscription->montant_cotis_annuel = $request->montant_cotis_annuel;
             $inscription->sigle = $request->sigle;
@@ -296,18 +301,19 @@ class HomeController extends Controller
             $inscription->telephone_entreprise = $request->telephone_entreprise;
             $inscription->fax_entreprise = $request->fax_entreprise;
             $inscription->fax_entreprise = $request->fax_entreprise;
-            $inscription->relation_tiers = $request->relation_tiers;
-            $inscription->nom_relation = $request->nom_relation;
-            $inscription->etre_auteur = $etre_auteur;
-            $inscription->nom_auteur = $valeur;
-            $inscription->raison_social_secondaire_freelance = $request->raison_social_secondaire_freelance;
-            $inscription->fonction_occupe_freelance = $request->fonction_occupe_freelance;
-            $inscription->type_contrat_freelance = $request->type_contrat_freelance;
-            $inscription->telephone_freelance = $request->telephone_freelance;
-            $inscription->fax_freelance = $request->fax_freelance;
-            $inscription->localisation_freelance = $request->localisation_freelance;
-            $inscription->adresse_postale_freelance = $request->adresse_postale_freelance;
-            $inscription->domaine_activite_freelance = $request->domaine_activite_freelance;
+
+            // $inscription->relation_tiers = $request->relation_tiers;
+            // $inscription->nom_relation = $request->nom_relation;
+            // $inscription->etre_auteur = $etre_auteur;
+            // $inscription->nom_auteur = $valeur;
+            // $inscription->raison_social_secondaire_freelance = $request->raison_social_secondaire_freelance;
+            // $inscription->fonction_occupe_freelance = $request->fonction_occupe_freelance;
+            // $inscription->type_contrat_freelance = $request->type_contrat_freelance;
+            // $inscription->telephone_freelance = $request->telephone_freelance;
+            // $inscription->fax_freelance = $request->fax_freelance;
+            // $inscription->localisation_freelance = $request->localisation_freelance;
+            // $inscription->adresse_postale_freelance = $request->adresse_postale_freelance;
+            // $inscription->domaine_activite_freelance = $request->domaine_activite_freelance;
             $inscription->avatar = $avatar;
             $inscription->photo_couverture = $photo_couverture;
             $inscription->document_carte_inscript_ONMCI = $document_carte_inscript_ONMCI;

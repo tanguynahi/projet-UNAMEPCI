@@ -30,22 +30,23 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'prenom' => ['required', 'string', 'max:100'],
             'contact' => ['required', 'string', 'max:15', 'unique:mutualistes,contact'],
             'contact_2' => ['nullable', 'string', 'max:15'],
-            'fax' => ['nullable', 'string', 'max:50'],
+            // 'fax' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255', 'unique:mutualistes,email'],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'nationalite' => ['required', 'string', 'max:100'],
             'situation_matrimoniale' => ['required', 'string'],
-            'nombre_charge' => ['nullable', 'integer', 'min:0'],
+            // 'nombre_charge' => ['nullable', 'integer', 'min:0'],
             'date_adhesion_unamepci' => ['nullable', 'date'],
 
             // Documents d'identité
             'type_piece_id' => ['required', 'exists:type_pieces,id'],
             'numero_piece' => ['required', 'string', 'max:50'],
             'date_etablissement_piece' => ['required', 'date'],
+            'date_expiration_piece' => ['required', 'date'],
             'lieu_etablissement_piece' => ['required', 'string', 'max:255'],
             'numero_inscription_ONMCI' => ['nullable', 'string', 'max:100'],
-            'pseudonyme_recon_ONMCI' => ['nullable', 'string', 'max:100'],
+            // 'pseudonyme_recon_ONMCI' => ['nullable', 'string', 'max:100'],
 
             // Informations professionnelles
             'matricule' => ['required', 'string', 'max:50', 'unique:mutualistes,matricule'],
@@ -55,7 +56,13 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'date_debut_metier' => ['nullable', 'date'],
             'nombre_annee_experience' => ['required', 'integer', 'min:-1'],
             'statut_emploi' => ['required', 'string'],
-            'domaine_activite' => ['nullable', 'string', 'max:255'],
+            
+            'niveau_intervention' => ['required', 'string'],
+            'precise_intervention' => ['nullable', 'string'],
+
+            'ville_personnel_id' => ['required', 'exists:villes,id'],
+            'commune_personnel' => ['nullable', 'string', 'max:255'],
+
             'nom_employeur_principale' => ['nullable', 'string', 'max:255'],
             // 'montant_cotis_annuel' => ['nullable', 'numeric', 'min:0'],
             'date_recrutement' => ['nullable', 'date'],
@@ -78,20 +85,20 @@ class StoreinscriptionUtilisateurRequest extends FormRequest
             'fax_entreprise' => ['nullable', 'string', 'max:50'],
             'adresse' => ['required', 'string', 'max:255'],
 
-            // Informations freelance
-            'raison_social_secondaire_freelance' => ['nullable', 'string', 'max:255'],
-            'fonction_occupe_freelance' => ['nullable', 'string', 'max:100'],
-            'type_contrat_freelance' => ['nullable', 'string'],
-            'telephone_freelance' => ['nullable', 'string', 'max:15'],
-            'localisation_freelance' => ['nullable', 'string', 'max:255'],
-            'adresse_postale_freelance' => ['nullable', 'string', 'max:255'],
-            'domaine_activite_freelance' => ['nullable', 'string', 'max:255'],
-            'fax_freelance' => ['nullable', 'string', 'max:50'],
+            // // Informations freelance
+            // 'raison_social_secondaire_freelance' => ['nullable', 'string', 'max:255'],
+            // 'fonction_occupe_freelance' => ['nullable', 'string', 'max:100'],
+            // 'type_contrat_freelance' => ['nullable', 'string'],
+            // 'telephone_freelance' => ['nullable', 'string', 'max:15'],
+            // 'localisation_freelance' => ['nullable', 'string', 'max:255'],
+            // 'adresse_postale_freelance' => ['nullable', 'string', 'max:255'],
+            // 'domaine_activite_freelance' => ['nullable', 'string', 'max:255'],
+            // 'fax_freelance' => ['nullable', 'string', 'max:50'],
 
             // Relations et auteur
-            'relation_tiers' => ['nullable', 'in:0,1'],
-            'nom_relation' => ['nullable', 'required_if:relation_tiers,1', 'string', 'max:255'],
-            'nom_auteur' => ['nullable', 'string', 'max:255'],
+            // 'relation_tiers' => ['nullable', 'in:0,1'],
+            // 'nom_relation' => ['nullable', 'required_if:relation_tiers,1', 'string', 'max:255'],
+            // 'nom_auteur' => ['nullable', 'string', 'max:255'],
 
             // Fichiers
             'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'],

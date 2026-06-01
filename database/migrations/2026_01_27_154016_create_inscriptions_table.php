@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('contact')->nullable();
             $table->string('contact_2')->nullable();
-            $table->string('fax')->nullable();
+            // $table->string('fax')->nullable();
             $table->string('email')->nullable();
             $table->string('adresse')->nullable();
             $table->enum('civilite', ['M.', 'Mme', 'Mlle'])->default('M.');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string("lieu_naissance")->nullable();
             $table->string("nationalite")->nullable();
             $table->string('situation_matrimoniale')->nullable();
-            $table->string('nombre_charge')->nullable();
+            // $table->string('nombre_charge')->nullable();
             $table->date("date_adhesion_unamepci")->nullable();
 
             // document d'identification
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string("pieces_joints_recto")->nullable();
             $table->string("pieces_joints_verso")->nullable();
             $table->string('numero_inscription_ONMCI')->nullable();
-            $table->string('pseudonyme_recon_ONMCI')->nullable();
+            // $table->string('pseudonyme_recon_ONMCI')->nullable();
 
 
             //- infos taf principale
@@ -53,7 +53,7 @@ return new class extends Migration
             $table->string("nombre_annee_experience")->nullable();
             $table->string("nom_employeur_principale")->nullable();
             $table->string("statut_emploi")->nullable();
-            $table->string("domaine_activite")->nullable();
+            // $table->string("domaine_activite")->nullable();
             $table->date("date_recrutement")->nullable();
             // $table->string("montant_cotis_annuel")->nullable();
             $table->string("sigle")->nullable();
@@ -72,20 +72,27 @@ return new class extends Migration
             $table->string("telephone_entreprise")->nullable();
             $table->string("fax_entreprise")->nullable();
 
-            $table->tinyInteger('relation_tiers')->default(0);
-            $table->string("nom_relation")->nullable();
-            $table->tinyInteger('etre_auteur')->default(0);
-            $table->string("nom_auteur")->nullable();
+
+            $table->date("date_expiration_piece")->nullable();
+            $table->foreignId('ville_personnel_id')->nullable()->constrained('villes', 'id');
+            $table->string("commune_personnel")->nullable();
+            $table->string("niveau_intervention")->nullable();
+            $table->string("precise_intervention")->nullable();
+
+            // $table->tinyInteger('relation_tiers')->default(0);
+            // $table->string("nom_relation")->nullable();
+            // $table->tinyInteger('etre_auteur')->default(0);
+            // $table->string("nom_auteur")->nullable();
 
             //- info taf freelance
-            $table->string("raison_social_secondaire_freelance")->nullable();
-            $table->string("fonction_occupe_freelance")->nullable();
-            $table->string("type_contrat_freelance")->nullable();
-            $table->string("telephone_freelance")->nullable();
-            $table->string("fax_freelance")->nullable();
-            $table->string("localisation_freelance")->nullable();
-            $table->string("adresse_postale_freelance")->nullable();
-            $table->string("domaine_activite_freelance")->nullable();
+            // $table->string("raison_social_secondaire_freelance")->nullable();
+            // $table->string("fonction_occupe_freelance")->nullable();
+            // $table->string("type_contrat_freelance")->nullable();
+            // $table->string("telephone_freelance")->nullable();
+            // $table->string("fax_freelance")->nullable();
+            // $table->string("localisation_freelance")->nullable();
+            // $table->string("adresse_postale_freelance")->nullable();
+            // $table->string("domaine_activite_freelance")->nullable();
 
             //-> document
             $table->string("avatar")->nullable();

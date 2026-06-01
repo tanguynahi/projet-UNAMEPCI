@@ -32,6 +32,20 @@
                 </div>
             </div>
         @endcan
+            @can('voir-total-cotisation-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Total Cotisations</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $mntCotisation ?? 0 }}</span> <small
+                                    class="text-danger">Fcfa</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
         {{-- <div class="col">
         <div class="card">
             <div class="card-body d-flex align-items-center">
@@ -57,20 +71,7 @@
                 </div>
             </div>
         @endcan
-        @can('voir-total-cotisation-dashboard')
-            <div class="col">
-                <div class="card">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-money fa-lg"></i></div>
-                        <div class="flex-fill ms-3 text-truncate">
-                            <div class="small text-uppercase">Total Cotisations</div>
-                            <div><span class="h6 mb-0 fw-bold">{{ $mntCotisation ?? 0 }}</span> <small
-                                    class="text-danger">Fcfa</small></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endcan
+
         @can('voir-total-pret-dashboard')
             <div class="col">
                 <div class="card">
@@ -91,7 +92,7 @@
                     <div class="card-body d-flex align-items-center">
                         <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-users fa-lg"></i></div>
                         <div class="flex-fill ms-3 text-truncate">
-                            <div class="small text-uppercase">Mutualistes</div>
+                            <div class="small text-uppercase">Membres</div>
                             <div><span class="h6 mb-0 fw-bold">{{ $nombrMutualiste ?? 0 }}</span></div>
                         </div>
                     </div>
@@ -107,6 +108,19 @@
                         <div class="flex-fill ms-3 text-truncate">
                             <div class="small text-uppercase">Administrateurs</div>
                             <div><span class="h6 mb-0 fw-bold">{{ $nombrAdmin ?? 0 }}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
+        @can('voir-total-adhesion-attente-dashboard')
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar rounded-circle no-thumbnail bg-light"><i class="fa fa-users fa-lg"></i></div>
+                        <div class="flex-fill ms-3 text-truncate">
+                            <div class="small text-uppercase">Adhesion Attente</div>
+                            <div><span class="h6 mb-0 fw-bold">{{ $inscrires ?? 0 }}</span></div>
                         </div>
                     </div>
                 </div>

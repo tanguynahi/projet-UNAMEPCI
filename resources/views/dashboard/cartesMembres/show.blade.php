@@ -349,6 +349,7 @@
     </style>
 @endpush
 
+
 @section('content')
     <div class="col-lg-9">
         <div class="rbt-dashboard-content bg-color-white rbt-shadow-box">
@@ -501,9 +502,9 @@
 
                                     <!-- Contact -->
                                     <div class="contact-info">
-                                        Siège : Abidjan Plateau<br>
-                                        Tél : 27 22 44 55 66<br>
-                                        www.unamepci.ci
+                                        Siège : {{ $parametre->adresse ?? 'Abidjan Plateau' }}<br>
+                                        Tél : {{ $parametre->contact_1 ?? $parametre->contact_2 ?? '27 22 44 55 66' }}<br>
+                                        www.unamepci.org.ci
                                     </div>
                                 </div>
                             </div>

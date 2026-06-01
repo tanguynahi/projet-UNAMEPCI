@@ -44,6 +44,10 @@ class Mutualiste extends Model
     {
         return $this->belongsTo(Ville::class);
     }
+    public function villePersonnel(): BelongsTo
+    {
+        return $this->belongsTo(Ville::class);
+    }
 
     public function corp(): BelongsTo
     {

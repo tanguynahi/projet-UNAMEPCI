@@ -1,4 +1,4 @@
-@extends('layouts.dashboard', ['title' => 'Liste des inscriptions', 'toolbar' => '_toolbar2', 'breadcrumb' => 'Inscriptions'])
+@extends('layouts.dashboard', ['title' => 'Liste des adherants', 'toolbar' => '_toolbar2', 'breadcrumb' => 'Adherants'])
 
 @push('css')
     <!-- Application vendor css url -->
@@ -10,7 +10,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="card-title mb-0">Liste des inscriptions</h6>
+                    <h6 class="card-title mb-0">Liste des adherants</h6>
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>

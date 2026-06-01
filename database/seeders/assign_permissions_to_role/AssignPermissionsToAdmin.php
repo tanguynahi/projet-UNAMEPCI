@@ -699,7 +699,12 @@ class AssignPermissionsToAdmin extends Seeder
         //     "voir-statistiques-par-periode-dashboard"
         // ];
 
-         $allPermissions = [
+        $allPermissions = [
+
+            "liste-statistiques",
+            "voir-total-adhesion-attente-dashboard",
+
+
             "liste-roles",
             "infos-roles",
             "ajouter-roles",
@@ -824,7 +829,7 @@ class AssignPermissionsToAdmin extends Seeder
             "restaurer-actualites",
 
 
-          "liste-documents",
+            "liste-documents",
             "infos-documents",
             "ajouter-documents",
             "modifier-documents",

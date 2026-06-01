@@ -247,7 +247,7 @@ class paiementApiController extends Controller
                     //         //     ]);
 
                     //         // if ($droit_adhesion->status == 1) {
-                    //         //     $sujet = "Paiement de droit d'adhésion sur votre compte MUTUALPAY";
+                    //         //     $sujet = "Paiement de droit d'adhésion sur votre compte UNAMEPCI";
                     //         //     $message = "
                     //         //         Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
                     //         //         C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue dans la communauté du Fond de Prévoyance Militaire !<br>
@@ -262,7 +262,7 @@ class paiementApiController extends Controller
                     //         //     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
 
                     //         //     $data = [
-                    //         //         'provider' => 'MUTUALPAY <info@mail-taseti.com>',
+                    //         //         'provider' => 'UNAMEPCI <info@mail-taseti.com>',
                     //         //         "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
                     //         //         "destination" => $mutualiste->email,
                     //         //         "sujet" => $sujet,
@@ -432,10 +432,10 @@ class paiementApiController extends Controller
                                     Logs::saveLog($module, $action);
                                 }
                                 if ($droit_adhesion->status == 1) {
-                                    $sujet = "Paiement de droit d'adhésion sur votre compte MAE-CI";
+                                    $sujet = "Paiement de droit d'adhésion sur votre compte UNAMEPCI";
                                     $message = "
                                     Bonjour M/Mme/Mlle:, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
-                                    C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue dans la Mutuelle des Auto-Ecoles de Côte d'Ivoire (MAE-CI) !<br>
+                                    C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue chez Union Nationale des Medecins Prives de Côte d'Ivoire (UNAMEPCI) !<br>
                                     Nous sommes super excités de vous avoir avec nous. Votre adhésion vous ouvre les portes à un monde de nouvelles opportunités, d'événements passionnants et de nombreuses ressources.<br>
                                     Prenez le temps d'explorer ce qui vous attend et faites-en le maximum !<br>
                                     Votre soutien signifie beaucoup pour nous, et nous sommes impatients de voir tout ce que vous accomplirez avec nous.<br>
@@ -446,7 +446,7 @@ class paiementApiController extends Controller
                                     $url = appelApiEmail();
                                     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                     $data = [
-                                        'provider' => 'MUTUALPAY <info@mail-taseti.com>',
+                                        'provider' => 'UNAMEPCI <info@mail-taseti.com>',
                                         "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
                                         "destination" => $mutualiste->email,
                                         "sujet" => $sujet,
@@ -465,11 +465,11 @@ class paiementApiController extends Controller
                                         Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
                                     }
                                 } else {
-                                    $sujet = "Paiement éffectuer pour le droit d'adhésion sur votre compte MAE-CI";
+                                    $sujet = "Paiement éffectuer pour le droit d'adhésion sur votre compte UNAMEPCI";
                                     $message = "
                                         Bonjour M/Mme/Mlle: " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
                                         C'est officiel, Vous avez effectué un paiement pour le droit d'adhésion ! 🎉<br>
-                                        Bienvenue dans la Mutuelle des Auto-Ecoles de Côte d'Ivoire (MAE-CI) !<br>
+                                        Bienvenue chez Union Nationale des Medecins Prives de Côte d'Ivoire (UNAMEPCI) !<br>
                                         Nous sommes super excités de vous avoir avec nous. Votre adhésion vous ouvre les portes à un monde de nouvelles opportunités, d'événements passionnants et de nombreuses ressources.<br>
                                         Prenez le temps d'explorer ce qui vous attend et faites-en le maximum !<br>
                                         Montant restant : " . formatMontant($droit_adhesion->montant ?? 0) . "<br>
@@ -481,7 +481,7 @@ class paiementApiController extends Controller
                                     $url = appelApiEmail();
                                     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                     $data = [
-                                        'provider' => 'MUTUALPAY <info@mail-taseti.com>',
+                                        'provider' => 'UNAMEPCI <info@mail-taseti.com>',
                                         "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
                                         "destination" => $mutualiste->email,
                                         "sujet" => $sujet,
@@ -507,7 +507,7 @@ class paiementApiController extends Controller
                                 $carteMembre = CarteMembre::where('mutualiste_id', $mutualisteId)->first();
                                 if (!empty($carteMembre)) {
                                     $carteMembre->status = 1;
-                                    $carteMembre->genere = 2;   
+                                    $carteMembre->genere = 2;
                                     $carteMembre->save();
 
                                     if ($carteMembre->status == 1) {
