@@ -20,6 +20,7 @@ use App\Models\ProjetMutualiste;
 use App\Models\STAuthTresorMoney;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Auth;
@@ -444,6 +445,7 @@ class DashboardController extends Controller
             // 'date_paiement' => 'required|date',
             'notes' => 'nullable|string',
         ]);
+        // dd($request->all());
 
         try {
             $typePaiementMap = [
@@ -503,6 +505,13 @@ class DashboardController extends Controller
 
                     switch ($type_paiement) {
                         case 'adhesion':
+                            // verification
+                            $verification = DroitAdhesion::where('mutualiste_id', $request->mutualiste_id)->first();
+
+                            if (!empty($verification) && $verification->status == 1) {
+                                toast("Ce mutualiste a déjà payé son droit d'adhésion.", "error");
+                                throw new \Exception("Ce mutualiste a déjà payé son droit d'adhésion.");
+                            }
                             // Comme dans l'ancien code qui fonctionne
                             $codePaiement = generateCode2('Ref');
 
@@ -697,6 +706,61 @@ class DashboardController extends Controller
                                 $action = "$Chaine";
                                 Logs::saveLog($module, $action);
                             }
+
+
+
+                            if (!empty($mutualiste) && empty($mutualiste->user_id) && ($mutualiste->status == 4)) {
+
+
+                                $lienDeValidation = URL::signedRoute(
+                                    'validation.inscription',
+                                    ['code' => $mutualiste->code]
+                                );
+                                Mutualiste::where('id', $mutualiste->id)->update([
+                                    'lien_email' => $lienDeValidation,
+                                ]);
+                                $sujet = "Validation de votre  compte UNAMEPCI";
+                                $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                                    Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                                    <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+                                    <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+                                    </div>
+                                        Merci d'utiliser notre plateforme! <br>
+                                    Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                ";
+                                $url = appelApiEmail();
+                                $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                $data = [
+                                    'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                    "key_rsa" => '',
+                                    "destination" => $mutualiste->email,
+                                    "sujet" => $sujet,
+                                    "message" => $template
+                                ];
+                                $retourAPI = Http::post($url, $data);
+                                $res = $retourAPI->json();
+                                if ($retourAPI->status() == 200) {
+                                    (int)$code = $res['status'];
+                                    if ($code != 200) {
+                                        $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                        // Log::ajoutLOG($message);
+                                        $module = "Envoyer de Mail a la creation Mutualiste";
+                                        $action = "Echec d'envoyer de mail  : $message";
+                                        Logs::saveLog($module, $action);
+                                    } else {
+                                        $module = "Envoyer de Mail a la creation Mutualiste";
+                                        $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                                        Logs::saveLog($module, $action);
+                                    }
+                                } else {
+                                    Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                                    $module = "Envoyer de Mail a la creation Mutualiste";
+                                    $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                                    Logs::saveLog($module, $action);
+                                }
+                            }
+
                             break;
 
                         case 'cotisation':
@@ -968,6 +1032,12 @@ class DashboardController extends Controller
 
                     switch ($type_paiement) {
                         case 'adhesion':
+                            $verification = DroitAdhesion::where('mutualiste_id', $request->mutualiste_id)->first();
+
+                            if (!empty($verification) && $verification->status == 1) {
+                                toast("Ce mutualiste a déjà payé son droit d'adhésion.", "error");
+                                throw new \Exception("Ce mutualiste a déjà payé son droit d'adhésion.");
+                            }
 
                             // Comme dans l'ancien code qui fonctionne
                             $codePaiement = generateCode2('Ref');
@@ -1163,6 +1233,61 @@ class DashboardController extends Controller
                                 $action = "$Chaine";
                                 Logs::saveLog($module, $action);
                             }
+
+
+                            $mutualiste = Mutualiste::where('id', $mutualisteId)->first();
+                            if (!empty($mutualiste) && empty($mutualiste->user_id)) {
+
+
+                                $lienDeValidation = URL::signedRoute(
+                                    'validation.inscription',
+                                    ['code' => $mutualiste->code]
+                                );
+                                Mutualiste::where('id', $mutualiste->id)->update([
+                                    'lien_email' => $lienDeValidation,
+                                ]);
+                                $sujet = "Validation de votre  compte UNAMEPCI";
+                                $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                                    Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                                    <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+                                    <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+                                    </div>
+                                        Merci d'utiliser notre plateforme! <br>
+                                    Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                ";
+                                $url = appelApiEmail();
+                                $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                $data = [
+                                    'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                    "key_rsa" => '',
+                                    "destination" => $mutualiste->email,
+                                    "sujet" => $sujet,
+                                    "message" => $template
+                                ];
+                                $retourAPI = Http::post($url, $data);
+                                $res = $retourAPI->json();
+                                if ($retourAPI->status() == 200) {
+                                    (int)$code = $res['status'];
+                                    if ($code != 200) {
+                                        $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                        // Log::ajoutLOG($message);
+                                        $module = "Envoyer de Mail a la creation Mutualiste";
+                                        $action = "Echec d'envoyer de mail  : $message";
+                                        Logs::saveLog($module, $action);
+                                    } else {
+                                        $module = "Envoyer de Mail a la creation Mutualiste";
+                                        $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                                        Logs::saveLog($module, $action);
+                                    }
+                                } else {
+                                    Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                                    $module = "Envoyer de Mail a la creation Mutualiste";
+                                    $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                                    Logs::saveLog($module, $action);
+                                }
+                            }
+
                             break;
 
                         case 'cotisation':
@@ -1448,10 +1573,22 @@ class DashboardController extends Controller
                             $mess = "<p>Erreur: $msg</p>";
                             return view('dashboard.pageErreurs.index', compact('code', 'mess'));
                         }
+                          if (empty($request->tresormoney_numero)) {
+                                toast("Veuillez entrer le numéro  pour le paiement.", "error");
+                                throw new \Exception("Veuillez entrer le numéro  pour le paiement.");
+                            }
 
                         // Traitement selon le type
                         switch ($type_paiement) {
                             case 'adhesion':
+
+                                $verification = DroitAdhesion::where('mutualiste_id', $request->mutualiste_id)->first();
+
+                                if (!empty($verification) && $verification->status == 1) {
+                                    toast("Ce mutualiste a déjà payé son droit d'adhésion.", "error");
+                                    throw new \Exception("Ce mutualiste a déjà payé son droit d'adhésion.");
+                                }
+
                                 // Comme dans l'ancien code qui fonctionne
                                 $infosProduits = new listeDesProduits();
                                 $infosProduits['LibelleProduit'] = "Droit d'adhesion";

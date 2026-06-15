@@ -11,12 +11,13 @@ use App\Models\DroitAdhesion;
 use App\Models\PaiementInitiale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StorePaiementRequest;
 use App\Http\Requests\UpdatePaiementRequest;
-use App\Notifications\MutualisteNotification;
 // use App\Notifications\MutualisteNotification;
+use App\Notifications\MutualisteNotification;
 
 class PaiementController extends Controller
 {

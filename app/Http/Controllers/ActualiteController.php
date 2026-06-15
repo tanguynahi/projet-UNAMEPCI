@@ -7,10 +7,10 @@ use App\Models\Actualite;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\StoreActualiteRequest;
 use App\Http\Requests\UpdateActualiteRequest;
-
 class ActualiteController extends Controller
 {
     /**

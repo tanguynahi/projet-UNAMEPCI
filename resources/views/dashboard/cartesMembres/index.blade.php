@@ -54,12 +54,12 @@
                                                 alt="profile-image">
 
                                             <span>{{ $cartemembre->mutualiste->civilite ?? '' }}
-                                                {{ $cartemembre->mutualiste->nom }}
-                                                {{ $cartemembre->mutualiste->prenom }}</span>
+                                                {{ $cartemembre->mutualiste->nom ?? '' }}
+                                                {{ $cartemembre->mutualiste->prenom ?? '' }}</span>
                                         </td>
 
-                                        <td>{{ $cartemembre->mutualiste->matricule }}</td>
-                                        <td>{{ $cartemembre->mutualiste->specialite->libelle }}</td>
+                                        <td>{{ $cartemembre->mutualiste->matricule  ?? ''}}</td>
+                                        <td>{{ $cartemembre->mutualiste->specialite->libelle ?? '' }}</td>
                                         <td>{{ formatPhoneNumber($cartemembre->mutualiste->contact, '-') ?? '' }}</td>
 
                                         <td>{!! $statusBadge !!}</td>

@@ -504,7 +504,7 @@
                                     <div class="contact-info">
                                         Siège : {{ $parametre->adresse ?? 'Abidjan Plateau' }}<br>
                                         Tél : {{ $parametre->contact_1 ?? $parametre->contact_2 ?? '27 22 44 55 66' }}<br>
-                                        www.unamepci.org.ci
+                                        www.unamepci.org
                                     </div>
                                 </div>
                             </div>

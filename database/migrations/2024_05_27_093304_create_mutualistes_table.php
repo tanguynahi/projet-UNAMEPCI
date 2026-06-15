@@ -102,7 +102,8 @@ return new class extends Migration
             $table->text("lien_email")->nullable();
             $table->text("message")->nullable();
             $table->text('code')->unique(); // code a envoyer dans le liens car l'id n'est pas securiser
-            $table->enum('status', [1, 2, 3])->default(2);
+            $table->text('codePlay')->nullable(); // code a envoyer dans le liens car l'id n'est pas securiser
+            $table->enum('status', [1, 2, 3,4])->default(2); // 4 en attent de paiement apres exportation de la liste des mutualistes pour le paiement en ligne
             $table->softDeletes();
             $table->timestamps();
         });

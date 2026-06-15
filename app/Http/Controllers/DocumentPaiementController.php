@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreDocumentPaiementRequest;
 use App\Http\Requests\UpdateDocumentPaiementRequest;
+use App\Http\Controllers\Controller;
 
 class DocumentPaiementController extends Controller
 {
@@ -114,7 +115,7 @@ class DocumentPaiementController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             toast('Une erreur s\'est produit, Veuillez réessayer.', 'error');
-           
+
             $module = "Module Document paiement";
             $action = "Une erreur s'est produite lors de l'enregistrement d'un paiement manuel pour un projet ";
             Logs::saveLog($module, $action);

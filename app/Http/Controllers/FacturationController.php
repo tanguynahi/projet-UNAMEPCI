@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\ProjetMutualiste;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreFacturationRequest;
 use App\Http\Requests\UpdateFacturationRequest;

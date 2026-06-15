@@ -321,15 +321,26 @@
                                             </a>
                                         @else
                                             <a class="rbt-btn rbt-switch-btn btn-xs" style="background-color:green;"
-                                                href="{{ route('connexion') }}">
+                                                href="{{ route('dashboard') }}">
+                                                {{-- <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                                </svg>
+                                                <span data-text="Se connecter">Se connecter</span> --}}
+
+
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                     fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                                     <path
                                                         d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                                                 </svg>
-                                                <span data-text="Se connecter">Se connecter</span>
+                                                <span
+                                                    data-text="{{ auth()->user()->administrateur->nom }} {{ auth()->user()->administrateur->prenom }}"
+                                                    style="color: white">{{ auth()->user()->administrateur->nom }}
+                                                    {{ auth()->user()->administrateur->prenom }}</span>
                                             </a>
-                                            <a class="rbt-btn rbt-switch-btn btn-xs mx-2"
+                                            {{-- <a class="rbt-btn rbt-switch-btn btn-xs mx-2"
                                                 style="background-color:green;" href="{{ route('inscriptionPage') }}">
                                                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20"
                                                     height="20" viewBox="0 0 512.000000 512.000000"
@@ -390,7 +401,7 @@
                                                     </g>
                                                 </svg>
                                                 <span data-text="S'inscrire">S'inscrire</span>
-                                            </a>
+                                            </a> --}}
                                         @endif
                                     @else
                                         <a class="rbt-btn rbt-switch-btn btn-xs" style="background-color:green;"
@@ -473,8 +484,8 @@
             </div>
         </div>
         <!-- End Header Top -->
-{{-- style="background-color: #1043b0;" --}}
-        <div class="rbt-header-wrapper header-space-betwween bg-color-white header-sticky" >
+        {{-- style="background-color: #1043b0;" --}}
+        <div class="rbt-header-wrapper header-space-betwween bg-color-white header-sticky">
             <div class="container-fluid">
                 <div class="mainbar-row rbt-navigation-start align-items-center">
 
@@ -644,13 +655,20 @@
                             </a> <br>
                         @else
                             <a class="rbt-btn btn-border-gradient radius-round btn-sm hover-transform-none w-100 justify-content-center text-center"
-                                href="{{ route('connexion') }}">
+                                href="{{ route('dashboard') }}">
+
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                                 </svg>
-                                <span data-text="Se connecter">Se connecter</span>
+                                <span
+                                    data-text="{{ auth()->user()->administrateur->nom }} {{ auth()->user()->administrateur->prenom }}"
+                                    style="color: black">{{ auth()->user()->administrateur->nom }}
+                                    {{ auth()->user()->administrateur->prenom }}</span>
                             </a>
+                            <br>
+                            <br>
+
                             <a class="rbt-btn btn-border-gradient radius-round btn-sm hover-transform-none w-100 justify-content-center text-center"
                                 style="background-color:green;" href="{{ route('inscriptionPage') }}">
                                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20" height="20"

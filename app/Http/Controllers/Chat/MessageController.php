@@ -190,8 +190,8 @@ class MessageController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'MUTUALPAY <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $mutualiste->email,
                 "sujet" => $sujet,
                 "message" => $template
@@ -304,8 +304,8 @@ class MessageController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'MUTUALPAY <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $emails,
                 "sujet" => $sujet,
                 "message" => $template
@@ -423,8 +423,8 @@ class MessageController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'MUTUALPAY <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $emails,
                 "sujet" => $sujet,
                 "message" => $template

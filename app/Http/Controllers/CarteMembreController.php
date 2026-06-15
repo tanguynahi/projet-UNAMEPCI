@@ -9,6 +9,7 @@ use App\Models\Parametre;
 use App\Models\Mutualiste;
 use App\Models\CarteMembre;
 use App\Models\Conversation;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCarteMembreRequest;
 use App\Http\Requests\UpdateCarteMembreRequest;
 

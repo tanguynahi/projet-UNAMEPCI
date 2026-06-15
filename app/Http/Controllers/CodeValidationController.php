@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CodeValidation;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCodeValidationRequest;
 use App\Http\Requests\UpdateCodeValidationRequest;
-use App\Models\CodeValidation;
 
 class CodeValidationController extends Controller
 {

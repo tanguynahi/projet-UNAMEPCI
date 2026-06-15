@@ -6,6 +6,7 @@ use App\Models\Logs;
 use App\Models\TypeDocument;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTypeDocumentRequest;
 use App\Http\Requests\UpdateTypeDocumentRequest;
 

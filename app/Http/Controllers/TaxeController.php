@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Logs;
 use App\Models\Taxe;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaxeRequest;
 use App\Http\Requests\UpdateTaxeRequest;
 

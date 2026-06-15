@@ -11,6 +11,7 @@ use App\Models\DroitAdhesion;
 use App\Models\PaiementInitiale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;

@@ -10,25 +10,34 @@ use App\Models\Corps;
 use App\Models\Grade;
 use App\Models\Ville;
 use App\Models\Compte;
+use App\Models\Paiement;
 use App\Models\Parametre;
 use App\Models\TypePiece;
 use App\Models\Cotisation;
 use App\Models\Mutualiste;
 use App\Models\Specialite;
 use App\Models\CarteMembre;
+use App\Models\Facturation;
 use Illuminate\Http\Request;
 use App\Models\DroitAdhesion;
 use App\Models\FormeJuridique;
 use Illuminate\Support\Carbon;
+use App\Models\listeDesProduits;
+use App\Models\PaiementInitiale;
+use App\Models\STAuthTresorMoney;
+use App\Imports\MutualistesImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\DemandeAccompagnement;
 use Illuminate\Auth\Events\Validated;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
@@ -48,7 +57,7 @@ class MutualisteController extends Controller
     public function index()
     {
 
-        $mutualistes = Mutualiste::orderBy('created_at', 'DESC')->get();
+        $mutualistes = Mutualiste::where('status', '<>', 4)->orderBy('created_at', 'DESC')->get();
         // dd($nom);
         $villes = Ville::orderBy('libelle', 'ASC')->get();
 
@@ -226,8 +235,8 @@ class MutualisteController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $mutualiste->email,
                 "sujet" => $sujet,
                 "message" => $template
@@ -1173,8 +1182,8 @@ class MutualisteController extends Controller
 
             // Données API
             $data = [
-                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                'key_rsa' => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                'key_rsa' => '',
                 'destination' => $mutualiste->email,
                 'sujet' => $sujet,
                 'message' => $template
@@ -1300,5 +1309,778 @@ class MutualisteController extends Controller
 
             return redirect()->back();
         }
+    }
+
+
+
+    public function importerListeMutualistes()
+    {
+        $taxeMontant = Taxe::where('id', 1)->value('montant') ?? 0;
+        // dd($taxeMontant);
+        $module = "Module Mutualiste ";
+        $action = " a affiché la page pour importer des données ";
+        Logs::saveLog($module, $action);
+
+        return view('dashboard.mutualistes.importer', compact('taxeMontant'));
+    }
+
+
+
+
+
+
+
+
+    public function initier(Request $request)
+    {
+        // Validation (on retire 'montant' si vous voulez le calcul auto)
+        $validator = Validator::make($request->all(), [
+            // 'montant' => 'required|numeric|min:1000',  // Plus nécessaire si calcul auto
+            'nombre_membres'     => 'required|integer|min:1',
+            'description'        => 'nullable|string|max:255',
+            'type_paiement'      => 'required|string|in:adhesion',
+            'tresormoney_numero' => 'required|string|size:10',
+            'fichier'            => 'required|mimes:xlsx,xls',
+        ]);
+        // dd($request->all());
+
+        if ($validator->fails()) {
+            toast("Veuillez charger un fichier valide svp!", "error");
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $isAjax = $request->ajax() || $request->wantsJson();
+
+        try {
+            DB::beginTransaction();
+
+            // ---------- Lecture fichier ----------
+            $file = $request->file('fichier');
+            $rows = Excel::toArray([], $file);
+            if (empty($rows) || empty($rows[0])) {
+                throw new \Exception("Le fichier est vide ou illisible.");
+            }
+            $sheet = $rows[0];
+            if (count($sheet) < 2) {
+                throw new \Exception("Le fichier ne contient pas assez de lignes (en-tête + données).");
+            }
+
+            // Normalisation de l'en-tête
+            $header = array_shift($sheet);
+            $header = array_map(function ($cell) {
+                return trim(mb_strtolower($cell));
+            }, $header);
+
+            // Alias des colonnes autorisées
+            $requiredColumns = [
+                'numero_matricule' => ['numero_matricule', 'matricule', 'num_matricule'],
+                'noms'             => ['noms', 'nom', 'last_name', 'nom_famille'],
+                'prenoms'          => ['prenoms', 'prenom', 'first_name'],
+                'contact'          => ['contact', 'telephone', 'tel', 'phone', 'mobile'],
+                'email'            => ['email', 'courriel', 'mail'],
+            ];
+
+            $colIndex = [];
+            $missing = [];
+            foreach ($requiredColumns as $field => $aliases) {
+                $found = false;
+                foreach ($aliases as $alias) {
+                    $idx = array_search($alias, $header);
+                    if ($idx !== false) {
+                        $colIndex[$field] = $idx;
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $missing[] = $field . ' (alias : ' . implode(', ', $aliases) . ')';
+                }
+            }
+            if (!empty($missing)) {
+                throw new \Exception("Colonnes manquantes ou mal nommées dans le fichier : " . implode(', ', $missing));
+            }
+
+            $codePaiement = generateCode2('Ref');
+            $mutualistesCrees = [];
+            $lignesIgnorees = 0;
+            $doublonsExistants = 0;
+
+            // ---------- Parcours des lignes ----------
+            foreach ($sheet as $rowIndex => $row) {
+                $matricule = trim($row[$colIndex['numero_matricule']] ?? '');
+                $nom       = trim($row[$colIndex['noms']] ?? '');
+                $prenom    = trim($row[$colIndex['prenoms']] ?? '');
+                $contact   = trim($row[$colIndex['contact']] ?? '');
+                $email     = trim($row[$colIndex['email']] ?? '');
+
+                if (empty($matricule) || empty($nom) || empty($prenom) || empty($contact) || empty($email)) {
+                    $lignesIgnorees++;
+                    continue;
+                }
+
+                $contactClean = cleanPhoneNumber($contact);
+
+                // Vérifier doublon dans BDD
+                $existant = Mutualiste::where('matricule', $matricule)
+                    ->orWhere('contact', $contactClean)
+                    ->exists();
+                if ($existant) {
+                    $doublonsExistants++;
+                    continue;
+                }
+
+                // Création
+                $mutualiste = Mutualiste::create([
+                    'matricule' => $matricule,
+                    'nom'       => $nom,
+                    'prenom'    => $prenom,
+                    'contact'   => $contactClean,
+                    'email'     => $email,
+                    'code'      => generateUniqueCode(10),
+                    'codePlay'      => $codePaiement,
+                    'status'    => 4,
+                ]);
+                $mutualistesCrees[] = $mutualiste->id;
+
+                Compte::create([
+                    'type_compte_id' => 2,
+                    'mutualiste_id'  => $mutualiste->id,
+                    'solde'          => 0,
+                    'quota'          => 2000000,
+                ]);
+
+                $taxe = Taxe::where('id', 1)->first();
+                DroitAdhesion::create([
+                    'administrateur_id' => auth()->user()->administrateur->id,
+                    'mutualiste_id'     => $mutualiste->id,
+                    'type_paiement_id'  => 1,
+                    'libelle'           => $taxe->libelle ?? "Droit d'adhésion",
+                    'montant'           => $taxe->montant ?? 10000,
+                    'status'            => 2,
+                ]);
+
+                CarteMembre::create([
+                    'administrateur_id' => auth()->user()->administrateur->id,
+                    'mutualiste_id'     => $mutualiste->id,
+                    'type_paiement_id'  => 5,
+                    'libelle'           => 'Taxe Carte Membre',
+                    'status'            => 2,
+                ]);
+
+
+
+
+
+                /// envoyer de mail
+
+
+                // $lienDeValidation = URL::signedRoute(
+                //     'validation.inscription',
+                //     ['code' => $mutualiste->code]
+                // );
+                // Mutualiste::where('id', $mutualiste->id)->update([
+                //     'lien_email' => $lienDeValidation,
+                // ]);
+                // $sujet = "Validation de votre  compte UNAMEPCI";
+                // $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                //         Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                //         <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+                //         <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+                //         </div>
+                //                Merci d'utiliser notre plateforme! <br>
+                //         Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                //                 ";
+                // $url = appelApiEmail();
+                // $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                // $data = [
+                //     'provider' => '',
+                //     "key_rsa" => '',
+                //     "destination" => $mutualiste->email,
+                //     "sujet" => $sujet,
+                //     "message" => $template
+                // ];
+                // $retourAPI = Http::post($url, $data);
+                // $res = $retourAPI->json();
+                // if ($retourAPI->status() == 200) {
+                //     (int)$code = $res['status'];
+                //     if ($code != 200) {
+                //         $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                //         // Log::ajoutLOG($message);
+                //         $module = "Envoyer de Mail a la creation Mutualiste";
+                //         $action = "Echec d'envoyer de mail  : $message";
+                //         Logs::saveLog($module, $action);
+                //     } else {
+                //         $module = "Envoyer de Mail a la creation Mutualiste";
+                //         $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                //         Logs::saveLog($module, $action);
+                //     }
+                // } else {
+                //     Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                //     $module = "Envoyer de Mail a la creation Mutualiste";
+                //     $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                //     Logs::saveLog($module, $action);
+                // }
+            }
+
+            if (empty($mutualistesCrees)) {
+                throw new \Exception("Aucun membre n'a pu être importé. Vérifiez les données (doublons ou champs vides).");
+            }
+
+            $nbMembres = count($mutualistesCrees) ?? $request->input('nombre_membres');
+
+            $taxes = Taxe::where('id', 1)->first();
+
+            $montantTotal = $nbMembres * ($taxes->montant ?? 10000); // 10 000 FCFA par membre
+
+            // ---------- Paiement TresorMoney ----------
+            $auth = new STAuthTresorMoney();
+            $auth->Key    = env('KEY_AUTH_TREMO');
+            $auth->Secret = env('SECRET_AUTH_TREMO');
+
+            Logs::saveLog("Module Paiement", "debut authentification tresormoney");
+            $responseReq = Http::post(env('URL_AUTHENTIF'), $auth);
+            $retourauth  = json_decode($responseReq->body());
+            Logs::saveLog("Module Paiement", "retour authentification: " . $responseReq->body());
+
+            if ($responseReq->status() !== 200 || ($retourauth->code ?? 0) !== 200) {
+                $msg = $retourauth->sMessage ?? 'Erreur d\'authentification';
+                Logs::saveLog("Module Paiement", "Erreur auth: $msg");
+                DB::rollBack();
+                if ($isAjax) return response()->json(['success' => false, 'message' => $msg], 422);
+                return view('dashboard.pageErreurs.index', ['code' => $retourauth->code ?? 500, 'mess' => "<p>$msg</p>"]);
+            }
+
+            // Préparation des produits
+            $infosProduits = new listeDesProduits();
+            $infosProduits->LibelleProduit       = "Droit d'adhesion (x$nbMembres)";
+            $infosProduits->Montant              = $montantTotal;
+            $infosProduits->nEstUnServicePrive   = 0;
+            $infosProduits->TypeProduit          = 1;
+            $infosProduits->Quantite             = 1;
+            $infosProduits->IdProduit            = 0;
+            $infosProduits->Reference_code_Produit = "";
+
+            $us = auth()->user()->administrateur;
+
+            $paiementinit = PaiementInitiale::create([
+                'code_paiement'    => $codePaiement,
+                'type_paiement_id' => 1,
+                'montant_initial'  => $montantTotal,
+                'contact_paiement' => cleanPhoneNumber($request->tresormoney_numero),
+            ]);
+
+            // Lien pivot (à adapter selon votre schéma)
+            // foreach ($mutualistesCrees as $mutId) {
+            //     DB::table('paiement_initial_mutualiste')->insert([
+            //         'paiement_initial_id' => $paiementinit->id,
+            //         'mutualiste_id'       => $mutId,
+            //         'created_at'          => now(),
+            //     ]);
+            // }
+
+            $infosbeneficiaire = [
+                'Credentiel' => env('HUB_KEY_TREMO_BMI'),
+                'produits'   => [$infosProduits]
+            ];
+
+            $infospaiement = [
+                'Url_callback'   => urlCallbackLienAdministrateurMembre(),
+                'Nom_usager'     => $us->nom ?? 'xxxxxxx',
+                'Prenom_usager'  => $us->prenom ?? 'xxxxxxx',
+                'code_paiement'  => $codePaiement,
+                'Email'          => $us->email ?? 'administrateur@gmail.com',
+                'Telephone'      => $paiementinit->contact_paiement,
+                'Additif'        => $codePaiement,
+                'Token'          => $retourauth->Token,
+                'TypeOperation'  => 1,
+                'TCredentiel'    => [$infosbeneficiaire],
+            ];
+
+            Logs::saveLog("Module Paiement", "debut initiation transaction: " . json_encode($infospaiement));
+            $responseReq = Http::post(env('URL_INITIATE'), $infospaiement);
+            $retourReq = json_decode($responseReq->body());
+            Logs::saveLog("Module Paiement", "retour initiation: " . $responseReq->body());
+
+            if ($responseReq->status() !== 200) {
+                $msg = "Echec d'initiation transaction TresorMoney, impossible de joindre l'hôte.";
+                Logs::saveLog("Module Paiement", $msg);
+                DB::rollBack();
+                if ($isAjax) return response()->json(['success' => false, 'message' => $msg], 500);
+                return view('dashboard.pageErreurs.index', ['code' => $responseReq->status(), 'mess' => "<p>$msg</p>"]);
+            }
+
+            if (($retourReq->code ?? 0) !== 200) {
+                $msg = $retourReq->cleretour ?? 'Erreur d\'initiation';
+                Logs::saveLog("Module Paiement", "Erreur initiation: $msg");
+                DB::rollBack();
+                if ($isAjax) return response()->json(['success' => false, 'message' => $msg], 422);
+                return view('dashboard.pageErreurs.index', ['code' => $retourReq->code ?? 500, 'mess' => "<p>$msg</p>"]);
+            }
+
+            $message = "L'opération a été initiée sur le numéro " . $paiementinit->contact_paiement . ". " . ($retourReq->cleretour ?? '');
+
+            DB::commit();
+
+            if ($isAjax) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'code_paiement' => $codePaiement,
+                    'nb_membres_importes' => $nbMembres,
+                    'redirect' => route('adhesionRelance', ['codePaiement' => $codePaiement, 'ind' => 1])
+                ]);
+            }
+
+            return redirect()->route('adhesionRelance', ['codePaiement' => $codePaiement, 'ind' => 1])
+                ->with('success', $message . " ($nbMembres membres importés)");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erreur paiement en ligne: ' . $e->getMessage());
+            Logs::saveLog("Module Paiement", "Exception: " . $e->getMessage());
+
+            if ($isAjax) {
+                return response()->json(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()], 500);
+            }
+
+            toast("Erreur lors du paiement en ligne : " . $e->getMessage(), "error");
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+
+    public function resulPayRelance($codePaiement, $ind)
+    {
+        $paiementinit = PaiementInitiale::where('code_paiement', $codePaiement)->first();
+        // $contCoti = NbreCotisation();
+
+        // dd($codePaiement);
+        if (!empty($paiementinit)) {
+            if ($paiementinit->status == 1) {
+                $code = 200;
+
+                if ($ind > 10) {
+                    $ind = 16;
+                    $mess = 'La reponse de traitement de votre transaction a mit plus de temps que prévu, ' .
+                        'mais elle a été valideé avec succès';
+                } else {
+                    $ind = 16;
+                    $mess = 'Paiement éffectué avec succès';
+                }
+            } else {
+
+                if ($ind < 15) {
+                    $code = 203;
+                    $comp = 15 - $ind;
+                    $mess = "L operation a ete initiee sur le numero " . $paiementinit->contact_paiement . " La transaction a été initiée. Veuillez la valider sur le numéro en composant \n *760#, option 2 'Paiement-TresorPay' puis 2 'Valider un paiement' ou par l’application mobile TresorMoney dans un délais de $comp min ";
+
+
+                    if ($ind == 14) {
+                        $code = 201;
+                        $mess = 'Votre transaction a mit plus de temps que prévu, ' .
+                            'elle a donc été annulée. Si votre compte a été débité, nous vous prions' .
+                            ' de contacter le support avec la reference: ' . $paiementinit->code_paiement;
+                    }
+                } else {
+                    $code = 201;
+
+                    $mess = ' Paiement échoué. Si votre compte a été débité, nous vous prions' .
+                        ' de contacter le support avec la reference: ' . $paiementinit->code_paiement;
+                }
+            }
+            $module = "Module Espace administrateur ";
+            $action = "a consulte  la page resultat paiement et voici le code du paiement : $code";
+            Logs::saveLog($module, $action);
+            return view('dashboard.mutualistes.replay', compact('paiementinit', 'mess', 'code',  'ind', 'codePaiement'));
+        } else {
+            $code = 404;
+            $mess = "<h3 class='sub-title'>Page Introuvable</h3><br>
+            <p>Une erreur est survenue, veuillez réessayer plus tard. #EDOCTNEME</p>";
+            $module = "Module Espace administrateur ";
+            $action = "Une erreur s'est produit sur la page resultat paiement car le paiement n'existe pas code Paiement : $codePaiement ";
+
+            Logs::saveLog($module, $action);
+            return view('dashboard.pageErreurs.index', compact('code', 'mess'));
+        }
+    }
+
+
+
+
+
+
+
+    public function verifierDoublons(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'fichier' => 'required|mimes:xlsx,xls',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fichier invalide.',
+            ], 422);
+        }
+
+        try {
+            $data = Excel::toCollection(new MutualistesImport(), $request->file('fichier'));
+
+            if ($data->isEmpty() || $data->first()->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Le fichier est vide.',
+                ], 422);
+            }
+
+            $rows = $data->first();
+            $resultats = [
+                'total' => 0,
+                'nouveaux' => 0,
+                'existants' => 0,
+                'details' => [],
+                'lignes_existantes' => []
+            ];
+
+            // 🔍 DEBUG : Voir la structure exacte
+            if ($rows->isNotEmpty()) {
+                $premiereLigne = $rows->first();
+                Log::info('=== DEBUG API VERIFICATION ===');
+                Log::info('Type de la ligne: ' . gettype($premiereLigne));
+                if (is_object($premiereLigne)) {
+                    Log::info('Classe: ' . get_class($premiereLigne));
+                    Log::info('Méthodes disponibles: ' . implode(', ', get_class_methods($premiereLigne)));
+                }
+                Log::info('Valeurs brutes:', (array) $premiereLigne);
+            }
+
+            foreach ($rows as $lineNumber => $row) {
+                $resultats['total']++;
+
+                // Convertir en tableau proprement
+                $rowArray = $this->rowToArray($row);
+
+                // Récupérer les valeurs
+                $matricule = $this->getValue($rowArray, ['numero_matricule', 'matricule']);
+                $contact   = $this->getValue($rowArray, ['contact']);
+                $email     = $this->getValue($rowArray, ['email']);
+                $nom       = $this->getValue($rowArray, ['noms', 'nom']);
+                $prenom    = $this->getValue($rowArray, ['prenoms', 'prenom']);
+
+                // Si toujours null, essayer par index numérique
+                if (empty($matricule) && empty($nom)) {
+                    $values = array_values($rowArray);
+                    $matricule = $values[0] ?? null;
+                    $nom       = $values[1] ?? null;
+                    $prenom    = $values[2] ?? null;
+                    $contact   = $values[3] ?? null;
+                    $email     = $values[4] ?? null;
+                }
+
+                // S'assurer que ce sont des strings
+                $matricule = is_string($matricule) ? trim($matricule) : (string) $matricule;
+                $nom = is_string($nom) ? trim($nom) : (string) $nom;
+                $prenom = is_string($prenom) ? trim($prenom) : (string) $prenom;
+                $contact = is_string($contact) ? trim($contact) : (string) $contact;
+                $email = is_string($email) ? trim($email) : (string) $email;
+
+                // Nettoyer le contact
+                $contactClean = $this->cleanPhoneNumber($contact);
+
+                // Vérifier si le matricule existe déjà
+                $existeParMatricule = !empty($matricule) ? Mutualiste::where('matricule', $matricule)->exists() : false;
+
+                // Vérifier si le contact existe déjà
+                $existeParContact = !empty($contactClean) ? Mutualiste::where('contact', $contactClean)->exists() : false;
+
+                // Vérifier si l'email existe déjà
+                $existeParEmail = !empty($email) ? Mutualiste::where('email', $email)->exists() : false;
+
+                $raisons = [];
+                if ($existeParMatricule) $raisons[] = 'matricule';
+                if ($existeParContact) $raisons[] = 'contact';
+                if ($existeParEmail) $raisons[] = 'email';
+
+                $fullName = trim($nom . ' ' . $prenom) ?: 'Nom inconnu';
+
+                if (!empty($raisons)) {
+                    $resultats['existants']++;
+                    $resultats['lignes_existantes'][] = [
+                        'ligne' => $lineNumber + 2,
+                        'matricule' => $matricule ?: 'N/A',
+                        'nom' => $fullName,
+                        'contact' => $contact,
+                        'email' => $email,
+                        'raisons' => $raisons
+                    ];
+                } else {
+                    $resultats['nouveaux']++;
+                    $resultats['details'][] = [
+                        'matricule' => $matricule ?: 'N/A',
+                        'nom' => $fullName
+                    ];
+                }
+            }
+
+            Log::info("Résultat vérification - Total: {$resultats['total']}, Nouveaux: {$resultats['nouveaux']}, Existants: {$resultats['existants']}");
+
+            return response()->json([
+                'success' => true,
+                'data' => $resultats
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la vérification: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la vérification : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+
+    // public function verifierDoublons(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'fichier' => 'required|mimes:xlsx,xls',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Fichier invalide.',
+    //         ], 422);
+    //     }
+
+    //     try {
+    //         $data = Excel::toCollection(new MutualistesImport(), $request->file('fichier'));
+
+    //         if ($data->isEmpty() || $data->first()->isEmpty()) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Le fichier est vide.',
+    //             ], 422);
+    //         }
+
+    //         $rows = $data->first();
+
+    //         // Récupérer le montant de la taxe depuis la base
+    //         $taxe = Taxe::where('id', 1)->first();
+    //         $taxeMontant = $taxe->montant ?? 10000;
+
+    //         $resultats = [
+    //             'total' => 0,
+    //             'nouveaux' => 0,
+    //             'existants' => 0,
+    //             'taxe_montant' => $taxeMontant,
+    //             'montant_total' => 0,
+    //             'details_nouveaux' => [],
+    //             'lignes_existantes' => []
+    //         ];
+
+    //         foreach ($rows as $lineNumber => $row) {
+    //             // Convertir proprement en tableau simple
+    //             $rowArray = [];
+    //             foreach ((array) $row as $key => $value) {
+    //                 // Nettoyer la clé
+    //                 $cleanKey = str_replace("\0*\0", '', $key);
+    //                 $cleanKey = str_replace("\0", '', $cleanKey);
+
+    //                 // Extraire la valeur scalaire
+    //                 if (is_object($value)) {
+    //                     if (method_exists($value, '__toString')) {
+    //                         $rowArray[$cleanKey] = (string) $value;
+    //                     } elseif (method_exists($value, 'getValue')) {
+    //                         $rowArray[$cleanKey] = (string) $value->getValue();
+    //                     } else {
+    //                         $rowArray[$cleanKey] = json_encode($value);
+    //                     }
+    //                 } elseif (is_array($value)) {
+    //                     $rowArray[$cleanKey] = implode(', ', $value);
+    //                 } else {
+    //                     $rowArray[$cleanKey] = (string) $value;
+    //                 }
+    //             }
+
+    //             $resultats['total']++;
+
+    //             // Récupérer les valeurs
+    //             $matricule = $rowArray['numero_matricule'] ?? $rowArray['matricule'] ?? '';
+    //             $contact   = $rowArray['contact'] ?? '';
+    //             $email     = $rowArray['email'] ?? '';
+    //             $nom       = $rowArray['noms'] ?? $rowArray['nom'] ?? '';
+    //             $prenom    = $rowArray['prenoms'] ?? $rowArray['prenom'] ?? '';
+
+    //             // Nettoyer
+    //             $matricule = trim($matricule);
+    //             $contact = trim($contact);
+    //             $email = trim($email);
+    //             $nom = trim($nom);
+    //             $prenom = trim($prenom);
+
+    //             // Nettoyer le contact (enlever préfixe 225, espaces, etc.)
+    //             $contactClean = preg_replace('/[^0-9]/', '', $contact);
+    //             if (strlen($contactClean) > 10 && substr($contactClean, 0, 3) === '225') {
+    //                 $contactClean = substr($contactClean, 3);
+    //             }
+
+    //             // Vérifier les doublons en base
+    //             $raisons = [];
+
+    //             if (!empty($matricule)) {
+    //                 if (Mutualiste::where('matricule', $matricule)->exists()) {
+    //                     $raisons[] = 'matricule';
+    //                 }
+    //             }
+
+    //             if (!empty($contactClean)) {
+    //                 if (Mutualiste::where('contact', $contactClean)->exists()) {
+    //                     $raisons[] = 'contact';
+    //                 }
+    //             }
+
+    //             if (!empty($email)) {
+    //                 if (Mutualiste::where('email', $email)->exists()) {
+    //                     $raisons[] = 'email';
+    //                 }
+    //             }
+
+    //             $fullName = trim($nom . ' ' . $prenom) ?: 'Nom inconnu';
+
+    //             if (!empty($raisons)) {
+    //                 $resultats['existants']++;
+    //                 $resultats['lignes_existantes'][] = [
+    //                     'ligne' => $lineNumber + 2,
+    //                     'matricule' => $matricule ?: 'N/A',
+    //                     'nom' => $fullName,
+    //                     'contact' => $contact,
+    //                     'email' => $email,
+    //                     'raisons' => $raisons
+    //                 ];
+    //             } else {
+    //                 $resultats['nouveaux']++;
+    //                 $resultats['details_nouveaux'][] = [
+    //                     'matricule' => $matricule ?: 'N/A',
+    //                     'nom' => $fullName
+    //                 ];
+    //             }
+    //         }
+
+    //         // Calculer le montant total (nouveaux * taxe_montant)
+    //         $resultats['montant_total'] = $resultats['nouveaux'] * $taxeMontant;
+
+    //         Log::info("Résultat vérification - Total: {$resultats['total']}, Nouveaux: {$resultats['nouveaux']}, Existants: {$resultats['existants']}");
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $resultats
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Erreur lors de la vérification: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Erreur : ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
+    /**
+     * Convertit une ligne Excel en tableau propre
+     */
+    private function rowToArray($row)
+    {
+        if (is_array($row)) {
+            $result = [];
+            foreach ($row as $key => $value) {
+                $result[$key] = $this->extractValue($value);
+            }
+            return $result;
+        }
+
+        if (is_object($row)) {
+            // Essaye d'abord toArray()
+            if (method_exists($row, 'toArray')) {
+                $array = $row->toArray();
+                $result = [];
+                foreach ($array as $key => $value) {
+                    $result[$key] = $this->extractValue($value);
+                }
+                return $result;
+            }
+
+            // Sinon, caste en array
+            $array = (array) $row;
+            $result = [];
+            foreach ($array as $key => $value) {
+                $key = str_replace("\0*\0", '', $key);
+                $key = str_replace("\0", '', $key);
+                $result[$key] = $this->extractValue($value);
+            }
+            return $result;
+        }
+
+        return (array) $row;
+    }
+
+    /**
+     * Extrait la valeur scalaire d'un objet/cellule Excel
+     */
+    private function extractValue($value)
+    {
+        if (is_null($value)) return '';
+
+        if (is_string($value) || is_numeric($value) || is_bool($value)) {
+            return (string) $value;
+        }
+
+        if (is_object($value)) {
+            // Si c'est un objet Cell de Maatwebsite
+            if (method_exists($value, '__toString')) {
+                return (string) $value;
+            }
+            if (method_exists($value, 'getValue')) {
+                return (string) $value->getValue();
+            }
+            if (method_exists($value, 'value')) {
+                return (string) $value->value();
+            }
+
+            // Dernier recours
+            $json = json_encode($value);
+            if ($json && $json !== 'null') {
+                return $json;
+            }
+
+            return '';
+        }
+
+        if (is_array($value)) {
+            return implode(', ', array_map([$this, 'extractValue'], $value));
+        }
+
+        return (string) $value;
+    }
+
+    /**
+     * Récupère une valeur depuis un tableau avec plusieurs clés possibles
+     */
+    private function getValue($array, $keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($array[$key]) && !empty($array[$key])) {
+                return $array[$key];
+            }
+        }
+        return null;
+    }
+
+    private function cleanPhoneNumber($phone)
+    {
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        if (strlen($phone) > 10 && substr($phone, 0, 3) === '225') {
+            $phone = substr($phone, 3);
+        }
+        return $phone;
     }
 }

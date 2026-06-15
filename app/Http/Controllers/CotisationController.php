@@ -7,6 +7,7 @@ use App\Models\Direction;
 use App\Models\Cotisation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCotisationRequest;
 use App\Http\Requests\UpdateCotisationRequest;
 

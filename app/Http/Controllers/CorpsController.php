@@ -6,6 +6,7 @@ use App\Models\Logs;
 use App\Models\Corps;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCorpsRequest;
 use App\Http\Requests\UpdateCorpsRequest;
 

@@ -12,6 +12,7 @@ use App\Models\DroitAdhesion;
 use App\Models\PaiementInitiale;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Http;
@@ -87,8 +88,8 @@ class paiementApiController extends Controller
                                 $url = appelApiEmail();
                                 $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                 $data = [
-                                    'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                    "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                    'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                    "key_rsa" => '',
                                     "destination" => $mutualiste->email,
                                     "sujet" => $sujet,
                                     "message" => $template
@@ -208,8 +209,8 @@ class paiementApiController extends Controller
                                 $url = appelApiEmail();
                                 $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                 $data = [
-                                    'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                    "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                    'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                    "key_rsa" => '',
                                     "destination" => $mutualiste->email,
                                     "sujet" => $sujet,
                                     "message" => $template
@@ -262,8 +263,8 @@ class paiementApiController extends Controller
                     //         //     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
 
                     //         //     $data = [
-                    //         //         'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                    //         //         "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                    //         //         'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                    //         //         "key_rsa" => '',
                     //         //         "destination" => $mutualiste->email,
                     //         //         "sujet" => $sujet,
                     //         //         "message" => $template
@@ -446,8 +447,8 @@ class paiementApiController extends Controller
                                     $url = appelApiEmail();
                                     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                     $data = [
-                                        'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                        "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                        'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                        "key_rsa" => '',
                                         "destination" => $mutualiste->email,
                                         "sujet" => $sujet,
                                         "message" => $template
@@ -481,8 +482,8 @@ class paiementApiController extends Controller
                                     $url = appelApiEmail();
                                     $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                     $data = [
-                                        'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                        "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                        'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                        "key_rsa" => '',
                                         "destination" => $mutualiste->email,
                                         "sujet" => $sujet,
                                         "message" => $template
@@ -528,8 +529,8 @@ class paiementApiController extends Controller
                                         $url = appelApiEmail();
                                         $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                         $data = [
-                                            'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                            "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                            'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                            "key_rsa" => '',
                                             "destination" => $mutualiste->email,
                                             "sujet" => $sujet,
                                             "message" => $template
@@ -552,6 +553,60 @@ class paiementApiController extends Controller
                                     $module = " paiement ";
                                     $action = "$Chaine";
                                     Logs::saveLog($module, $action);
+                                }
+
+
+                                $mutualiste = Mutualiste::where('id', $mutualisteId)->first();
+                                if (!empty($mutualiste) && empty($mutualiste->user_id) && ($mutualiste->status == 4)) {
+
+
+                                    $lienDeValidation = URL::signedRoute(
+                                        'validation.inscription',
+                                        ['code' => $mutualiste->code]
+                                    );
+                                    Mutualiste::where('id', $mutualiste->id)->update([
+                                        'lien_email' => $lienDeValidation,
+                                    ]);
+                                    $sujet = "Validation de votre  compte UNAMEPCI";
+                                    $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                                    Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                                    <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+                                    <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+                                    </div>
+                                        Merci d'utiliser notre plateforme! <br>
+                                    Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                ";
+                                    $url = appelApiEmail();
+                                    $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                    $data = [
+                                        'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                        "key_rsa" => '',
+                                        "destination" => $mutualiste->email,
+                                        "sujet" => $sujet,
+                                        "message" => $template
+                                    ];
+                                    $retourAPI = Http::post($url, $data);
+                                    $res = $retourAPI->json();
+                                    if ($retourAPI->status() == 200) {
+                                        (int)$code = $res['status'];
+                                        if ($code != 200) {
+                                            $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                            // Log::ajoutLOG($message);
+                                            $module = "Envoyer de Mail a la creation Mutualiste";
+                                            $action = "Echec d'envoyer de mail  : $message";
+                                            Logs::saveLog($module, $action);
+                                        } else {
+                                            $module = "Envoyer de Mail a la creation Mutualiste";
+                                            $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                                            Logs::saveLog($module, $action);
+                                        }
+                                    } else {
+                                        Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                                        $module = "Envoyer de Mail a la creation Mutualiste";
+                                        $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                                        Logs::saveLog($module, $action);
+                                    }
                                 }
 
 
@@ -666,8 +721,8 @@ class paiementApiController extends Controller
                                         $url = appelApiEmail();
                                         $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
                                         $data = [
-                                            'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                                            "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                                            'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                            "key_rsa" => '',
                                             "destination" => $mutualiste->email,
                                             "sujet" => $sujet,
                                             "message" => $template
@@ -701,6 +756,335 @@ class paiementApiController extends Controller
                                 $action = "$Chaine";
                                 Logs::saveLog($module, $action);
                                 break;
+                        }
+                    } else {
+                        // paiement echouer
+                        $paiementinit->status = 3; //
+                        $paiementinit->reference = $request->Details[0]['referenceePaiement'];
+                    }
+                    $paiementinit->save();
+                    $Chaine .= "\n//// retour Paiement effectue '";
+                    $module = " paiement Retour API";
+                    $action = "$Chaine";
+                    Logs::saveLog($module, $action);
+                } else {
+                    $Chaine .= "\n//// verification code paiement:#" . $codePaiement . "# introuvable ou déjà notifié dans 'paiement_en_attentes'";
+                    $module = " paiement Retour API";
+                    $action = "$Chaine";
+                    Logs::saveLog($module, $action);
+                }
+            }
+        } catch (\Throwable $e) {
+            $Chaine .= "\n/// Une erreur s'est produite. DETAIL_ERR: " . $e->getMessage();
+            $module = " paiement Retour API";
+            $action = "$Chaine";
+            Logs::saveLog($module, $action);
+        }
+
+        return 'Ok';
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function newCallBackPourAdmin(Request $request)
+    {
+        // $log = new Log();
+        (string) $RetourPaiementEnJSON = json_encode($request->input());
+        (string) $Chaine = "Debut callback paiement, recu: " . $RetourPaiementEnJSON;
+        try {
+
+            if (empty($request->Details[0]['referenceePaiement'])) {
+                $response['code'] = 200;
+                $response['message'] = "transaction notifiee avec des informations manquantes.";
+                $Chaine .= "\n** transaction notifie avec un 'Details' vide. code 404.";
+
+                $module = "erreur donnee manquante notifie par tresormoney";
+                $action = "$Chaine";
+                Logs::saveLog($module, $action);
+                return response()->json($response);
+            } else {
+                (int) $Code = $request->code;
+
+                (string) $codePaiement = $request->codePaiement;
+                // Recupère le paiement en attente avec le statut '2'
+                $paiementinit = PaiementInitiale::where('code_paiement', $codePaiement)
+                    ->where('status', 2)
+                    ->first();
+                (int) $Montant = $request->montant  ?? $paiementinit->montant_initial;
+
+                if (!empty($paiementinit->id)) {
+                    if ($Code == 200) {
+                        $mutualistes = Mutualiste::where('codePlay', $codePaiement)->where('status', 4)->get();
+
+                        $date = str_replace(['/', '-'], '', $request->Details[0]['datePaiement']);
+                        $date = substr($date, 0, 8);
+                        $date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
+
+                        // Traitement de l'heure
+                        $heure = str_replace(':', '', $request->Details[0]['HeurePaiement']);
+                        $heure = substr($heure, 0, 9);
+                        $heure = substr($heure, 0, 2) . ':' . substr($heure, 2, 2) . ':' . substr($heure, 4, 2);
+
+                        foreach ($mutualistes as $mutualiste) {
+
+
+
+                            $paiement = new Paiement();
+                            $paiement->montant_total = $Montant ?? $paiementinit->montant_initial;
+                            $paiement->moyen_paiement =  "Tresor Money";
+                            $paiement->status = 1;
+                            $paiement->code_paiement = $codePaiement;
+                            $paiement->date_paiement_final =  $date ?? '';
+                            // $paiement->heure_paiement_final = '' ?? $heure ?? '';
+                            $paiement->reference =  $request->Details[0]['referenceePaiement'];
+                            $paiement->type_paiement_id = $paiementinit->type_paiement_id;
+                            // $paiement->no_transation = $request->no_transation;  // champs a creer
+                            $paiement->mutualiste_id = $mutualiste->id;
+                            $paiement->contact_paiement = $request->numTel;
+                            $paiement->montant_initial = $paiementinit->montant_initial;
+                            // $paiement->correspondance_id = $paiementinit->correspondance_id;
+                            // $paiement->chainejson = '$RetourPaiementEnJSON';
+
+                            // $paiement->status = ($Code == 200 ? 1 : 2);
+                            $paiement->save();
+                            $paiementinit->moyen_paiement =  "Tresor Money";
+                            $paiementinit->status = 1; //
+                            $paiementinit->reference = $request->Details[0]['referenceePaiement'];
+                            $mutualiste->status = 1;
+                            $mutualiste->save();
+                            // ($Code == 200) ? $paiementinit->message_retour = 'SUCCESSFUL' : $paiementinit->message_retour = $request->cleretour;
+
+                            (int)  $typID = $paiement->type_paiement_id ?? $paiementinit->type_paiement_id ?? 0;
+                            // (int) $idCord = $paiement->correspondance_id ?? $paiementinit->correspondance_id  ?? 0;
+                            switch ($typID) {
+                                case 1:
+                                    // cas de paiement droit d'adhesion ( y compris carte membre inclus )
+                                    $droit_adhesion = DroitAdhesion::where('mutualiste_id', $mutualiste->id)->first();
+                                    if (!empty($droit_adhesion) && $droit_adhesion->status == 2) {
+                                        $droit_adhesion->montant = 0;
+                                        $droit_adhesion->status = 1;
+                                        $droit_adhesion->save();
+                                    } else {
+                                        $Chaine .= "\droit d'adhesion pas defini pour ce mutualiste error '";
+                                        $module = " paiement Retour API";
+                                        $action = "$Chaine";
+                                        Logs::saveLog($module, $action);
+                                    }
+                                    if ($droit_adhesion->status == 1) {
+                                        $sujet = "Paiement de droit d'adhésion sur votre compte UNAMEPCI";
+                                        $message = "
+                                                Bonjour M/Mme/Mlle:, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                                                C'est officiel, votre paiement d'adhésion a été confirmé ! 🎉 Bienvenue chez Union Nationale des Medecins Prives de Côte d'Ivoire (UNAMEPCI) !<br>
+                                                Nous sommes super excités de vous avoir avec nous. Votre adhésion vous ouvre les portes à un monde de nouvelles opportunités, d'événements passionnants et de nombreuses ressources.<br>
+                                                Prenez le temps d'explorer ce qui vous attend et faites-en le maximum !<br>
+                                                Votre soutien signifie beaucoup pour nous, et nous sommes impatients de voir tout ce que vous accomplirez avec nous.<br>
+                                                Bienvenue à bord, et profitons de cette aventure ensemble !<br>
+                                                Merci d'utiliser notre plateforme! <br>
+                                                Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                             ";
+                                        $url = appelApiEmail();
+                                        $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                        $data = [
+                                            'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                            "key_rsa" => '',
+                                            "destination" => $mutualiste->email,
+                                            "sujet" => $sujet,
+                                            "message" => $template
+                                        ];
+                                        $retourAPI = Http::post($url, $data);
+                                        $res = $retourAPI->json();
+
+                                        if ($retourAPI->status() == 200) {
+                                            (int)$code = $res['status'];
+                                            if ($code != 200) {
+                                                $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                                Log::error($message);
+                                            }
+                                        } else {
+                                            Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+                                        }
+                                    } else {
+                                        $sujet = "Paiement éffectuer pour le droit d'adhésion sur votre compte UNAMEPCI";
+                                        $message = "
+                                                    Bonjour M/Mme/Mlle: " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                                                    C'est officiel, Vous avez effectué un paiement pour le droit d'adhésion ! 🎉<br>
+                                                    Bienvenue chez Union Nationale des Medecins Prives de Côte d'Ivoire (UNAMEPCI) !<br>
+                                                    Nous sommes super excités de vous avoir avec nous. Votre adhésion vous ouvre les portes à un monde de nouvelles opportunités, d'événements passionnants et de nombreuses ressources.<br>
+                                                    Prenez le temps d'explorer ce qui vous attend et faites-en le maximum !<br>
+                                                    Montant restant : " . formatMontant($droit_adhesion->montant ?? 0) . "<br>
+                                                    Votre soutien signifie beaucoup pour nous, et nous sommes impatients de voir tout ce que vous accomplirez avec nous.<br>
+                                                    Bienvenue à bord, et profitons de cette aventure ensemble !<br>
+                                                    Merci d'utiliser notre plateforme !<br>
+                                                    Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                                    ";
+                                        $url = appelApiEmail();
+                                        $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                        $data = [
+                                            'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                            "key_rsa" => '',
+                                            "destination" => $mutualiste->email,
+                                            "sujet" => $sujet,
+                                            "message" => $template
+                                        ];
+                                        $retourAPI = Http::post($url, $data);
+                                        $res = $retourAPI->json();
+
+                                        if ($retourAPI->status() == 200) {
+                                            (int)$code = $res['status'];
+                                            if ($code != 200) {
+                                                $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                                Log::error($message);
+                                            }
+                                        } else {
+                                            Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+                                        }
+                                    }
+
+                                    // carte membre inclus
+
+
+                                    $carteMembre = CarteMembre::where('mutualiste_id', $mutualiste->id)->first();
+                                    if (!empty($carteMembre)) {
+                                        $carteMembre->status = 1;
+                                        $carteMembre->genere = 2;
+                                        $carteMembre->save();
+
+                                        if ($carteMembre->status == 1) {
+                                            $sujet = "Confirmation de paiement – Carte Membre UNAMEPCI";
+
+                                            $message = "
+                                                Bonjour " . $mutualiste->prenom . " " . $mutualiste->nom . ",<br><br>
+
+                                                Félicitations 🎉 !
+                                                Nous vous informons que le paiement de votre **carte de membre UNAMEPCI** a été effectué avec succès.<br><br>
+                                                Votre adhésion est désormais **active** et vous bénéficiez pleinement des services et avantages offerts par le **Union Nationale des Medecins Prives de Côte d'Ivoire**.<br><br>
+                                                Nous vous remercions pour votre confiance et sommes ravis de vous compter parmi nos membres.<br><br>
+                                                Si vous avez besoin d’assistance ou d’informations complémentaires, notre équipe reste à votre disposition.<br><br>
+                                                Cordialement,<br>
+                                                <strong>L’équipe UNAMEPCI</strong>
+                                                ";
+
+                                            $url = appelApiEmail();
+                                            $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                                            $data = [
+                                                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                                "key_rsa" => '',
+                                                "destination" => $mutualiste->email,
+                                                "sujet" => $sujet,
+                                                "message" => $template
+                                            ];
+                                            $retourAPI = Http::post($url, $data);
+                                            $res = $retourAPI->json();
+
+                                            if ($retourAPI->status() == 200) {
+                                                (int)$code = $res['status'];
+                                                if ($code != 200) {
+                                                    $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                                    Log::error($message);
+                                                }
+                                            } else {
+                                                Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+                                            }
+                                        }
+                                    } else {
+                                        $Chaine .= " id carte membre  incorrecter";
+                                        $module = " paiement ";
+                                        $action = "$Chaine";
+                                        Logs::saveLog($module, $action);
+                                    }
+
+
+                                    break;
+
+
+                                default:
+                                    // Ajoutez ici d'autres types de paiement si nécessaire (exceptions)
+                                    $Chaine .= " id type de ce paiement es non defini";
+                                    $module = " paiement ";
+                                    $action = "$Chaine";
+                                    Logs::saveLog($module, $action);
+                                    break;
+                            }
+
+
+
+
+
+                            // envoyer de mail pour confirmation d'acces
+                            // Générer le lien de validation
+                            // $lienDeValidation = URL::temporarySignedRoute(
+                            //     'validation.inscription',
+                            //     // now()->addHours(24), // Définissez la durée de validité du lien
+                            //     ['code' => $mutualiste->code]
+                            // );
+                            $lienDeValidation = URL::signedRoute(
+                                'validation.inscription',
+                                ['code' => $mutualiste->code]
+                            );
+                            Mutualiste::where('id', $mutualiste->id)->update([
+                                'lien_email' => $lienDeValidation,
+                            ]);
+                            $sujet = "Validation de votre  compte UNAMEPCI";
+                            $message = "  Bonjour, " . $mutualiste->prenom . ' ' . $mutualiste->nom . "<br>
+                        Merci pour la première étape de votre inscription sur UNAMEPCI. <br> Veuillez cliquer sur le boutton ci-dessous pour finaliser votre inscription et valider votre compte. !<br>
+                        <div style='margin-top:3px; margin-bottom:3px;  text-align:center;'>
+                        <a href=" . $lienDeValidation . " class='bouton'> POURSUIVRE</a> <br>
+                        </div>
+                               Merci d'utiliser notre plateforme! <br>
+                        Si vous rencontrez des problèmes avec votre compte, n'hésitez pas à nous contacter.
+                                ";
+                            $url = appelApiEmail();
+                            $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
+                            // $data = [
+                            //     'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                            //     "key_rsa" => '',
+                            //     "destination" => $mutualiste->email,
+                            //     "sujet" => $sujet,
+                            //     "message" => $template
+                            // ];
+
+                            $data = [
+                                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                                "key_rsa" => '',
+                                "destination" => $mutualiste->email,
+                                "sujet" => $sujet,
+                                "message" => $template
+                            ];
+                            $retourAPI = Http::post($url, $data);
+                            $res = $retourAPI->json();
+                            if ($retourAPI->status() == 200) {
+                                (int)$code = $res['status'];
+                                if ($code != 200) {
+                                    $message = "Une erreur s'est produite " . $code . ", DETAIL: " . messageBrut($res['message']) . " ERR: Envoye Paiement adhesion";
+                                    // Log::ajoutLOG($message);
+                                    $module = "Envoyer de Mail a la creation Mutualiste";
+                                    $action = "Echec d'envoyer de mail  : $message";
+                                    Logs::saveLog($module, $action);
+                                } else {
+                                    $module = "Envoyer de Mail a la creation Mutualiste";
+                                    $action = "Email envoyer avec success   : $mutualiste->nom , $mutualiste->prenom sur son email  $mutualiste->email";
+                                    Logs::saveLog($module, $action);
+                                }
+                            } else {
+                                Log::error("Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status());
+
+                                $module = "Envoyer de Mail a la creation Mutualiste";
+                                $action = "Erreur lors de l'envoi de l'email. Statut API : " . $retourAPI->status();
+                                Logs::saveLog($module, $action);
+                            }
                         }
                     } else {
                         // paiement echouer

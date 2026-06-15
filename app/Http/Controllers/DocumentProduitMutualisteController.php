@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\DocumentProduitMutualiste;
 use App\Http\Requests\StoreDocumentProduitMutualisteRequest;
 use App\Http\Requests\UpdateDocumentProduitMutualisteRequest;

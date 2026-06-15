@@ -6,6 +6,7 @@ use App\Models\Logs;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Administrateur;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use App\Http\Requests\AdministrateurLoginRequest;

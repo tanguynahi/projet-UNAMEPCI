@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaiementInitiale;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePaiementInitialeRequest;
 use App\Http\Requests\UpdatePaiementInitialeRequest;
 

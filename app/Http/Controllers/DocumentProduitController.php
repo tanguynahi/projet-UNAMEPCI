@@ -10,6 +10,7 @@ use App\Models\ProduitProjet;
 use App\Models\DocumentProduit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\StoreDocumentProduitRequest;
 use App\Http\Requests\UpdateDocumentProduitRequest;

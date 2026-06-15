@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DroitAdhesion;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDroitAdhesionRequest;
 use App\Http\Requests\UpdateDroitAdhesionRequest;
-use App\Models\DroitAdhesion;
-
 class DroitAdhesionController extends Controller
 {
     /**

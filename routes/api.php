@@ -27,6 +27,7 @@ Route::controller(paiementApiController::class)->group(function () {
 
 
     Route::post('/paiements/newCallBackLiens', 'newCallBack02')->name('pay.newCallBacks');
+    Route::post('/paiements/newCallBackLiensPourAdmin', 'newCallBackPourAdmin')->name('pay.newCallBacksPourAdmin');
 });
 
 Route::get('/notifications/unread-count', [NotificationMutualisteController::class, 'unreadCount']);

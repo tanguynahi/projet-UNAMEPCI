@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Logs;
 use App\Models\FormeJuridique;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreformeJuridiqueRequest;
 use App\Http\Requests\UpdateformeJuridiqueRequest;
 

@@ -10,6 +10,7 @@ use App\Models\DocumentProduit;
 use App\Models\ProjetMutualiste;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Models\DocumentProduitMutualiste;
 use Illuminate\Support\Facades\Validator;

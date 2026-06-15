@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->nullable(); // lorsque reference est renseigne il s'agit de paiement cash
             $table->string('code_paiement')->nullable(); // lorsque codepaiement est renseigne il s'agit de paiement en ligne
-            $table->foreignId('mutualiste_id')->constrained('mutualistes', 'id');
+            $table->foreignId('mutualiste_id')->nullable()->constrained('mutualistes', 'id');
             $table->foreignId('type_paiement_id')->constrained('type_paiements', 'id');
-            $table->bigInteger('correspondance_id');
+            $table->bigInteger('correspondance_id')->nullable(); // correspondance_id est renseigne lorsque le paiement en ligne est effectue pour une mise a jour de paiement effectuer en cash
             $table->bigInteger('montant_initial');
             $table->bigInteger('p_cash')->nullable();
             $table->bigInteger('montant_total')->nullable();

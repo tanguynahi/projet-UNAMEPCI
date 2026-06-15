@@ -245,7 +245,6 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/caisse/services-accompagnement-mutualiste/{mutualiste}', 'servicesAccompagnementMutualiste')
                 ->name('caisse.services.accompagnement');
-
         });
 
         Route::controller(AdministrateurController::class)->group(function () {
@@ -272,6 +271,16 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(MutualisteController::class)->group(function () {
         Route::get('/reenvoyer-mutualiste/{id}', 'resendLinkInscription')->name('reenvoyerMail.mutualiste');
+        Route::get('importer-liste-mutualistes', 'importerListeMutualistes')->name('mutualistes.importer');
+        Route::post('/paiement/initier', 'initier')
+            ->name('paiement.initier');
+
+        Route::get('/paiement/recherchAdminRencement/{codePaiement}/{ind}', 'resulPayRelance')->name('adhesionRelance');
+
+        Route::get('/enregistrement-importexcel', 'enregistrementImportExcel')->name('mutualistes.enregistrementImportExcel');
+
+        Route::post('/verifier-doublons', 'verifierDoublons')
+            ->name('verifier.doublons');
     });
     Route::resources([
         'mutualistes' => MutualisteController::class,

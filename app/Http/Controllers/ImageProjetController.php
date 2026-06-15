@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ImageProjet;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreImageProjetRequest;
 use App\Http\Requests\UpdateImageProjetRequest;
-use App\Models\ImageProjet;
 
 class ImageProjetController extends Controller
 {

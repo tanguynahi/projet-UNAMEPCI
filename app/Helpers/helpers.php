@@ -1206,3 +1206,25 @@ function adhesionAttent()
     $inscrires = Inscription::where('status', 2)->count();
     return $inscrires ?? 0;
 }
+
+
+
+
+function cleanPhoneNumber($phone)
+{
+    return preg_replace('/\s+/', '', trim($phone)); // Supprime tous les espaces visibles et invisibles
+}
+
+
+
+
+function urlCallbackLienAdministrateurMembre()
+{
+    $exe = 'LOCAL';
+    $exe = 'REEL';
+    if ($exe == 'REEL') {
+        return "https://unamepci.org/api/paiements/newCallBackLiensPourAdmin";
+    } else {
+        return "https://127.0.0.1:8000/api/paiements/newCallBackLiensPourAdmin";
+    }
+}

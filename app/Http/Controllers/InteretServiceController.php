@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\InteretService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 use App\Http\Requests\StoreInteretServiceRequest;
 use App\Http\Requests\UpdateInteretServiceRequest;

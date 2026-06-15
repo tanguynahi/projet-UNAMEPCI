@@ -8,6 +8,7 @@ use App\Models\Parametre;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\StoreParametreRequest;
 use App\Http\Requests\UpdateParametreRequest;

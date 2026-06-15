@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Periode;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePeriodeRequest;
 use App\Http\Requests\UpdatePeriodeRequest;
-use App\Models\Periode;
 
 class PeriodeController extends Controller
 {

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipe;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEquipeRequest;
 use App\Http\Requests\UpdateEquipeRequest;
-use App\Models\Equipe;
 
 class EquipeController extends Controller
 {

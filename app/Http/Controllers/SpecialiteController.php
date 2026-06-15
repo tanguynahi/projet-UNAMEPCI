@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Logs;
 use App\Models\Specialite;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StorespecialiteRequest;
 use App\Http\Requests\UpdatespecialiteRequest;
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ProduitProjet;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProduitProjetRequest;

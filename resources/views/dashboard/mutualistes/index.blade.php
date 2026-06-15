@@ -14,7 +14,8 @@
                     <div class="dropdown morphing scale-left">
                         <a href="#" class="card-fullscreen" data-bs-toggle="tooltip" title="Card Full-Screen"><i
                                 class="icon-size-fullscreen"></i></a>
-                                                        {{-- <a href="{{ route('mutualistes.importer') }}" class="btn btn-success d-inline">Importer</a> --}}
+
+                        <a href="{{ route('mutualistes.importer') }}" class="btn btn-success d-inline">Importer</a>
                         <a href="{{ route('mutualistes.create') }}" class="btn btn-primary d-inline">Ajouter un
                             mutualiste</a>
                     </div>

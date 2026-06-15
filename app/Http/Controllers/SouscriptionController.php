@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Souscription;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSouscriptionRequest;
 use App\Http\Requests\UpdateSouscriptionRequest;
-use App\Models\Souscription;
 
 class SouscriptionController extends Controller
 {

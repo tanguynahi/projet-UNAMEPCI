@@ -14,6 +14,7 @@ use App\Models\DroitAdhesion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
 use App\Models\CotisationMutualiste;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
@@ -275,8 +276,8 @@ class InscriptionController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI  <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $mutualiste->email,
                 "sujet" => $sujet,
                 "message" => $template
@@ -404,8 +405,8 @@ class InscriptionController extends Controller
             $url = appelApiEmail();
             $template = View::make('home.admin.paiements.paiementAdhesion', ['contenumess' => $message])->render();
             $data = [
-                'provider' => 'UNAMEPCI <info@mail-taseti.com>',
-                "key_rsa" => 're_2i7H3Ynf_KRVm9VwTsrwrfF8isCBYvyyE',
+                'provider' => 'UNAMEPCI <notification@mail.tresormoney.ci>',
+                "key_rsa" => '',
                 "destination" => $inscription->email,
                 "sujet" => $sujet,
                 "message" => $template

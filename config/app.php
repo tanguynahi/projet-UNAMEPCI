@@ -194,9 +194,11 @@ return [
 
         // pour genere un recu de manier automatique
         // 'PDF' => Barryvdh\DomPDF\Facade::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];

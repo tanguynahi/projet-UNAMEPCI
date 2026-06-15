@@ -7,6 +7,7 @@ use App\Models\Accompagnement;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAccompagnementRequest;
 use App\Http\Requests\UpdateAccompagnementRequest;
+use App\Http\Controllers\Controller;
 
 class AccompagnementController extends Controller
 {
@@ -71,5 +72,5 @@ class AccompagnementController extends Controller
         //
     }
 
-  
+
 }

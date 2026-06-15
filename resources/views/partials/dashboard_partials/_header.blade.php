@@ -25,7 +25,7 @@
             <!-- start: link -->
             <ul class="header-right justify-content-end d-flex align-items-center mb-0">
                 <!-- start: notifications dropdown-menu -->
-                <li>
+                {{-- <li>
                     <div class="dropdown morphing scale-left notifications">
                         <a class="nav-link dropdown-toggle after-none" href="#" role="button"
                             data-bs-toggle="dropdown">
@@ -117,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                </li>
+                </li> --}}
                 <!-- start: quick light dark -->
                 <li class="d-none d-xl-inline-block">
                     <a class="nav-link fullscreen" href="javascript:void(0);"
@@ -131,7 +131,7 @@
                     </a>
                 </li>
                 <!-- start: Language dropdown-menu -->
-                <li class="d-none d-xl-inline-block">
+                {{-- <li class="d-none d-xl-inline-block">
                     <div class="dropdown morphing scale-left Language">
                         <a class="nav-link dropdown-toggle after-none" href="#" role="button"
                             data-bs-toggle="dropdown">
@@ -148,14 +148,14 @@
                                 <div class="list-group list-group-custom" style="width: 200px;">
                                     <a href="#" class="list-group-item"><span
                                             class="flag-icon flag-icon-fr me-2"></span>FR</a>
-                                    <!-- <a href="#" class="list-group-item"><span class="flag-icon flag-icon-us me-2"></span>ENG</a> -->
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                </li>
+                </li> --}}
                 <!-- start: quick light dark -->
-                <li>
+                {{-- <li>
                     <a class="nav-link quick-light-dark" href="#">
                         <svg viewBox="0 0 16 16" width="18px" fill="currentColor"
                             xmlns="http://www.w3.org/2000/svg">
@@ -165,7 +165,7 @@
                                 d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
                         </svg>
                     </a>
-                </li>
+                </li> --}}
                 <!-- start: User dropdown-menu -->
                 <li>
                     <div class="dropdown morphing scale-left user-profile mx-lg-3 mx-2">

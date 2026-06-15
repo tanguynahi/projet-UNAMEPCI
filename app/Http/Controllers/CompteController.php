@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logs;
 use App\Models\Compte;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompteRequest;
 use App\Http\Requests\UpdateCompteRequest;
 
